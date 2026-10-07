@@ -16,29 +16,62 @@ import profile from '../data/profile.json';
       </ul>
     </div>
 
-    <form class="rounded-[30px] border border-[var(--border)] bg-[var(--panel)] p-6 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
+    <form id="contact-form" class="rounded-[30px] border border-[var(--border)] bg-[var(--panel)] p-6 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
       <div class="grid gap-5 sm:grid-cols-2">
         <label class="block text-sm font-medium text-[var(--text)] sm:col-span-1">
           Name
-          <input type="text" placeholder="Your name" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+          <input name="name" type="text" required placeholder="Your name" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
         </label>
         <label class="block text-sm font-medium text-[var(--text)] sm:col-span-1">
           Email
-          <input type="email" placeholder="you@example.com" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+          <input name="email" type="email" required placeholder="you@example.com" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
         </label>
         <label class="block text-sm font-medium text-[var(--text)] sm:col-span-2">
           Subject
-          <input type="text" placeholder="Project idea / opportunity / question" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+          <input name="subject" type="text" required placeholder="Project idea / opportunity / question" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
         </label>
         <label class="block text-sm font-medium text-[var(--text)] sm:col-span-2">
           Message
-          <textarea rows="6" placeholder="Tell me a bit about the project or goal..." class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]"></textarea>
+          <textarea name="message" rows="6" required placeholder="Tell me a bit about the project or goal..." class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]"></textarea>
         </label>
       </div>
       <div class="mt-6 flex items-center justify-between gap-3">
-        <p class="text-xs text-[var(--muted)]">Form UI placeholder for Phase 2; backend email delivery will be added during the contact-phase implementation.</p>
-        <button type="button" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Send message</button>
+        <p id="contact-status" class="text-xs text-[var(--muted)]">Your message is sent through the portfolio contact endpoint.</p>
+        <button type="submit" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Send message</button>
       </div>
     </form>
   </section>
+
+  <script is:inline>
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('contact-status');
+
+    form?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+
+      status.textContent = 'Sending...';
+
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || 'Unable to send message right now.');
+        }
+
+        status.textContent = result.message || 'Message sent successfully.';
+        form.reset();
+      } catch (error) {
+        status.textContent = error instanceof Error ? error.message : 'Unable to send message right now.';
+      }
+    });
+  </script>
 </BaseLayout>

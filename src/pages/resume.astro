@@ -8,9 +8,17 @@ const { basics, work, education, skills, certifications, awards } = resumeData;
 <BaseLayout title="Resume | Yug Shah" description="Professional resume for Yug Shah, covering security roles, research, education, and certifications.">
   <article class="prose prose-invert max-w-none rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 lg:p-10">
     <header class="mb-10 border-b border-[var(--border)] pb-6">
-      <p class="mb-2 text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Resume</p>
-      <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{basics.name}</h1>
-      <p class="mt-2 text-lg text-[var(--muted)]">{basics.label}</p>
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p class="mb-2 text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Resume</p>
+          <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{basics.name}</h1>
+          <p class="mt-2 text-lg text-[var(--muted)]">{basics.label}</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="/resume.pdf" download class="inline-flex rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950">Download PDF</a>
+          <a href={`mailto:${basics.email}`} class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">Email</a>
+        </div>
+      </div>
       <div class="mt-5 flex flex-wrap gap-4 text-sm text-[var(--muted)]">
         <a href={`mailto:${basics.email}`} class="hover:text-[var(--text)]">{basics.email}</a>
         <a href={basics.url} class="hover:text-[var(--text)]">LinkedIn</a>
