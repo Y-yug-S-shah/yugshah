@@ -38,8 +38,8 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at 12% calc(12% + var(--scroll-progress) * 13%), rgba(115, 177, 146, 0.16), transparent 42%),
-    radial-gradient(ellipse at 88% calc(82% - var(--scroll-progress) * 18%), rgba(204, 151, 111, 0.13), transparent 39%),
+    radial-gradient(ellipse at 12% calc(12% + var(--bg-shift, 0%)), rgba(115, 177, 146, 0.16), transparent 42%),
+    radial-gradient(ellipse at 88% calc(82% - var(--bg-shift, 0%)), rgba(204, 151, 111, 0.13), transparent 39%),
     var(--bg);
   color: var(--text);
   font-family:
@@ -288,6 +288,14 @@ main article,
 main section > aside,
 main > article {
   box-shadow: 0 18px 48px -42px var(--shadow);
+}
+
+main h1,
+main h2,
+main article h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 500;
+  letter-spacing: -0.035em;
 }
 
 .garden-section {
