@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Portfolio: auto-commit and publish on save",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "auto-publish"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "portfolio-auto-publish",
+        "pattern": [],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Auto-publish watcher ready",
+          "endsPattern": "Auto-publish watcher stopped"
+        }
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}

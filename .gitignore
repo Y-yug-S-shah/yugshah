@@ -15,9 +15,7 @@ pnpm-debug.log*
 .lighthouse-*.json
 
 # environment variables
-.env
-.env.production
-.env.example
+.env*
 
 # macOS-specific files
 .DS_Store

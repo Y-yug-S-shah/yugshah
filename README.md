@@ -113,16 +113,11 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 
 ## Publishing workflow
 
-Cloudflare Pages deploys the connected `main` branch after each successful push. In this checkout, the Git post-commit hook pushes each new commit automatically. Local file edits are not committed automatically: review the changes and commit them when ready:
+Cloudflare Pages deploys the connected `main` branch after each successful push. The VS Code task **Portfolio: auto-commit and publish on save** starts when this project folder opens. After a short pause following a save, it commits project changes; the Git post-commit hook pushes the commit to GitHub, which triggers the Pages deployment.
 
-```bash
-git add .
-git commit -m "Describe the change"
-```
+If VS Code asks, allow automatic tasks for this folder. The watcher runs only on `main`, excludes `.env*` files and generated resume/OG assets, and reports errors in its task terminal. If automatic publishing fails, review the message and use Source Control or `git status` to resolve the issue. To start it manually, run `npm run auto-publish`.
 
-The hook is stored in `.githooks/post-commit` and is enabled for this checkout with `git config core.hooksPath .githooks`. To enable it in another clone, run that setup command there. If an automatic push fails, the hook prints the manual `git push` command.
-
-Add blog posts as `.mdx` files under `src/content/blog/`; pushing the post triggers the same build and deployment workflow.
+Auto-publishing makes saved code live without waiting for a manual commit, so review changes regularly. Add blog posts as `.mdx` files under `src/content/blog/`; saving a post while the watcher is running publishes it and triggers the normal deployment workflow.
 
 ## SEO and analytics
 

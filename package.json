@@ -14,7 +14,8 @@
     "astro": "astro",
     "check": "astro check",
     "lint": "eslint . --ext .js,.mjs,.ts,.astro",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "auto-publish": "node scripts/auto-publish.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",
