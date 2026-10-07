@@ -34,12 +34,13 @@ function findGitExecutable() {
 }
 
 function git(args, options = {}) {
-  return execFileSync(gitPath, args, {
+  const output = execFileSync(gitPath, args, {
     cwd: projectRoot,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
     ...options
-  }).trim();
+  });
+  return typeof output === 'string' ? output.trim() : '';
 }
 
 function checkSafeToPublish() {
