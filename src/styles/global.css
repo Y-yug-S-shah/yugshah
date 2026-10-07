@@ -153,13 +153,13 @@ img {
   transform: translateY(0) scale(1);
 }
 
-main section > article,
+main article,
 main section > div,
 .game-card {
   transform-style: preserve-3d;
 }
 
-main section > article,
+main article,
 .game-card {
   transition:
     transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
@@ -167,7 +167,7 @@ main section > article,
     border-color 320ms ease;
 }
 
-main section > article:hover,
+main article:hover,
 .game-card:hover {
   border-color: color-mix(in srgb, var(--accent-strong) 50%, var(--border));
   box-shadow: 0 24px 46px -30px var(--shadow);
@@ -274,17 +274,17 @@ html.cli-active .field-companion {
   }
 }
 
-main section > article,
+main article,
 main section > aside,
 main > article {
   border-radius: 38px 16px 32px 20px;
 }
 
-main section > article:nth-of-type(even) {
+main article:nth-of-type(even) {
   border-radius: 18px 38px 20px 32px;
 }
 
-main section > article,
+main article,
 main section > aside,
 main > article {
   box-shadow: 0 18px 48px -42px var(--shadow);
