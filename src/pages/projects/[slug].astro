@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import projects from '../../data/projects.json';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props;
+---
+
+<BaseLayout title={`${project.title} | Yug Shah`} description={project.summary}>
+  <article class="space-y-8 py-6">
+    <img src={project.image} alt={project.title} class="h-64 w-full rounded-[32px] border border-[var(--border)] object-cover shadow-[0_30px_60px_rgba(15,23,42,0.08)]" />
+    <div class="space-y-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Project</p>
+      <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{project.title}</h1>
+      <p class="max-w-3xl text-base leading-8 text-[var(--muted)]">{project.description}</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      {project.tech.map((tech) => (
+        <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">{tech}</span>
+      ))}
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a href={project.links.repo} class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">Repository</a>
+      <a href={project.links.live} class="inline-flex rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950">Live preview</a>
+    </div>
+  </article>
+</BaseLayout>

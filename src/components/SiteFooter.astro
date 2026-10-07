@@ -1,0 +1,15 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--border)] bg-[var(--bg)]">
+  <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-[var(--muted)] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+    <p>© {year} Yug Shah. Built for security, clarity, and curiosity.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="/resume" class="hover:text-[var(--text)]">Resume</a>
+      <a href="/projects" class="hover:text-[var(--text)]">Projects</a>
+      <a href="/blog" class="hover:text-[var(--text)]">Blog</a>
+      <a href="/contact" class="hover:text-[var(--text)]">Contact</a>
+    </div>
+  </div>
+</footer>

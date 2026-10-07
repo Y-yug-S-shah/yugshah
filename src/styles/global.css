@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+:root {
+  --bg: #f6f1e8;
+  --bg-soft: rgba(255, 255, 255, 0.55);
+  --panel: rgba(255, 255, 255, 0.7);
+  --border: rgba(15, 23, 42, 0.12);
+  --text: #0f172a;
+  --muted: #475569;
+  --accent: #fbbf24;
+  --accent-soft: rgba(251, 191, 36, 0.16);
+  --accent-strong: #f97316;
+  --shadow: rgba(15, 23, 42, 0.12);
+}
+
+:root[data-theme='dark'] {
+  --bg: #061018;
+  --bg-soft: rgba(15, 23, 42, 0.7);
+  --panel: rgba(15, 23, 42, 0.76);
+  --border: rgba(148, 163, 184, 0.25);
+  --text: #e2e8f0;
+  --muted: #cbd5e1;
+  --accent: #fbbf24;
+  --accent-soft: rgba(251, 191, 36, 0.2);
+  --accent-strong: #f9a826;
+  --shadow: rgba(2, 6, 23, 0.45);
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--text);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(251, 191, 36, 0.18), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.15), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  font-family:
+    'Segoe UI', 'Inter', 'Helvetica Neue', Arial, 'Nimbus Sans L', sans-serif;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(251, 191, 36, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

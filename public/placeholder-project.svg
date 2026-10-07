@@ -1,0 +1,27 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Portfolio placeholder artwork</title>
+  <desc id="desc">A stylized placeholder card with a gradient grid and security-themed shapes.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <g opacity="0.18" stroke="#e2e8f0" stroke-width="1">
+    <path d="M0 100 H1200 M0 220 H1200 M0 340 H1200 M0 460 H1200 M0 580 H1200 M0 700 H1200"/>
+    <path d="M100 0 V800 M260 0 V800 M420 0 V800 M580 0 V800 M740 0 V800 M900 0 V800 M1060 0 V800"/>
+  </g>
+  <rect x="96" y="110" width="1008" height="580" rx="28" fill="rgba(15,23,42,0.44)" stroke="rgba(255,255,255,0.22)"/>
+  <circle cx="200" cy="220" r="80" fill="url(#accent)" opacity="0.9"/>
+  <rect x="330" y="180" width="480" height="26" rx="13" fill="#f8fafc" opacity="0.88"/>
+  <rect x="330" y="246" width="350" height="20" rx="10" fill="#e2e8f0" opacity="0.65"/>
+  <rect x="330" y="332" width="220" height="180" rx="18" fill="#0f172a" opacity="0.72"/>
+  <rect x="582" y="332" width="260" height="180" rx="18" fill="#111827" opacity="0.7"/>
+  <rect x="330" y="548" width="500" height="22" rx="11" fill="#f8fafc" opacity="0.72"/>
+  <path d="M160 560 L300 450 L390 510 L520 390 L690 520 L916 330" fill="none" stroke="#fbbf24" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity="0.75"/>
+</svg>

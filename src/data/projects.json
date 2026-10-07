@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Authguardian",
+    "slug": "authguardian",
+    "summary": "Detection logic for unusual authentication activity across login telemetry.",
+    "description": "Built Splunk queries to detect abnormal authentication behavior across login logs in Virtual Box. Identified failed login spikes, unusual access patterns, and account misuse while analyzing and correlating 100+ authentication log events.",
+    "tech": ["Splunk", "Security Analytics", "Python", "SIEM"],
+    "links": {
+      "repo": "TODO: add repo URL",
+      "live": "TODO: add demo URL"
+    },
+    "year": 2026,
+    "featured": true,
+    "image": "/placeholder-project.svg"
+  },
+  {
+    "title": "PhishHound",
+    "slug": "phishhound",
+    "summary": "Python CLI for validating email header signals and surfacing phishing indicators.",
+    "description": "Developed a Python CLI tool to analyze email headers and extract phishing indicators. Validated SPF, DKIM, and DMARC results from headers and generated structured IOC output. Automated parsing and analysis workflows using Python scripting and regular expressions.",
+    "tech": ["Python", "Email Security", "Threat Hunting", "Automation"],
+    "links": {
+      "repo": "TODO: add repo URL",
+      "live": "TODO: add live demo URL"
+    },
+    "year": 2026,
+    "featured": true,
+    "image": "/placeholder-project.svg"
+  },
+  {
+    "title": "Featured project placeholder",
+    "slug": "featured-project-placeholder",
+    "summary": "TODO: add a third featured project from your broader portfolio when ready.",
+    "description": "This slot is intentionally left as a placeholder until a third project is added. The content is intentionally incomplete and needs a real project entry before publishing.",
+    "tech": ["TODO"],
+    "links": {
+      "repo": "TODO: add repo URL",
+      "live": "TODO: add live demo URL"
+    },
+    "year": 2026,
+    "featured": false,
+    "image": "/placeholder-project.svg"
+  }
+]

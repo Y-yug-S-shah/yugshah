@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'sample-post' } },
+    { params: { slug: 'another-placeholder' } }
+  ];
+}
+
+const { slug } = Astro.params;
+---
+
+<BaseLayout title={`${slug} | Blog | Yug Shah`} description="Placeholder blog article page for the portfolio blog.">
+  <article class="mx-auto max-w-3xl space-y-6 py-8">
+    <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Blog post</p>
+    <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{slug}</h1>
+    <p class="text-base leading-8 text-[var(--muted)]">This is a placeholder article page. The real blog content and reading experience are planned for Phase 3 and will include MDX content, tags, reading progress, and richer storytelling.</p>
+    <div class="rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6 text-base leading-8 text-[var(--muted)]">
+      A more complete article experience will include a styled outline, share links, related posts, comment-free reading flow, and article metadata when the blog system lands in later phases.
+    </div>
+    <a href="/blog" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">Return to blog</a>
+  </article>
+</BaseLayout>

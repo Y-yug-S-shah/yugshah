@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import projects from '../data/projects.json';
+---
+
+<BaseLayout title="Projects | Yug Shah" description="Explore selected portfolio projects from Yug Shah.">
+  <section class="space-y-8 py-6">
+    <div class="space-y-3">
+      <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Projects</p>
+      <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">Selected work</h1>
+      <p class="max-w-2xl text-base text-[var(--muted)]">This section highlights the projects that best reflect the work, tooling, and thinking behind my security and validation practice.</p>
+    </div>
+
+    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      {projects.map((project) => (
+        <article class="overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--panel)]">
+          <img src={project.image} alt={project.title} class="h-48 w-full object-cover" />
+          <div class="space-y-4 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <h2 class="text-xl font-bold text-[var(--text)]">{project.title}</h2>
+              <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">{project.year}</span>
+            </div>
+            <p class="text-sm leading-7 text-[var(--muted)]">{project.summary}</p>
+            <div class="flex flex-wrap gap-2">
+              {project.tech.map((tech) => (
+                <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">{tech}</span>
+              ))}
+            </div>
+            <a href={`/projects/${project.slug}`} class="inline-flex text-sm font-semibold text-[var(--accent-strong)]">Read more →</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

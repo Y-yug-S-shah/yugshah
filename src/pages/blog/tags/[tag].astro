@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { tag: 'security' } },
+    { params: { tag: 'networking' } },
+    { params: { tag: 'product-thinking' } }
+  ];
+}
+
+const { tag } = Astro.params;
+const normalizedTag = tag?.replace(/-/g, ' ');
+---
+
+<BaseLayout title={`${normalizedTag} | Blog | Yug Shah`} description={`Browse blog posts tagged with ${normalizedTag}.`}>
+  <section class="space-y-6 py-8">
+    <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Tag archive</p>
+    <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{normalizedTag}</h1>
+    <p class="max-w-2xl text-base leading-8 text-[var(--muted)]">This tag archive is a placeholder for the later MDX-powered blog and tag pages. Real article lists will land in Phase 3.</p>
+    <a href="/blog" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Back to blog</a>
+  </section>
+</BaseLayout>

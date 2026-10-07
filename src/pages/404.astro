@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 | Yug Shah" description="The page you requested could not be found.">
+  <section class="flex min-h-[50vh] flex-col items-center justify-center py-16 text-center">
+    <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Error 404</p>
+    <h1 class="mt-4 text-5xl font-black tracking-tight text-[var(--text)]">Lost in the signal.</h1>
+    <p class="mt-4 max-w-xl text-base leading-8 text-[var(--muted)]">The route you asked for is not here yet. Head back to the dashboard or explore the portfolio instead.</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="/" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Return home</a>
+      <a href="/projects" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 py-3 text-sm font-semibold text-[var(--text)]">View projects</a>
+    </div>
+  </section>
+</BaseLayout>

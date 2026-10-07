@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import profile from '../data/profile.json';
+---
+
+<BaseLayout title="Contact | Yug Shah" description="Contact Yug Shah about projects, opportunities, or technical discussions.">
+  <section class="grid gap-8 py-6 lg:grid-cols-[0.9fr_1.1fr]">
+    <div class="space-y-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Contact</p>
+      <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">Let’s build something useful.</h1>
+      <p class="text-base leading-8 text-[var(--muted)]">I work across security, technical validation, and customer-facing problem solving. If you want to talk through a security initiative, product question, or collaboration, send a note here.</p>
+      <ul class="space-y-3 text-sm text-[var(--muted)]">
+        <li>• Email: <a href={`mailto:${profile.email}`} class="text-[var(--accent-strong)]">{profile.email}</a></li>
+        <li>• LinkedIn: <a href={profile.socialLinks.linkedin} class="text-[var(--accent-strong)]">linkedin.com/in/yugshah369</a></li>
+        <li>• GitHub: <a href={profile.socialLinks.github} class="text-[var(--accent-strong)]">github.com/Y-yug-S-shah</a></li>
+      </ul>
+    </div>
+
+    <form class="rounded-[30px] border border-[var(--border)] bg-[var(--panel)] p-6 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
+      <div class="grid gap-5 sm:grid-cols-2">
+        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-1">
+          Name
+          <input type="text" placeholder="Your name" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+        </label>
+        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-1">
+          Email
+          <input type="email" placeholder="you@example.com" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+        </label>
+        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-2">
+          Subject
+          <input type="text" placeholder="Project idea / opportunity / question" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+        </label>
+        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-2">
+          Message
+          <textarea rows="6" placeholder="Tell me a bit about the project or goal..." class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]"></textarea>
+        </label>
+      </div>
+      <div class="mt-6 flex items-center justify-between gap-3">
+        <p class="text-xs text-[var(--muted)]">Form UI placeholder for Phase 2; backend email delivery will be added during the contact-phase implementation.</p>
+        <button type="button" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Send message</button>
+      </div>
+    </form>
+  </section>
+</BaseLayout>
