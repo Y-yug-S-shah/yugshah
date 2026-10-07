@@ -108,8 +108,8 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 - Forms use semantic labels and live status messages.
 - Content remains readable and crawlable without JavaScript-required features.
 - Motion is CSS/inline-vector artwork made for this site; there are no third-party image, audio, or 3D template assets. Reduced-motion preferences disable the ambient animation.
-- Optional interface tones are synthesized in the browser and remain off until enabled with the Sound control.
-- The optional field games are collapsed by default so the portfolio content stays primary.
+- The ambient nature-and-piano soundscape and per-click tones are synthesized in the browser; both remain off until enabled with the Sound control.
+- The home page has one optional, isometric alien-garden game. Reading a blog post or exploring a project reveals new garden discoveries.
 
 ## Publishing workflow
 
