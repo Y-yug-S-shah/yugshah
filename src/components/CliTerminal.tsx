@@ -110,15 +110,6 @@ export default function CliTerminal() {
   const outputRef = useRef<HTMLDivElement | null>(null);
   const [command, setCommand] = useState('');
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [snake, setSnake] = useState<Array<{ x: number; y: number }>>([
-    { x: 3, y: 4 },
-    { x: 2, y: 4 },
-    { x: 1, y: 4 }
-  ]);
-  const [food, setFood] = useState({ x: 6, y: 4 });
-  const [direction, setDirection] = useState({ x: 1, y: 0 });
-  const [snakeOpen, setSnakeOpen] = useState(false);
-
   useEffect(() => {
     const openHandler = () => setIsOpen(true);
     const closeHandler = () => setIsOpen(false);
@@ -153,52 +144,7 @@ export default function CliTerminal() {
     outputRef.current?.scrollTo({ top: outputRef.current.scrollHeight, behavior: 'smooth' });
   }, [output]);
 
-  useEffect(() => {
-    if (!snakeOpen) return;
-
-    const timer = window.setInterval(() => {
-      setSnake((currentSnake) => {
-        const nextHead = {
-          x: currentSnake[0].x + direction.x,
-          y: currentSnake[0].y + direction.y
-        };
-
-        const next = [nextHead, ...currentSnake];
-        if (nextHead.x === food.x && nextHead.y === food.y) {
-          setFood({
-            x: 1 + Math.floor(Math.random() * 8),
-            y: 1 + Math.floor(Math.random() * 8)
-          });
-        } else {
-          next.pop();
-        }
-
-        return next;
-      });
-    }, 220);
-
-    return () => window.clearInterval(timer);
-  }, [snakeOpen, direction, food.x, food.y]);
-
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (!snakeOpen) return;
-      const map: Record<string, { x: number; y: number }> = {
-        ArrowUp: { x: 0, y: -1 },
-        ArrowDown: { x: 0, y: 1 },
-        ArrowLeft: { x: -1, y: 0 },
-        ArrowRight: { x: 1, y: 0 }
-      };
-      if (map[event.key]) {
-        setDirection(map[event.key]);
-      }
-    };
-
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [snakeOpen]);
-
-  const commands = useMemo(() => ['help', 'ls [path]', 'cd [path]', 'pwd', 'tree', 'cat <file>', 'whoami', 'neofetch', 'open <page>', 'theme <light|dark|system>', 'history', 'clear', 'echo <text>', 'date', 'sudo hire-me', 'play snake', 'exit'], []);
+  const commands = useMemo(() => ['help', 'ls [path]', 'cd [path]', 'pwd', 'tree', 'cat <file>', 'whoami', 'neofetch', 'open <page>', 'theme <light|dark|system>', 'history', 'clear', 'echo <text>', 'date', 'sudo hire-me', 'exit'], []);
 
   const appendOutput = (kind: TerminalLine['kind'], text: string) => {
     setOutput((current) => [...current, { id: `${Date.now()}-${Math.random()}`, kind, text }]);
@@ -302,12 +248,6 @@ export default function CliTerminal() {
       return;
     }
 
-    if (trimmed === 'play snake') {
-      setSnakeOpen(true);
-      appendOutput('output', 'Snake loaded. Use arrow keys to move and avoid walls.');
-      return;
-    }
-
     if (trimmed === 'exit') {
       window.dispatchEvent(new CustomEvent('portfolio:request-close-cli'));
       return;
@@ -369,26 +309,6 @@ export default function CliTerminal() {
                 </div>
               ))}
             </div>
-
-            {snakeOpen && (
-              <div className="mt-6 rounded-xl border border-slate-700 bg-slate-900/70 p-4">
-                <div className="mb-3 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-slate-300">
-                  <span>snake</span>
-                  <button type="button" onClick={() => setSnakeOpen(false)} className="rounded-full border border-slate-700 px-2 py-1 text-[10px]">Quit</button>
-                </div>
-                <div className="snake-3d-board grid w-full max-w-[18rem] grid-cols-10 gap-1 rounded-lg bg-slate-950 p-2">
-                  {Array.from({ length: 10 }).map((_, rowIndex) =>
-                    Array.from({ length: 10 }).map((__, colIndex) => {
-                      const isHead = snake[0]?.x === colIndex && snake[0]?.y === rowIndex;
-                      const isBody = snake.some((segment) => segment.x === colIndex && segment.y === rowIndex);
-                      const isFood = food.x === colIndex && food.y === rowIndex;
-                      const cellClass = isHead ? 'bg-emerald-400' : isBody ? 'bg-cyan-400' : isFood ? 'bg-amber-400' : 'bg-slate-800';
-                      return <div key={`${rowIndex}-${colIndex}`} className={`snake-cell h-4 w-4 rounded-sm ${cellClass}`} />;
-                    })
-                  )}
-                </div>
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="mt-4 flex items-center gap-3">
               <span className="text-cyan-400">{cwd}$</span>

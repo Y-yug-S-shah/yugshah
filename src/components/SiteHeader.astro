@@ -28,7 +28,7 @@ const nav = [
         <span aria-hidden="true">⌨️</span>
         <span class="hidden sm:inline">CLI</span>
       </button>
-      <button id="sound-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-xs font-medium text-[var(--text)] shadow-sm transition-transform hover:-translate-y-0.5" aria-label="Turn interface sounds on" aria-pressed="false">
+      <button id="sound-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-xs font-medium text-[var(--text)] shadow-sm transition-transform hover:-translate-y-0.5" aria-label="Turn ambient and click sounds on" aria-pressed="false">
         <span aria-hidden="true">🔇</span>
         <span class="hidden sm:inline">Sound off</span>
       </button>
@@ -115,10 +115,11 @@ const nav = [
       ambienceGain.gain.setTargetAtTime(0, audioContext.currentTime, 0.18);
     }
     if (ambienceSource) {
+      const source = ambienceSource;
+      ambienceSource = undefined;
       window.setTimeout(() => {
-        try { ambienceSource?.stop(); } catch { /* It may already have stopped. */ }
-        ambienceSource?.disconnect();
-        ambienceSource = undefined;
+        try { source.stop(); } catch { /* It may already have stopped. */ }
+        source.disconnect();
       }, 800);
     }
   };
@@ -224,7 +225,13 @@ const nav = [
       stopAmbience();
     }
   });
-  document.addEventListener('pointerdown', playClick, { capture: true });
+  document.addEventListener('pointerdown', () => {
+    if (soundEnabled && !audioContext) {
+      void startAmbience().then(playClick);
+      return;
+    }
+    playClick();
+  }, { capture: true });
   window.addEventListener('portfolio:garden-sound', playClick);
   window.addEventListener('pagehide', stopAmbience);
 </script>

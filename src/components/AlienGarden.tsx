@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { readGardenVisits, type GardenVisits } from '../lib/gardenState';
 
 type Point = { x: number; y: number };
@@ -64,6 +64,10 @@ export default function AlienGarden() {
     }
 
     const updateVisits = (event: Event) => {
+      if (event instanceof StorageEvent) {
+        setVisits(readGardenVisits());
+        return;
+      }
       const next = (event as CustomEvent<GardenVisits>).detail;
       if (next) setVisits(next);
     };
@@ -164,7 +168,7 @@ export default function AlienGarden() {
                   key={`${x}-${y}`}
                   type="button"
                   className={`garden-tile${occupied ? ' is-occupied' : ''}${item ? ' has-discovery' : ''}${item && !unlocked ? ' is-sleeping' : ''}`}
-                  style={{ '--tile-x': x, '--tile-y': y } as import('react').CSSProperties}
+                  style={{ '--tile-x': x, '--tile-y': y } as CSSProperties}
                   aria-label={item ? `${item.name}${found ? ', collected' : unlocked ? ', ready to collect' : ', locked'}` : `Garden path, row ${y + 1}, column ${x + 1}`}
                   onClick={() => {
                     const dx = Math.sign(x - position.x);
