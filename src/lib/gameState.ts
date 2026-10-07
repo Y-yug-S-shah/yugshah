@@ -103,7 +103,9 @@ export function getGameState(): GameState {
 
 export function subscribe(listener: (next: GameState) => void) {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 export function updateGameState(mutator: (draft: GameState) => GameState) {

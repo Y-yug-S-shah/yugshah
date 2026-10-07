@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { completeQuest, getGameState } from '../lib/gameState';
+import { completeQuest } from '../lib/gameState';
 
 type TerminalLine = {
   id: string;
@@ -70,27 +70,34 @@ const buildAscii = `
 `;
 
 function normalizePath(input: string, cwd: string) {
-  const value = input.trim();
+  const value = input.trim().replace(/\\/g, '/');
   if (!value || value === '.') return cwd;
-  const next = value.replace(/^~\//, '~').replace(/^~$/, '~');
-  if (next.startsWith('/')) return next;
-  return `${cwd.replace(/\/$/, '')}/${next}`.replace(/\/+/g, '/');
+  const target = value.startsWith('~')
+    ? value
+    : value.startsWith('/')
+      ? `~${value}`
+      : `${cwd}/${value}`;
+  const segments: string[] = [];
+
+  for (const segment of target.split('/')) {
+    if (!segment || segment === '.') continue;
+    if (segment === '..') {
+      if (segments.length > 1) segments.pop();
+      continue;
+    }
+    segments.push(segment);
+  }
+
+  return segments.join('/') || '~';
 }
 
-const hasPrefix = (target: string, prefix: string) => target === prefix || target.startsWith(`${prefix}/`);
-
 function resolvePath(input: string, cwd: string) {
-  const raw = normalizePath(input, cwd).replace(/\/+/g, '/');
-  const candidates = [raw, raw.startsWith('~') ? raw.replace(/^~/, '~') : `~${raw}`];
-  for (const candidate of candidates) {
-    if (candidate in virtualFs) return candidate;
-  }
-  if (raw === '~') return '~';
-  return null;
+  const path = normalizePath(input, cwd);
+  return path in virtualFs ? path : null;
 }
 
 export default function CliTerminal() {
-  const [isOpen, setIsOpen] = useState(() => typeof window !== 'undefined' && window.location.search.includes('mode=cli'));
+  const [isOpen, setIsOpen] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'cli');
   const [cwd, setCwd] = useState('~');
   const [history, setHistory] = useState<string[]>([
     'help',
@@ -100,7 +107,9 @@ export default function CliTerminal() {
   ]);
   const [output, setOutput] = useState<TerminalLine[]>(initialLines);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const outputRef = useRef<HTMLDivElement | null>(null);
   const [command, setCommand] = useState('');
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const [snake, setSnake] = useState<Array<{ x: number; y: number }>>([
     { x: 3, y: 4 },
     { x: 2, y: 4 },
@@ -116,43 +125,33 @@ export default function CliTerminal() {
     window.addEventListener('portfolio:open-cli', openHandler);
     window.addEventListener('portfolio:close-cli', closeHandler);
 
-    const query = new URLSearchParams(window.location.search);
-    if (query.get('mode') === 'cli') {
-      setIsOpen(true);
-    }
+    const syncFromLocation = () => setIsOpen(new URLSearchParams(window.location.search).get('mode') === 'cli');
+    window.addEventListener('popstate', syncFromLocation);
 
     return () => {
       window.removeEventListener('portfolio:open-cli', openHandler);
       window.removeEventListener('portfolio:close-cli', closeHandler);
+      window.removeEventListener('popstate', syncFromLocation);
     };
   }, []);
 
   useEffect(() => {
-    if (!isOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === '`') {
-        setIsOpen((current) => !current);
-      }
-      if (event.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isOpen]);
-
-  useEffect(() => {
+    document.documentElement.classList.toggle('cli-active', isOpen);
+    const previousOverflow = document.body.style.overflow;
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       inputRef.current?.focus();
-    } else {
-      document.body.style.overflow = '';
     }
 
     return () => {
-      document.body.style.overflow = '';
+      document.documentElement.classList.remove('cli-active');
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    outputRef.current?.scrollTo({ top: outputRef.current.scrollHeight, behavior: 'smooth' });
+  }, [output]);
 
   useEffect(() => {
     if (!snakeOpen) return;
@@ -199,7 +198,7 @@ export default function CliTerminal() {
     return () => window.removeEventListener('keydown', onKey);
   }, [snakeOpen]);
 
-  const commands = useMemo(() => ['help', 'ls', 'cd', 'pwd', 'tree', 'cat', 'whoami', 'neofetch', 'open', 'theme', 'history', 'clear', 'echo', 'date', 'sudo hire-me', 'play snake', 'exit'], []);
+  const commands = useMemo(() => ['help', 'ls [path]', 'cd [path]', 'pwd', 'tree', 'cat <file>', 'whoami', 'neofetch', 'open <page>', 'theme <light|dark|system>', 'history', 'clear', 'echo <text>', 'date', 'sudo hire-me', 'play snake', 'exit'], []);
 
   const appendOutput = (kind: TerminalLine['kind'], text: string) => {
     setOutput((current) => [...current, { id: `${Date.now()}-${Math.random()}`, kind, text }]);
@@ -243,9 +242,17 @@ export default function CliTerminal() {
       return;
     }
 
-    if (trimmed === 'ls') {
-      const current = virtualFs[cwd] ?? virtualFs['~'];
-      appendOutput('output', current.children?.join('  ') ?? '');
+    if (trimmed === 'ls' || trimmed.startsWith('ls ')) {
+      const target = trimmed.slice(2).trim().split(/\s+/).filter((part) => !part.startsWith('-')).join(' ') || cwd;
+      const path = resolvePath(target, cwd);
+      const entry = path ? virtualFs[path] : null;
+      if (entry?.type === 'dir') {
+        appendOutput('output', entry.children?.join('  ') ?? '');
+      } else if (entry?.type === 'file') {
+        appendOutput('output', path?.split('/').at(-1) ?? '');
+      } else {
+        appendOutput('error', `ls: cannot access '${target}': no such file or directory`);
+      }
       return;
     }
 
@@ -255,12 +262,7 @@ export default function CliTerminal() {
     }
 
     if (trimmed.startsWith('cd ')) {
-      const target = trimmed.replace(/^cd\s+/, '');
-      if (target === '..' || target === '../') {
-        setCwd('~');
-        appendOutput('output', 'Moved to ~');
-        return;
-      }
+      const target = trimmed.replace(/^cd\s+/, '').trim() || '~';
       const nextPath = resolvePath(target, cwd);
       if (nextPath && nextPath in virtualFs && virtualFs[nextPath]?.type === 'dir') {
         setCwd(nextPath);
@@ -272,15 +274,21 @@ export default function CliTerminal() {
     }
 
     if (trimmed.startsWith('cat ')) {
-      const target = trimmed.replace(/^cat\s+/, '');
-      const path = resolvePath(target, cwd);
-      const entry = path ? virtualFs[path] : null;
-      if (entry?.type === 'file') {
-        appendOutput('output', entry.content ?? '');
-        completeQuest('read-post');
+      const targets = trimmed.replace(/^cat\s+(?:--\s+)?/, '').trim().split(/\s+/).filter(Boolean);
+      if (!targets.length) {
+        appendOutput('error', 'cat: provide a file name');
         return;
       }
-      appendOutput('error', `cat: ${target}: no such file`);
+      targets.forEach((target) => {
+        const path = resolvePath(target, cwd);
+        const entry = path ? virtualFs[path] : null;
+        if (entry?.type === 'file') {
+          appendOutput('output', entry.content ?? '');
+          completeQuest('read-post');
+        } else {
+          appendOutput('error', `cat: ${target}: no such file`);
+        }
+      });
       return;
     }
 
@@ -301,8 +309,7 @@ export default function CliTerminal() {
     }
 
     if (trimmed === 'exit') {
-      setIsOpen(false);
-      appendOutput('output', 'Exiting CLI mode.');
+      window.dispatchEvent(new CustomEvent('portfolio:request-close-cli'));
       return;
     }
 
@@ -338,6 +345,7 @@ export default function CliTerminal() {
     event.preventDefault();
     executeCommand(command);
     setCommand('');
+    setHistoryIndex(-1);
   };
 
   if (!isOpen) {
@@ -345,18 +353,18 @@ export default function CliTerminal() {
   }
 
   return (
-    <div className="fixed inset-0 z-[80] bg-slate-950/95 text-slate-100 backdrop-blur-sm">
+    <div id="cli-root" role="dialog" aria-modal="true" aria-label="Portfolio command line interface" className="fixed inset-0 z-[100] bg-[#050a12] text-slate-100">
       <div className="mx-auto flex h-full max-w-6xl flex-col p-4 sm:p-6">
-        <div className="mb-3 flex items-center justify-between rounded-t-2xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-xs uppercase tracking-[0.22em] text-slate-300">
-          <span>Portfolio CLI</span>
-          <button type="button" onClick={() => setIsOpen(false)} className="rounded-full border border-slate-700 px-2 py-1 text-[10px]">Close</button>
+        <div className="mb-3 flex items-center justify-between rounded-t-2xl border border-cyan-900/60 bg-slate-900/90 px-4 py-3 font-mono text-xs uppercase tracking-[0.22em] text-cyan-200">
+          <span className="flex items-center gap-2"><span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" /> Yug Shah // interactive terminal</span>
+          <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('portfolio:request-close-cli'))} className="rounded-full border border-slate-700 px-3 py-1 text-[10px] hover:border-cyan-400 hover:text-cyan-200">Exit (Esc)</button>
         </div>
 
-        <div className="flex-1 overflow-hidden rounded-b-2xl border border-slate-700 bg-[#0b1220] shadow-2xl shadow-slate-950/60">
-          <div className="h-full overflow-y-auto p-4 font-mono text-sm sm:p-6">
+        <div className="flex-1 overflow-hidden rounded-b-2xl border border-cyan-950 bg-[radial-gradient(ellipse_at_top_left,rgba(8,47,73,0.45),transparent_45%),#080e18] shadow-2xl shadow-cyan-950/30">
+          <div ref={outputRef} className="h-full overflow-y-auto p-4 font-mono text-sm sm:p-6">
             <div className="space-y-3">
               {output.map((line) => (
-                <div key={line.id} className={line.kind === 'error' ? 'text-rose-300' : line.kind === 'info' ? 'text-cyan-300' : 'text-slate-100'}>
+                <div key={line.id} className={`whitespace-pre-wrap leading-relaxed ${line.kind === 'error' ? 'text-rose-300' : line.kind === 'info' ? 'text-cyan-300' : 'text-slate-100'}`}>
                   {line.text}
                 </div>
               ))}
@@ -368,14 +376,14 @@ export default function CliTerminal() {
                   <span>snake</span>
                   <button type="button" onClick={() => setSnakeOpen(false)} className="rounded-full border border-slate-700 px-2 py-1 text-[10px]">Quit</button>
                 </div>
-                <div className="grid w-full max-w-[18rem] grid-cols-10 gap-1 rounded-lg bg-slate-950 p-2">
+                <div className="snake-3d-board grid w-full max-w-[18rem] grid-cols-10 gap-1 rounded-lg bg-slate-950 p-2">
                   {Array.from({ length: 10 }).map((_, rowIndex) =>
                     Array.from({ length: 10 }).map((__, colIndex) => {
                       const isHead = snake[0]?.x === colIndex && snake[0]?.y === rowIndex;
                       const isBody = snake.some((segment) => segment.x === colIndex && segment.y === rowIndex);
                       const isFood = food.x === colIndex && food.y === rowIndex;
                       const cellClass = isHead ? 'bg-emerald-400' : isBody ? 'bg-cyan-400' : isFood ? 'bg-amber-400' : 'bg-slate-800';
-                      return <div key={`${rowIndex}-${colIndex}`} className={`h-4 w-4 rounded-sm ${cellClass}`} />;
+                      return <div key={`${rowIndex}-${colIndex}`} className={`snake-cell h-4 w-4 rounded-sm ${cellClass}`} />;
                     })
                   )}
                 </div>
@@ -389,8 +397,23 @@ export default function CliTerminal() {
                 value={command}
                 onChange={(event) => setCommand(event.target.value)}
                 className="w-full border-0 bg-transparent text-slate-100 outline-none placeholder:text-slate-500"
-                placeholder="type a command"
+                placeholder="try ls, cat about.txt, help, or exit"
                 aria-label="Terminal command input"
+                autoComplete="off"
+                spellCheck={false}
+                onKeyDown={(event) => {
+                  if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    const nextIndex = Math.min(history.length - 1, historyIndex + 1);
+                    setHistoryIndex(nextIndex);
+                    setCommand(history[history.length - 1 - nextIndex] ?? '');
+                  } else if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    const nextIndex = Math.max(-1, historyIndex - 1);
+                    setHistoryIndex(nextIndex);
+                    setCommand(nextIndex < 0 ? '' : history[history.length - 1 - nextIndex] ?? '');
+                  }
+                }}
               />
             </form>
           </div>

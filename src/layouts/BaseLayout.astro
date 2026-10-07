@@ -16,7 +16,6 @@ const {
 } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
 const ogImageUrl = new URL(image, SITE_URL).toString();
-const showCli = Astro.url.searchParams.get('mode') === 'cli';
 ---
 
 <!doctype html>
@@ -56,10 +55,72 @@ const showCli = Astro.url.searchParams.get('mode') === 'cli';
   <body class="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[var(--panel)] focus:px-4 focus:py-2 focus:text-[var(--text)]">Skip to content</a>
     <SiteHeader />
-    {showCli && <CliTerminal client:only="react" />}
+    <CliTerminal client:only="react" />
+    <div class="field-companion" aria-hidden="true">
+      <svg viewBox="0 0 112 132" role="presentation">
+        <defs>
+          <linearGradient id="companion-shell" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fbbf24" />
+            <stop offset="1" stop-color="#fb923c" />
+          </linearGradient>
+          <linearGradient id="companion-glass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#cffafe" />
+            <stop offset="1" stop-color="#38bdf8" />
+          </linearGradient>
+        </defs>
+        <ellipse cx="56" cy="121" rx="31" ry="6" fill="currentColor" opacity=".14" />
+        <path d="M31 24 16 16l8 23M81 24l15-8-8 23" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="5" />
+        <path d="M30 35c0-10 8-18 18-18h16c10 0 18 8 18 18v34c0 10-8 18-18 18H48c-10 0-18-8-18-18V35Z" fill="url(#companion-shell)" stroke="currentColor" stroke-width="3" />
+        <rect x="37" y="34" width="38" height="27" rx="12" fill="url(#companion-glass)" stroke="currentColor" stroke-width="2.5" />
+        <circle cx="48" cy="47" r="3" fill="#0f172a" />
+        <circle cx="64" cy="47" r="3" fill="#0f172a" />
+        <path d="M49 55c4 4 10 4 14 0" fill="none" stroke="#0f172a" stroke-linecap="round" stroke-width="2" />
+        <path d="M42 88 37 108M70 88l5 20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="6" />
+        <path d="M29 66 18 75M83 66l11 9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="5" />
+        <circle cx="56" cy="9" r="4" fill="#34d399" />
+        <path d="M56 13v6" stroke="currentColor" stroke-width="2" />
+      </svg>
+      <span>FIELD GUIDE</span>
+    </div>
     <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <slot />
     </main>
     <SiteFooter />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const companion = document.querySelector('.field-companion');
+        const updateScrollEffects = () => {
+          const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+          const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+          root.style.setProperty('--scroll-progress', progress.toFixed(4));
+          if (companion) {
+            const top = Math.round(window.innerHeight * (0.18 + progress * 0.62));
+            companion.style.setProperty('--companion-top', `${top}px`);
+          }
+        };
+        updateScrollEffects();
+        window.addEventListener('scroll', updateScrollEffects, { passive: true });
+        window.addEventListener('resize', updateScrollEffects);
+
+        if ('IntersectionObserver' in window) {
+          const targets = document.querySelectorAll('main section, main article, main details');
+          targets.forEach((target, index) => {
+            target.setAttribute('data-reveal', '');
+            target.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+          });
+          document.documentElement.classList.add('motion-ready');
+          const observer = new IntersectionObserver((entries, currentObserver) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.setAttribute('data-visible', '');
+                currentObserver.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.08 });
+          targets.forEach((target) => observer.observe(target));
+        }
+      })();
+    </script>
   </body>
 </html>

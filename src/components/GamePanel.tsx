@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   achievementCatalog,
   completeQuest,
+  defaultState,
   getGameState,
   getLevel,
   getProgressToNextLevel,
@@ -17,10 +18,13 @@ const unlockableLabels: Record<string, string> = {
 };
 
 export default function GamePanel() {
-  const [game, setGame] = useState<GameState>(() => getGameState());
+  const [game, setGame] = useState<GameState>(defaultState);
   const [toasts, setToasts] = useState<Array<{ id: string; text: string }>>([]);
 
-  useEffect(() => subscribe(setGame), []);
+  useEffect(() => {
+    setGame(getGameState());
+    return subscribe(setGame);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -50,8 +54,6 @@ export default function GamePanel() {
 
   const level = getLevel(game.xp);
   const progress = getProgressToNextLevel(game.xp);
-  const achievements = achievementCatalog.filter((achievement) => game.achievements.includes(achievement.id));
-
   const triggerToast = (text: string) => {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('portfolio:toast', { detail: { text } }));
@@ -69,7 +71,7 @@ export default function GamePanel() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
+      <div className="game-card rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--muted)]">Player profile</p>
@@ -92,7 +94,7 @@ export default function GamePanel() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6">
+        <div className="game-card rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6">
           <div className="mb-4 flex items-center justify-between">
             <h4 className="text-xl font-bold text-[var(--text)]">Quest log</h4>
             <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{game.questIds.length}/{questCatalog.length} done</span>
@@ -100,7 +102,7 @@ export default function GamePanel() {
 
           <div className="space-y-3">
             {quests.map((quest) => (
-              <div key={quest.id} className="rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] p-3">
+              <div key={quest.id} className="game-card rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] p-3">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="font-semibold text-[var(--text)]">{quest.title}</p>
@@ -123,13 +125,13 @@ export default function GamePanel() {
           </div>
         </div>
 
-        <div className="rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6">
+        <div className="game-card rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6">
           <h4 className="text-xl font-bold text-[var(--text)]">Trophies</h4>
           <div className="mt-4 space-y-3">
             {achievementCatalog.map((achievement) => {
               const unlocked = game.achievements.includes(achievement.id);
               return (
-                <div key={achievement.id} className={`rounded-2xl border p-3 ${unlocked ? 'border-emerald-500/40 bg-emerald-500/8' : 'border-[var(--border)] bg-[var(--bg-soft)]'}`}>
+                <div key={achievement.id} className={`game-card rounded-2xl border p-3 ${unlocked ? 'border-emerald-500/40 bg-emerald-500/8' : 'border-[var(--border)] bg-[var(--bg-soft)]'}`}>
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="font-semibold text-[var(--text)]">{achievement.title}</p>
@@ -144,7 +146,7 @@ export default function GamePanel() {
         </div>
       </div>
 
-      <div className="rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6">
+      <div className="game-card rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h4 className="text-xl font-bold text-[var(--text)]">Unlocks</h4>
           <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{game.unlocks.length} active</span>

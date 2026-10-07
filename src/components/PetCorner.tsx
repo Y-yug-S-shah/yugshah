@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { feedPet, getGameState, subscribe, type PetName } from '../lib/gameState';
+import { defaultState, feedPet, getGameState, subscribe, type PetName } from '../lib/gameState';
 
 const pets: Array<{ id: PetName; label: string; emoji: string; feedItem: string; accent: string }> = [
   { id: 'dog', label: 'Dog', emoji: '🐶', feedItem: '🍪', accent: 'from-amber-300 to-orange-400' },
@@ -14,10 +14,13 @@ const itemMap = {
 } as const;
 
 export default function PetCorner() {
-  const [game, setGame] = useState(() => getGameState());
+  const [game, setGame] = useState(defaultState);
   const [lastAction, setLastAction] = useState('');
 
-  React.useEffect(() => subscribe(setGame), []);
+  React.useEffect(() => {
+    setGame(getGameState());
+    return subscribe(setGame);
+  }, []);
 
   const tasks = useMemo(
     () =>
@@ -56,7 +59,7 @@ export default function PetCorner() {
           <button
             key={pet.id}
             type="button"
-            className="rounded-[24px] border border-[var(--border)] bg-[var(--bg-soft)] p-4 text-left transition-transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+            className="game-card group rounded-[24px] border border-[var(--border)] bg-[var(--bg-soft)] p-4 text-left focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             aria-label={`Feed the ${pet.label} with ${pet.feedItem}`}
             onKeyDown={(event) => {
               if (event.key === 'Enter' || event.key === ' ') {
@@ -71,7 +74,7 @@ export default function PetCorner() {
               handleDrop(pet.id, item || pet.feedItem);
             }}
           >
-            <div className={`mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${pet.accent} text-3xl`}>
+            <div             className={`mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${pet.accent} text-3xl shadow-[0_8px_0_rgba(15,23,42,0.12)] transition-transform duration-300 group-hover:-translate-y-1`}>
               {pet.emoji}
             </div>
             <div className="flex items-center justify-between gap-3">
@@ -94,7 +97,7 @@ export default function PetCorner() {
               key={petId}
               draggable
               onDragStart={(event) => event.dataTransfer.setData('text/plain', food)}
-              className="flex h-14 w-14 cursor-grab items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--panel)] text-3xl shadow-sm active:cursor-grabbing"
+              className="game-card flex h-14 w-14 cursor-grab items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--panel)] text-3xl shadow-sm active:cursor-grabbing"
               aria-label={`Drag ${food} to the ${petId} pet`}
             >
               {food}
