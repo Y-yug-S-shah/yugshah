@@ -617,3 +617,40 @@ main article h3 {
   .garden-scene { min-height: 17rem; }
   .garden-caption { font-size: 0.44rem; }
 }
+
+@media (max-width: 360px) {
+  .site-header > div:first-child {
+    gap: 0.35rem;
+    padding-inline: 0.35rem;
+  }
+
+  .site-brand-name { display: none; }
+  .site-header > div:first-child > a { gap: 0; }
+  .site-header > div:first-child > div { gap: 0.2rem; }
+  .site-header #cli-toggle,
+  .site-header #sound-toggle,
+  .site-header #theme-toggle,
+  .site-header > div:first-child > div > a {
+    width: 2rem;
+    height: 2rem;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .garden-heading {
+    flex-direction: column;
+    padding: 1rem 1rem 0.35rem;
+  }
+
+  .garden-heading h2 { font-size: 1.7rem; }
+  .garden-layout { padding: 0.75rem 0.85rem 1rem; }
+  .garden-scene { min-height: 13rem; border-radius: 42% 16px 35% 16px; }
+  .garden-ground { width: 68%; }
+  .garden-caption { display: none; }
+  .garden-progress { align-self: flex-end; }
+}
+
+@media (max-width: 260px) {
+  .site-header > div:first-child > div > a { display: none; }
+  .garden-journal { min-width: 0; }
+}
