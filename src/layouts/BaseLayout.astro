@@ -83,7 +83,6 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
         <path d="M43 88 39 106M65 88l5 18M34 70 23 77M78 69l11 5" fill="none" stroke="#387967" stroke-linecap="round" stroke-width="6" />
         <path d="m55 68 5 7-5 7-5-7 5-7Z" fill="#f5bd73" stroke="#387967" stroke-width="1.5" />
       </svg>
-      <span>PIP-7 · MARTIAN SCOUT</span>
     </div>
     <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <slot />
@@ -224,7 +223,8 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
         }
 
         if ('IntersectionObserver' in window) {
-          const targets = document.querySelectorAll('main section, main article, main details');
+          const targets = [...document.querySelectorAll('main section, main article, main details')]
+            .filter((target) => !target.closest('astro-island'));
           targets.forEach((target, index) => {
             target.setAttribute('data-reveal', '');
             target.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
