@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { readGardenVisits, type GardenVisits } from '../lib/gardenState';
 
 type Point = { x: number; y: number };
@@ -46,6 +46,7 @@ function AlienSprite() {
 export default function AlienGarden() {
   const [visits, setVisits] = useState<GardenVisits>({ blog: [], project: [] });
   const [position, setPosition] = useState(initialPlayer);
+  const positionRef = useRef(initialPlayer);
   const [collected, setCollected] = useState<string[]>([]);
   const [message, setMessage] = useState('A quiet little planet. Wander, and see what has grown.');
   const [moves, setMoves] = useState(0);
@@ -75,35 +76,34 @@ export default function AlienGarden() {
   }, []);
 
   const move = useCallback((dx: number, dy: number) => {
-    setPosition((current) => {
-      const next = {
-        x: Math.max(0, Math.min(mapSize - 1, current.x + dx)),
-        y: Math.max(0, Math.min(mapSize - 1, current.y + dy))
-      };
-      if (next.x === current.x && next.y === current.y) return current;
+    const current = positionRef.current;
+    const next = {
+      x: Math.max(0, Math.min(mapSize - 1, current.x + dx)),
+      y: Math.max(0, Math.min(mapSize - 1, current.y + dy))
+    };
+    if (next.x === current.x && next.y === current.y) return;
 
-      setMoves((count) => count + 1);
-      const target = discoveries.find((item) => item.x === next.x && item.y === next.y);
-      if (target && collected.includes(target.id)) {
-        setMessage(`${target.name} is already resting in your collection.`);
-      } else if (target && canReach(target.requires, visits)) {
-        const nextCollected = [...collected, target.id];
-        setCollected(nextCollected);
-        window.localStorage.setItem('portfolio-garden-collected-v1', JSON.stringify(nextCollected));
-        setMessage(`${target.name} found. Thanks for taking the long way around.`);
-        window.dispatchEvent(new CustomEvent('portfolio:garden-sound', { detail: 'discovery' }));
-      } else if (target) {
-        setMessage(target.requires === 'blog'
-          ? 'This seed is sleeping. Read a field note to wake it.'
-          : target.requires === 'project'
-            ? 'A crystal is waiting. Explore a project to reveal its signal.'
-            : 'The orchid opens after a field note and a project visit.');
-      } else {
-        setMessage('The garden shifts softly beneath your feet.');
-      }
-
-      return next;
-    });
+    positionRef.current = next;
+    setPosition(next);
+    setMoves((count) => count + 1);
+    const target = discoveries.find((item) => item.x === next.x && item.y === next.y);
+    if (target && collected.includes(target.id)) {
+      setMessage(`${target.name} is already resting in your collection.`);
+    } else if (target && canReach(target.requires, visits)) {
+      const nextCollected = [...collected, target.id];
+      setCollected(nextCollected);
+      window.localStorage.setItem('portfolio-garden-collected-v1', JSON.stringify(nextCollected));
+      setMessage(`${target.name} found. Thanks for taking the long way around.`);
+      window.dispatchEvent(new CustomEvent('portfolio:garden-sound', { detail: 'discovery' }));
+    } else if (target) {
+      setMessage(target.requires === 'blog'
+        ? 'This seed is sleeping. Read a field note to wake it.'
+        : target.requires === 'project'
+          ? 'A crystal is waiting. Explore a project to reveal its signal.'
+          : 'The orchid opens after a field note and a project visit.');
+    } else {
+      setMessage('The garden shifts softly beneath your feet.');
+    }
   }, [collected, visits]);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ export default function AlienGarden() {
                   key={`${x}-${y}`}
                   type="button"
                   className={`garden-tile${occupied ? ' is-occupied' : ''}${item ? ' has-discovery' : ''}${item && !unlocked ? ' is-sleeping' : ''}`}
-                  style={{ '--tile-x': x, '--tile-y': y } as React.CSSProperties}
+                  style={{ '--tile-x': x, '--tile-y': y } as import('react').CSSProperties}
                   aria-label={item ? `${item.name}${found ? ', collected' : unlocked ? ', ready to collect' : ', locked'}` : `Garden path, row ${y + 1}, column ${x + 1}`}
                   onClick={() => {
                     const dx = Math.sign(x - position.x);
