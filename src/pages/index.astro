@@ -2,11 +2,25 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import profile from '../data/profile.json';
 import projects from '../data/projects.json';
+import { SITE_URL } from '../config/site';
 
 const featuredProjects = projects.filter((project) => project.featured);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: profile.name,
+  url: SITE_URL,
+  description: profile.bio,
+  publisher: {
+    '@type': 'Person',
+    name: profile.name,
+    url: SITE_URL,
+    email: profile.email
+  }
+};
 ---
 
-<BaseLayout title="Yug Shah | Security Engineer" description={profile.bio}>
+<BaseLayout title="Yug Shah | Security Engineer" description={profile.bio} image="/og/home.svg" jsonLd={jsonLd}>
   <section class="grid gap-8 py-8 md:grid-cols-[1.3fr_0.7fr] md:items-center lg:py-14">
     <div class="space-y-6">
       <p class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-[var(--muted)]">

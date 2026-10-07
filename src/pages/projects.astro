@@ -1,9 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import projects from '../data/projects.json';
+import { SITE_URL } from '../config/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Projects',
+  description: 'Explore selected portfolio projects from Yug Shah.',
+  hasPart: projects.map((project) => ({
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: project.summary,
+    url: `${SITE_URL}/projects/${project.slug}`
+  }))
+};
 ---
 
-<BaseLayout title="Projects | Yug Shah" description="Explore selected portfolio projects from Yug Shah.">
+<BaseLayout title="Projects | Yug Shah" description="Explore selected portfolio projects from Yug Shah." image="/og/projects.svg" jsonLd={jsonLd} canonicalPath="/projects">
   <section class="space-y-8 py-6">
     <div class="space-y-3">
       <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Projects</p>

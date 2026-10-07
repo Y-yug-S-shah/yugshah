@@ -1,9 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import profile from '../data/profile.json';
+import { SITE_URL } from '../config/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Contact Yug Shah',
+  description: 'Contact Yug Shah about projects, opportunities, or technical discussions.',
+  url: `${SITE_URL}/contact`,
+  mainEntity: {
+    '@type': 'Person',
+    name: profile.name,
+    email: profile.email,
+    sameAs: [
+      profile.socialLinks.linkedin,
+      profile.socialLinks.github,
+      profile.socialLinks.youtube
+    ]
+  }
+};
 ---
 
-<BaseLayout title="Contact | Yug Shah" description="Contact Yug Shah about projects, opportunities, or technical discussions.">
+<BaseLayout title="Contact | Yug Shah" description="Contact Yug Shah about projects, opportunities, or technical discussions." image="/og/home.svg" jsonLd={jsonLd} canonicalPath="/contact">
   <section class="grid gap-8 py-6 lg:grid-cols-[0.9fr_1.1fr]">
     <div class="space-y-5">
       <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Contact</p>

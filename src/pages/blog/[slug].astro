@@ -1,23 +1,51 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_URL } from '../../config/site';
 
-export function getStaticPaths() {
-  return [
-    { params: { slug: 'sample-post' } },
-    { params: { slug: 'another-placeholder' } }
-  ];
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.mdx?$/, '') },
+    props: { postId: post.id }
+  }));
 }
 
-const { slug } = Astro.params;
+const posts = await getCollection('blog');
+const post = posts.find((entry) => entry.id === Astro.props.postId) ?? posts[0];
+const { Content } = await render(post);
+const slug = post.id.replace(/\.mdx?$/, '');
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  image: `${SITE_URL}/og/blog-${slug}.svg`,
+  datePublished: post.data.pubDate,
+  dateModified: post.data.updatedDate || post.data.pubDate,
+  author: {
+    '@type': 'Person',
+    name: post.data.author || 'Yug Shah'
+  },
+  keywords: post.data.tags.join(', '),
+  mainEntityOfPage: `${SITE_URL}/blog/${slug}`
+};
 ---
 
-<BaseLayout title={`${slug} | Blog | Yug Shah`} description="Placeholder blog article page for the portfolio blog.">
+<BaseLayout title={`${post.data.title} | Blog | Yug Shah`} description={post.data.description} image={`/og/blog-${slug}.svg`} jsonLd={jsonLd} canonicalPath={`/blog/${slug}`} type="article">
   <article class="mx-auto max-w-3xl space-y-6 py-8">
     <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Blog post</p>
-    <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{slug}</h1>
-    <p class="text-base leading-8 text-[var(--muted)]">This is a placeholder article page. The real blog content and reading experience are planned for Phase 3 and will include MDX content, tags, reading progress, and richer storytelling.</p>
-    <div class="rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6 text-base leading-8 text-[var(--muted)]">
-      A more complete article experience will include a styled outline, share links, related posts, comment-free reading flow, and article metadata when the blog system lands in later phases.
+    <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{post.data.title}</h1>
+    <div class="flex flex-wrap gap-2">
+      {post.data.tags.map((tag) => (
+        <a href={`/blog/tags/${tag}`} class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">{tag}</a>
+      ))}
+    </div>
+    <p class="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">
+      {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+    </p>
+    <div class="prose prose-invert max-w-none rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6 text-base leading-8 text-[var(--muted)]">
+      <Content />
     </div>
     <a href="/blog" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">Return to blog</a>
   </article>

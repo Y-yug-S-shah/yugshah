@@ -1,23 +1,35 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { tag: 'security' } },
-    { params: { tag: 'networking' } },
-    { params: { tag: 'product-thinking' } }
-  ];
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+  return tags.map((tag) => ({ params: { tag } }));
 }
 
 const { tag } = Astro.params;
 const normalizedTag = tag?.replace(/-/g, ' ');
+const posts = (await getCollection('blog'))
+  .filter((post) => post.data.tags.includes(tag ?? ''))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
 ---
 
 <BaseLayout title={`${normalizedTag} | Blog | Yug Shah`} description={`Browse blog posts tagged with ${normalizedTag}.`}>
   <section class="space-y-6 py-8">
     <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Tag archive</p>
     <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{normalizedTag}</h1>
-    <p class="max-w-2xl text-base leading-8 text-[var(--muted)]">This tag archive is a placeholder for the later MDX-powered blog and tag pages. Real article lists will land in Phase 3.</p>
+
+    <div class="space-y-4">
+      {posts.map((post) => (
+        <article class="rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-5">
+          <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="text-2xl font-bold text-[var(--text)]">{post.data.title}</a>
+          <p class="mt-3 text-base leading-8 text-[var(--muted)]">{post.data.description}</p>
+        </article>
+      ))}
+    </div>
+
     <a href="/blog" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Back to blog</a>
   </section>
 </BaseLayout>

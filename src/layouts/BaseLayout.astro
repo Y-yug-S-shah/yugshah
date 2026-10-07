@@ -3,9 +3,18 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { SITE_URL } from '../config/site';
+import profile from '../data/profile.json';
 
-const { title, description, canonicalPath = Astro.url.pathname } = Astro.props;
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  image = '/og/home.svg',
+  type = 'website',
+  jsonLd
+} = Astro.props;
 const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
+const ogImageUrl = new URL(image, SITE_URL).toString();
 ---
 
 <!doctype html>
@@ -16,14 +25,22 @@ const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#0f172a" />
-    <meta property="og:type" content="website" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:site_name" content="Yug Shah" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="me" href={profile.socialLinks.linkedin} />
+    <link rel="me" href={profile.socialLinks.github} />
+    <link rel="me" href={profile.socialLinks.youtube} />
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('theme');
@@ -31,6 +48,7 @@ const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
         document.documentElement.setAttribute('data-theme', preferredTheme);
       })();
     </script>
+    {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
     <title>{title}</title>
   </head>
   <body class="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">

@@ -1,8 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_URL } from '../config/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: '404 Not Found',
+  url: `${SITE_URL}/404`,
+  description: 'The page you requested could not be found.'
+};
 ---
 
-<BaseLayout title="404 | Yug Shah" description="The page you requested could not be found.">
+<BaseLayout title="404 | Yug Shah" description="The page you requested could not be found." image="/og/home.svg" jsonLd={jsonLd} canonicalPath="/404">
   <section class="flex min-h-[50vh] flex-col items-center justify-center py-16 text-center">
     <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Error 404</p>
     <h1 class="mt-4 text-5xl font-black tracking-tight text-[var(--text)]">Lost in the signal.</h1>

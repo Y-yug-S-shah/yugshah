@@ -1,11 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import resumeData from '../data/resume.json';
+import { SITE_URL } from '../config/site';
 
 const { basics, work, education, skills, certifications, awards } = resumeData;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: basics.name,
+  email: basics.email,
+  url: basics.url,
+  jobTitle: basics.label,
+  description: basics.summary,
+  sameAs: [
+    'https://www.linkedin.com/in/yugshah369/',
+    'https://github.com/Y-yug-S-shah',
+    'https://www.youtube.com/@DefenderDiarybyYug'
+  ],
+  knowsAbout: ['Cybersecurity', 'Networking', 'Security operations', 'Technical validation']
+};
 ---
 
-<BaseLayout title="Resume | Yug Shah" description="Professional resume for Yug Shah, covering security roles, research, education, and certifications.">
+<BaseLayout title="Resume | Yug Shah" description="Professional resume for Yug Shah, covering security roles, research, education, and certifications." image="/og/resume.svg" jsonLd={jsonLd} canonicalPath="/resume">
   <article class="prose prose-invert max-w-none rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 lg:p-10">
     <header class="mb-10 border-b border-[var(--border)] pb-6">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
