@@ -7,7 +7,6 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const gitPath = process.env.GIT_EXECUTABLE || findGitExecutable();
 const ignoredPath = /(^|\/)(\.git|node_modules|dist|\.astro)(\/|$)|(^|\/)\.env(?:$|\.)|^public\/og\//i;
 const generatedPathspecs = [
-  ':(exclude)public/resume.pdf',
   ':(exclude)public/og/**'
 ];
 const debounceMs = 1800;
