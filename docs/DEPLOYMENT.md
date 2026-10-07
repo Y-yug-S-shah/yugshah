@@ -34,13 +34,19 @@ How to obtain the free keys:
 - Resend: create a free account, then generate an API key from the Resend dashboard.
 - Contact email: use the approved public address or any account you want to receive the contact form submissions.
 
-## 4. Create the D1 database and apply the schema
+## 4. Create the D1 database and apply the schema (optional)
+
+The portfolio site can deploy without D1. The `stats` endpoint already includes a safe fallback, so you do not need a database to get the site running.
+
+If you do want database-backed stats later:
 
 1. In Cloudflare Dashboard, open D1.
 2. Create a new database and name it `portfolio-site-db` (or your chosen name).
 3. Open the new database and use the SQL editor to run the statements from `schema.sql`.
-4. Update `wrangler.toml` so the `database_name` and `database_id` match the created database.
+4. Update `wrangler.toml` by uncommenting the `[[d1_databases]]` section and replacing the placeholder with the real database ID.
 5. In Cloudflare Pages, add the D1 binding named `DB` if you want the stats and guestbook APIs to use the database.
+
+If you are deploying for the first time and do not yet have a real D1 database, leave the block commented out. Deploying with the zero-value UUID is what triggers the Cloudflare error.
 
 ## 5. Update the site URL constant
 
