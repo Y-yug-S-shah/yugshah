@@ -109,7 +109,7 @@ try {
 }
 
 console.log('Auto-publish watcher ready on main. Saving tracked project files will commit and push after a short pause.');
-console.log('Secrets (.env*) and generated PDF/OG assets are excluded; Cloudflare Pages builds the deployment from each main push.');
+console.log('Secrets (.env*) and generated OG assets are excluded; Cloudflare Pages builds the deployment from each main push.');
 
 const watcher = watch(projectRoot, { recursive: true }, (_eventType, filename) => {
   if (filename === null) {
