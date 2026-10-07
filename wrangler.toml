@@ -1,0 +1,11 @@
+name = "portfolio-site"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "dist"
+
+[vars]
+SITE_URL = "https://portfolio-site.pages.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-site-db"
+database_id = "00000000-0000-0000-0000-000000000000"

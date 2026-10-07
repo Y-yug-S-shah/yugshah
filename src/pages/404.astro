@@ -13,12 +13,17 @@ const jsonLd = {
 
 <BaseLayout title="404 | Yug Shah" description="The page you requested could not be found." image="/og/home.svg" jsonLd={jsonLd} canonicalPath="/404">
   <section class="flex min-h-[50vh] flex-col items-center justify-center py-16 text-center">
-    <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Error 404</p>
-    <h1 class="mt-4 text-5xl font-black tracking-tight text-[var(--text)]">Lost in the signal.</h1>
-    <p class="mt-4 max-w-xl text-base leading-8 text-[var(--muted)]">The route you asked for is not here yet. Head back to the dashboard or explore the portfolio instead.</p>
-    <div class="mt-8 flex flex-wrap justify-center gap-3">
-      <a href="/" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Return home</a>
-      <a href="/projects" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 py-3 text-sm font-semibold text-[var(--text)]">View projects</a>
+    <div class="rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-8 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
+      <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Error 404</p>
+      <h1 class="mt-4 text-5xl font-black tracking-tight text-[var(--text)]">Lost in the signal.</h1>
+      <p class="mt-4 max-w-xl text-base leading-8 text-[var(--muted)]">The route you asked for is not here yet. You have been redirected to a safe fallback zone.</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Return home</a>
+        <a href="/projects" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 py-3 text-sm font-semibold text-[var(--text)]">View projects</a>
+      </div>
+      <div class="mt-8 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-soft)] p-4 text-sm text-[var(--muted)]">
+        <span class="font-semibold text-[var(--text)]">Quest status:</span> Signal lost. Reward: +15 XP for returning to base.
+      </div>
     </div>
   </section>
 </BaseLayout>

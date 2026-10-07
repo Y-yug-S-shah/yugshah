@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import CliTerminal from '../components/CliTerminal.tsx';
 import { SITE_URL } from '../config/site';
 import profile from '../data/profile.json';
 
@@ -15,6 +16,7 @@ const {
 } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
 const ogImageUrl = new URL(image, SITE_URL).toString();
+const showCli = Astro.url.searchParams.get('mode') === 'cli';
 ---
 
 <!doctype html>
@@ -54,6 +56,7 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
   <body class="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[var(--panel)] focus:px-4 focus:py-2 focus:text-[var(--text)]">Skip to content</a>
     <SiteHeader />
+    {showCli && <CliTerminal client:only="react" />}
     <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <slot />
     </main>

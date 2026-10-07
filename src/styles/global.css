@@ -54,6 +54,11 @@ img {
   max-width: 100%;
 }
 
+:focus-visible {
+  outline: 3px solid rgba(251, 191, 36, 0.7);
+  outline-offset: 3px;
+}
+
 ::selection {
   background: rgba(251, 191, 36, 0.3);
 }
