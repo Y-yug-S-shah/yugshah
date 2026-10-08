@@ -416,7 +416,12 @@ export default function CliTerminal() {
                   autoComplete="off"
                   spellCheck={false}
                   onKeyDown={(event) => {
-                    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      executeCommand(command);
+                      setCommand('');
+                      setHistoryIndex(-1);
+                    } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') {
                       event.preventDefault();
                       executeCommand('clear');
                     } else if (event.key === 'ArrowUp') {
