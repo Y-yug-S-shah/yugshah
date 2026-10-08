@@ -129,6 +129,7 @@
         mesh.position.set(...placements[index] as [number, number, number]);
         mesh.rotation.set(index * 0.55, index * 0.9, index * 0.22);
         mesh.userData.phase = index * 1.7;
+        mesh.userData.baseY = mesh.position.y;
         scene?.add(mesh);
         return mesh;
       });
@@ -170,7 +171,7 @@
       const render = (timestamp: number) => {
         animationFrame = 0;
         if (!composer || !camera || document.hidden || motionPreference.matches) return;
-        if (timestamp - previousFrame < 40) {
+        if (timestamp - previousFrame < 1000 / 30) {
           animationFrame = window.requestAnimationFrame(render);
           return;
         }
@@ -180,7 +181,7 @@
           const phase = mesh.userData.phase as number;
           mesh.rotation.x += 0.0012;
           mesh.rotation.y += 0.0017;
-          mesh.position.y += Math.sin(seconds + phase) * 0.0014;
+          mesh.position.y = (mesh.userData.baseY as number) + Math.sin(seconds + phase) * 0.035;
         });
         camera.position.x += (pointerX - camera.position.x * 0.05) * 0.008;
         camera.position.y += (-pointerY - camera.position.y * 0.05) * 0.008;
