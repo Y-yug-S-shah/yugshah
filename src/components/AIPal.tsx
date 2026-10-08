@@ -181,7 +181,7 @@ export default function AIPal() {
                 <span aria-hidden="true">✦</span>
               </button>
             ))}
-            <div className="mori-pet-wrap" aria-label={`${pal.name} is ${reaction}`}>
+            <div className="mori-pet-wrap" aria-label={`${pal.name} is ${reaction}`} role="img">
               <div className="mori-pet">
                 <span className="mori-ear ear-left" />
                 <span className="mori-ear ear-right" />
