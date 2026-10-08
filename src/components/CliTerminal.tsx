@@ -355,7 +355,8 @@ export default function CliTerminal() {
 
   const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    executeCommand(command);
+    const enteredCommand = event.currentTarget.querySelector<HTMLInputElement>('#cli-command')?.value ?? command;
+    executeCommand(enteredCommand);
     setCommand('');
     setHistoryIndex(-1);
   };
@@ -418,7 +419,7 @@ export default function CliTerminal() {
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
                       event.preventDefault();
-                      executeCommand(command);
+                      executeCommand(event.currentTarget.value);
                       setCommand('');
                       setHistoryIndex(-1);
                     } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') {
