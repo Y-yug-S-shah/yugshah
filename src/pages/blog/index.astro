@@ -41,9 +41,12 @@ const jsonLd = {
             </div>
             <h2 class="text-2xl font-bold text-[var(--text)]">{post.data.title}</h2>
             <p class="mt-3 text-sm leading-7 text-[var(--muted)]">{post.data.description}</p>
-            <div class="mt-4 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
               <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-              <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="font-semibold text-[var(--accent-strong)]">Read article →</a>
+              <div class="flex flex-wrap gap-4">
+                <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="font-semibold text-[var(--accent-strong)]">Read article →</a>
+                {post.data.mediumUrl && <a href={post.data.mediumUrl} target="_blank" rel="noreferrer" class="font-semibold text-[var(--muted)]">Read on Medium ↗</a>}
+              </div>
             </div>
           </div>
         </article>
