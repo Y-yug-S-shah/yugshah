@@ -116,7 +116,7 @@ const skillTree = [
     <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
       {featuredProjects.map((project) => (
         <article class="overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--panel)]">
-          <img src={project.image} alt={project.title} class="h-48 w-full object-cover" />
+          <img src={project.image} alt={project.imageAlt} class="h-48 w-full object-cover" />
           <div class="space-y-4 p-5">
             <div class="flex items-center justify-between gap-3">
               <h3 class="text-xl font-bold text-[var(--text)]">{project.title}</h3>

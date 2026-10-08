@@ -10,7 +10,8 @@
     },
     "year": 2026,
     "featured": true,
-    "image": "/media/authguardian-dashboard.jpg"
+    "image": "/media/authguardian-dashboard.jpg",
+    "imageAlt": "AuthGuardian Splunk dashboard showing authentication event activity"
   },
   {
     "title": "PhishHound",
@@ -23,6 +24,7 @@
     },
     "year": 2026,
     "featured": true,
-    "image": "/media/phishhound-analysis.jpg"
+    "image": "/media/phishhound-analysis.jpg",
+    "imageAlt": "PhishHound command-line output analyzing a suspicious email header"
   }
 ]
