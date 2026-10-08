@@ -11,6 +11,7 @@
   let renderer: import('three').WebGLRenderer | undefined;
   let composer: import('three/addons/postprocessing/EffectComposer.js').EffectComposer | undefined;
   let scene: import('three').Scene | undefined;
+  let threeApi: typeof import('three') | undefined;
   let camera: import('three').PerspectiveCamera | undefined;
   let glassObjects: import('three').Mesh[] = [];
   let animationFrame = 0;
@@ -30,17 +31,17 @@
     composer?.dispose();
     renderer?.dispose();
     scene?.traverse((object) => {
-      if (object instanceof (globalThis as typeof globalThis & { THREE?: typeof import('three') }).THREE?.Mesh) {
+      if (threeApi && object instanceof threeApi.Mesh) {
         object.geometry.dispose();
-        const material = object.material;
-        if (Array.isArray(material)) material.forEach((item) => item.dispose());
-        else material.dispose();
+        if (Array.isArray(object.material)) object.material.forEach((item) => item.dispose());
+        else object.material.dispose();
       }
     });
     renderer?.domElement.remove();
     renderer = undefined;
     composer = undefined;
     scene = undefined;
+    threeApi = undefined;
     camera = undefined;
     glassObjects = [];
   };
@@ -48,19 +49,19 @@
   const start = async () => {
     if (!canvas || saveData || motionPreference.matches || document.hidden || renderer) return;
 
-    const [
-      THREE,
-      { EffectComposer },
-      { RenderPass },
-      { UnrealBloomPass }
-    ] = await Promise.all([
-      import('three'),
-      import('three/addons/postprocessing/EffectComposer.js'),
-      import('three/addons/postprocessing/RenderPass.js'),
-      import('three/addons/postprocessing/UnrealBloomPass.js')
-    ]);
-
     try {
+      const [
+        THREE,
+        { EffectComposer },
+        { RenderPass },
+        { UnrealBloomPass }
+      ] = await Promise.all([
+        import('three'),
+        import('three/addons/postprocessing/EffectComposer.js'),
+        import('three/addons/postprocessing/RenderPass.js'),
+        import('three/addons/postprocessing/UnrealBloomPass.js')
+      ]);
+      threeApi = THREE;
       const viewport = { width: window.innerWidth, height: window.innerHeight };
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera(38, viewport.width / viewport.height, 0.1, 80);
