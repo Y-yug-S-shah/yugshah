@@ -17,7 +17,7 @@ const virtualFs: Record<string, FileNode> = {
   '~': { type: 'dir', children: ['readme.txt', 'resume.txt', 'contact.txt', 'experience', 'projects', 'blog', 'skills'] },
   '~/readme.txt': {
     type: 'file',
-    content: 'YUG SHAH // SECURITY ENGINEERING\n\nThis workspace covers security, networking, technical validation, and practical security tooling.\n\nBrowse: experience/  projects/  blog/  skills/\nTry: ls, tree, cat resume.txt, cat experience/palo-alto-networks.txt'
+    content: 'YUG SHAH // SECURITY ENGINEERING\n\nThis workspace covers security, networking, technical validation, and practical security tooling.\n\nBrowse: experience/  projects/  blog/  skills/\nTry: ls, cat resume.txt, cat experience/palo-alto-networks.txt, open game'
   },
   '~/resume.txt': {
     type: 'file',
@@ -123,18 +123,6 @@ function resolvePath(input: string, cwd: string) {
   return path in virtualFs ? path : null;
 }
 
-function buildTree(path: string, depth = 0): string[] {
-  const entry = virtualFs[path];
-  if (entry?.type !== 'dir') return [];
-  return (entry.children ?? []).flatMap((name, index, siblings) => {
-    const last = index === siblings.length - 1;
-    const childPath = path === '~' ? `~/${name}` : `${path}/${name}`;
-    const child = virtualFs[childPath];
-    const prefix = `${'  '.repeat(depth)}${last ? '└── ' : '├── '}${name}${child?.type === 'dir' ? '/' : ''}`;
-    return [prefix, ...buildTree(childPath, depth + 1)];
-  });
-}
-
 export default function CliTerminal() {
   const [isOpen, setIsOpen] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'cli');
   const [cwd, setCwd] = useState('~');
@@ -177,7 +165,7 @@ export default function CliTerminal() {
   }, [output]);
 
   const commands = useMemo(() => [
-    'help', 'ls [path]', 'cd <dir>', 'pwd', 'tree', 'cat <file>', 'grep <term> <file>',
+    'help', 'ls [path]', 'cd <dir>', 'pwd', 'cat <file>', 'grep <term> <file>',
     'head [-n count] <file>', 'whoami', 'neofetch', 'open <page>', 'theme <light|dark>',
     'history', 'clear', 'echo <text>', 'date', 'sudo hire-me', 'exit'
   ], []);
@@ -302,11 +290,6 @@ export default function CliTerminal() {
       return;
     }
 
-    if (trimmed === 'tree') {
-      appendOutput('output', `~/\n${buildTree('~').join('\n')}`);
-      return;
-    }
-
     if (trimmed === 'neofetch') {
       appendOutput('info', buildAscii);
       return;
@@ -326,8 +309,8 @@ export default function CliTerminal() {
     if (trimmed.startsWith('open ')) {
       const target = trimmed.replace(/^open\s+/, '');
       const route = target.startsWith('/') ? target : `/${target}`;
-      if (!['/', '/resume', '/projects', '/blog', '/contact'].includes(route)) {
-        appendOutput('error', `open: unknown route ${route}. Try /, /resume, /projects, /blog, or /contact.`);
+      if (!['/', '/resume', '/projects', '/blog', '/contact', '/game'].includes(route)) {
+        appendOutput('error', `open: unknown route ${route}. Try /, /game, /resume, /projects, /blog, or /contact.`);
         return;
       }
       completeQuest('explore-projects');
@@ -387,7 +370,7 @@ export default function CliTerminal() {
             </div>
             <p className="cli-section-label cli-quick-label">QUICK COMMANDS</p>
             <div className="cli-quick-commands">
-              {['ls', 'tree', 'whoami', 'help'].map((quickCommand) => (
+              {['ls', 'whoami', 'help', 'open game'].map((quickCommand) => (
                 <button type="button" key={quickCommand} onClick={() => executeCommand(quickCommand)}>{quickCommand}</button>
               ))}
             </div>
