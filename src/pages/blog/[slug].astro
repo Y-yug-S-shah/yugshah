@@ -45,7 +45,9 @@ const jsonLd = {
       {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
     </p>
     <div class="prose prose-invert max-w-none rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6 text-base leading-8 text-[var(--muted)]">
-      <Content />
+      {post.data.contentHtml
+        ? <div class="medium-article" set:html={post.data.contentHtml} />
+        : <Content />}
     </div>
     {post.data.mediumUrl && (
       <a href={post.data.mediumUrl} target="_blank" rel="noreferrer" class="inline-flex text-sm font-semibold text-[var(--accent-strong)]">

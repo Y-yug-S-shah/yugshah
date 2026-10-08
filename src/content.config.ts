@@ -11,6 +11,7 @@ const blog = defineCollection({
     tags: z.array(z.string()).default([]),
     cover: z.string().optional(),
     mediumUrl: z.url().optional(),
+    contentHtml: z.string().optional(),
     draft: z.boolean().default(false),
     author: z.string().default('Yug Shah')
   })
