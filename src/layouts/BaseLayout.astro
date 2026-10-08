@@ -4,6 +4,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import CliTerminal from '../components/CliTerminal.tsx';
 import CyberBackdrop from '../components/CyberBackdrop.astro';
+import AgentSidebar from '../components/AgentSidebar.astro';
 import { SITE_URL } from '../config/site';
 import profile from '../data/profile.json';
 
@@ -58,79 +59,48 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
     <CyberBackdrop />
     <SiteHeader />
     <CliTerminal client:only="react" />
-    <div class="field-companion" aria-hidden="true">
-      <svg viewBox="0 0 184 126" role="presentation">
-        <defs>
-          <linearGradient id="dog-coat" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#f8bd72" />
-            <stop offset="1" stop-color="#c8783c" />
-          </linearGradient>
-        </defs>
-        <ellipse cx="101" cy="115" rx="68" ry="6" fill="#020617" opacity=".35" />
-        <g class="dog-tail">
-          <path d="M137 62c25-22 43-9 33 12-7 15-21 17-33 7 18 0 23-9 15-15-4-4-9-4-15-4Z" fill="url(#dog-coat)" stroke="#a95632" stroke-width="2" />
-          <path d="M165 57c7-2 10 3 7 9-3 5-7 7-12 8 5-6 7-11 5-17Z" fill="#fff0d7" />
-        </g>
-        <g class="dog-body">
-          <path d="M52 58c15-19 49-22 77-9 13 6 20 20 14 37-7 16-35 22-66 15-21-5-35-19-34-34Z" fill="url(#dog-coat)" stroke="#a95632" stroke-width="2" />
-          <path d="M78 70c18 8 38 9 57 2l11 18c-16 14-50 16-76 4 10-4 16-12 8-24Z" fill="#fff0d7" />
-          <path d="M43 65c-10-11-20-18-28-21-6-3-8 1-6 6 4 11 13 19 25 25Z" fill="url(#dog-coat)" stroke="#a95632" stroke-width="2" />
-          <path d="M13 47c-3-3-5 0-3 4 3 7 8 12 15 16-2-7-5-14-12-20Z" fill="#fff0d7" />
-          <path d="M29 55c-8-14-5-31 8-40l12 22M46 37c-1-18 9-29 23-31l2 34" fill="#d8874c" stroke="#a95632" stroke-width="2" stroke-linejoin="round" />
-          <path d="m35 25 3-4 6 13M55 34l3-17 9-3 1 21" fill="#543323" />
-          <path d="M29 56c8-13 24-19 41-14 13 4 20 14 18 26-8 14-31 17-51 8-8-4-13-12-8-20Z" fill="url(#dog-coat)" />
-          <path d="M29 68c10 1 18-3 25 4 6 6 3 17-7 20-12 4-29-2-35-11-4-6 3-13 17-13Z" fill="#fff0d7" />
-          <circle cx="44" cy="55" r="2.8" fill="#24180f" />
-          <circle cx="45" cy="54" r=".8" fill="#fff" />
-          <path d="M14 73c-1-4 3-6 7-4l5 4-6 5c-3 1-5-2-6-5Z" fill="#302018" />
-          <path d="M28 80c4 5 9 6 13 5" fill="none" stroke="#8a4c36" stroke-linecap="round" stroke-width="1.6" />
-          <path class="dog-leg dog-leg-rear" d="M119 87v20q0 5 6 5h8" fill="none" stroke="#a95632" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" />
-          <path class="dog-leg dog-leg-front" d="M77 85v21q0 5 6 5h8" fill="none" stroke="#b96a3c" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" />
-          <path class="dog-leg dog-leg-rear dog-leg-back" d="M138 83v20q0 5 6 5h7" fill="none" stroke="#82472e" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
-          <path class="dog-leg dog-leg-front dog-leg-back" d="M94 86v19q0 5 6 5h7" fill="none" stroke="#945433" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
-        </g>
-      </svg>
+    <div class="site-shell">
+      <main id="main-content" class="site-main min-w-0 py-10">
+        <slot />
+      </main>
+      <AgentSidebar />
     </div>
-    <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-      <slot />
-    </main>
     <SiteFooter />
-    <script is:inline>
-      (() => {
-        const companion = document.querySelector('.field-companion');
-        let scrollFrame = 0;
-        const updateScrollEffects = () => {
-          if (scrollFrame) return;
-          scrollFrame = window.requestAnimationFrame(() => {
-            scrollFrame = 0;
-            const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-            const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-            if (companion) companion.style.setProperty('--companion-top', `${Math.round(window.innerHeight * (0.22 + progress * 0.68))}px`);
-          });
-        };
-        updateScrollEffects();
-        window.addEventListener('scroll', updateScrollEffects, { passive: true });
-        window.addEventListener('resize', updateScrollEffects);
+    <script>
+      const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const targets = [...document.querySelectorAll(
+        'main > section, main > article, main article.resume-role-card, main article.resume-project-card, main article.resume-skill-card, main article.resume-education-card, main article.experience-card'
+      )].filter((target) => !target.closest('astro-island'));
 
-        if ('IntersectionObserver' in window) {
-          const targets = [...document.querySelectorAll('main section, main article, main details')]
-            .filter((target) => !target.closest('astro-island'));
-          targets.forEach((target, index) => {
-            target.setAttribute('data-reveal', '');
-            target.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
-          });
-          document.documentElement.classList.add('motion-ready');
-          const observer = new IntersectionObserver((entries, currentObserver) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.setAttribute('data-visible', '');
-                currentObserver.unobserve(entry.target);
-              }
+      if (!motionPreference.matches && targets.length) {
+        const animateContent = async () => {
+          try {
+            const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+              import('gsap'),
+              import('gsap/ScrollTrigger')
+            ]);
+            gsap.registerPlugin(ScrollTrigger);
+            targets.forEach((target) => {
+              gsap.fromTo(target, { y: 18, opacity: 0 }, {
+                y: 0,
+                opacity: 1,
+                duration: 0.68,
+                ease: 'power2.out',
+                clearProps: 'transform,opacity',
+                scrollTrigger: { trigger: target, start: 'top 92%', once: true }
+              });
             });
-          }, { threshold: 0.08 });
-          targets.forEach((target) => observer.observe(target));
+          } catch (error) {
+            console.error('GSAP could not initialize the optional scroll reveals.', error);
+          }
+        };
+
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(() => void animateContent(), { timeout: 2200 });
+        } else {
+          window.setTimeout(() => void animateContent(), 800);
         }
-      })();
+      }
     </script>
   </body>
 </html>
