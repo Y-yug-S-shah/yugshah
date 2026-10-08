@@ -228,7 +228,7 @@ const nav = [
     localStorage.setItem(soundStorageKey, soundEnabled ? 'on' : 'off');
     syncSoundButton();
     if (soundEnabled) {
-      void startAmbience();
+      void startAmbience().then(playClick);
     } else {
       stopAmbience();
     }
