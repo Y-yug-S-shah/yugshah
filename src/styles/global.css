@@ -11,7 +11,6 @@
   --accent-soft: rgba(251, 191, 36, 0.16);
   --accent-strong: #f97316;
   --shadow: rgba(15, 23, 42, 0.12);
-  --scroll-progress: 0;
 }
 
 :root[data-theme='dark'] {
@@ -38,42 +37,11 @@ body {
   position: relative;
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 12% calc(12% + var(--bg-shift, 0%)), rgba(115, 177, 146, 0.16), transparent 42%),
-    radial-gradient(ellipse at 88% calc(82% - var(--bg-shift, 0%)), rgba(204, 151, 111, 0.13), transparent 39%),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family:
     'Segoe UI', 'Inter', 'Helvetica Neue', Arial, 'Nimbus Sans L', sans-serif;
   line-height: 1.6;
-}
-
-body::before,
-body::after {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  content: '';
-}
-
-body::before {
-  opacity: 0.32;
-  background-image:
-    radial-gradient(circle, rgba(128, 166, 134, 0.36) 1px, transparent 1.6px),
-    radial-gradient(circle, rgba(220, 169, 114, 0.25) 1px, transparent 1.7px);
-  background-position: 0 0, 36px 52px;
-  background-size: 82px 82px, 137px 137px;
-  mask-image: linear-gradient(to bottom, #000, transparent 95%);
-  animation: dust-drift 36s linear infinite;
-}
-
-body::after {
-  opacity: 0.52;
-  background:
-    radial-gradient(ellipse at 8% 32%, rgba(118, 170, 139, 0.16), transparent 31%),
-    radial-gradient(ellipse at 91% 70%, rgba(223, 160, 116, 0.13), transparent 32%);
-  animation: ambient-breathe 19s ease-in-out infinite alternate;
 }
 
 body > * {
@@ -81,14 +49,49 @@ body > * {
   z-index: 1;
 }
 
-#ambient-field {
+.ambient-scene {
   position: fixed;
   inset: 0;
   z-index: 0;
-  width: 100%;
-  height: 100%;
+  overflow: hidden;
   pointer-events: none;
 }
+
+.ambient-orb {
+  position: absolute;
+  width: min(54vw, 54rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: 0.22;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.ambient-orb-one {
+  top: -28%;
+  left: -16%;
+  background: radial-gradient(circle, #a9c9a1 0, rgba(169, 201, 161, 0) 70%);
+  animation: canopy-drift-one 31s ease-in-out infinite alternate;
+}
+
+.ambient-orb-two {
+  right: -19%;
+  bottom: -42%;
+  background: radial-gradient(circle, #ddb889 0, rgba(221, 184, 137, 0) 70%);
+  animation: canopy-drift-two 37s ease-in-out infinite alternate;
+}
+
+.ambient-orb-three {
+  top: 26%;
+  left: 39%;
+  width: min(34vw, 34rem);
+  background: radial-gradient(circle, #96b7ab 0, rgba(150, 183, 171, 0) 70%);
+  opacity: 0.13;
+  animation: canopy-drift-three 43s ease-in-out infinite alternate;
+}
+
+:root[data-theme='dark'] .ambient-orb { opacity: 0.12; }
 
 * {
   box-sizing: border-box;
@@ -111,34 +114,33 @@ img {
 .field-companion {
   position: fixed;
   top: var(--companion-top, 24vh);
-  right: clamp(0.35rem, 2.6vw, 2.5rem);
+  right: 0.15rem;
   z-index: 45;
-  display: grid;
-  justify-items: center;
-  gap: 0.25rem;
-  width: clamp(1.8rem, 3.2vw, 2.55rem);
-  color: var(--text);
-  filter: drop-shadow(0 12px 18px var(--shadow));
+  width: clamp(2.8rem, 4vw, 3.4rem);
+  filter: drop-shadow(0 8px 8px rgba(26, 34, 24, 0.24));
   pointer-events: none;
-  transform: translateY(-50%);
-  animation: companion-float 4s ease-in-out infinite;
+  transform: translate3d(0, -50%, 0);
 }
 
 .field-companion svg {
   width: 100%;
   overflow: visible;
+  animation: fox-run-bob 470ms ease-in-out infinite alternate;
 }
 
-.field-companion span {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--panel);
-  padding: 0.12rem 0.32rem;
-  color: var(--muted);
-  font-size: 0.34rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  white-space: nowrap;
+.edge-fox-tail {
+  transform-origin: 89px 55px;
+  animation: fox-tail-swing 620ms ease-in-out infinite alternate;
+}
+
+.edge-fox-leg-one {
+  transform-origin: 60px 60px;
+  animation: fox-leg-run 260ms ease-in-out infinite alternate;
+}
+
+.edge-fox-leg-two {
+  transform-origin: 52px 60px;
+  animation: fox-leg-run 260ms ease-in-out infinite alternate-reverse;
 }
 
 .motion-ready [data-reveal] {
@@ -154,25 +156,15 @@ img {
   transform: translateY(0) scale(1);
 }
 
-main article,
-main section > div,
-.game-card {
-  transform-style: preserve-3d;
-}
-
-main article,
-.game-card {
+main article {
   transition:
-    transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    box-shadow 320ms ease,
-    border-color 320ms ease;
+    box-shadow 200ms ease,
+    border-color 200ms ease;
 }
 
-main article:hover,
-.game-card:hover {
+main article:hover {
   border-color: color-mix(in srgb, var(--accent-strong) 50%, var(--border));
-  box-shadow: 0 24px 46px -30px var(--shadow);
-  transform: perspective(900px) translateY(-4px) rotateX(1.5deg) rotateY(-1deg);
+  box-shadow: 0 16px 36px -30px var(--shadow);
 }
 
 .hero-console {
@@ -208,30 +200,36 @@ html.cli-active body {
   background: #050a12;
 }
 
-html.cli-active body::before,
-html.cli-active body::after,
+html.cli-active .ambient-scene,
 html.cli-active .field-companion {
   display: none;
 }
 
-@keyframes grid-drift {
-  from { background-position: center 0, center 0; }
-  to { background-position: center 58px, center 58px; }
+@keyframes canopy-drift-one {
+  to { transform: translate3d(12vw, 15vh, 0) scale(1.08); }
 }
 
-@keyframes dust-drift {
-  from { background-position: 0 0, 36px 52px; }
-  to { background-position: 0 -164px, 173px -85px; }
+@keyframes canopy-drift-two {
+  to { transform: translate3d(-13vw, -9vh, 0) scale(0.94); }
 }
 
-@keyframes ambient-breathe {
-  from { opacity: 0.38; transform: scale(0.98); }
-  to { opacity: 0.8; transform: scale(1.04); }
+@keyframes canopy-drift-three {
+  to { transform: translate3d(-9vw, 11vh, 0) scale(1.12); }
 }
 
-@keyframes companion-float {
-  0%, 100% { margin-top: 0; }
-  50% { margin-top: -10px; }
+@keyframes fox-run-bob {
+  from { transform: translate3d(-1px, -2px, 0); }
+  to { transform: translate3d(2px, 1px, 0); }
+}
+
+@keyframes fox-tail-swing {
+  from { rotate: -6deg; }
+  to { rotate: 7deg; }
+}
+
+@keyframes fox-leg-run {
+  from { rotate: -24deg; }
+  to { rotate: 24deg; }
 }
 
 @keyframes orbit-pulse {
@@ -261,13 +259,9 @@ html.cli-active .field-companion {
 
 @media (max-width: 640px) {
   .field-companion {
-    right: 0.2rem;
-    width: 1.65rem;
-    opacity: 0.68;
-  }
-
-  .field-companion span {
-    display: none;
+    right: 0.08rem;
+    width: 2.7rem;
+    opacity: 0.92;
   }
 
   .hero-console {
