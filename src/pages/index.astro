@@ -2,10 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import profile from '../data/profile.json';
 import projects from '../data/projects.json';
+import resume from '../data/resume.json';
 import { SITE_URL } from '../config/site';
-import FoxTrail from '../components/FoxTrail.tsx';
+import SignalDefense from '../components/SignalDefense.tsx';
 
 const featuredProjects = projects.filter((project) => project.featured);
+const featuredExperience = resume.work;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -33,7 +35,7 @@ const skillTree = [
   <section class="grid gap-8 py-8 md:grid-cols-[1.3fr_0.7fr] md:items-center lg:py-14">
     <div class="space-y-6">
       <p class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-[var(--muted)]">
-        Security • Networking • Trust-building
+        CYBERSECURITY · NETWORK DEFENSE · AI SECURITY
       </p>
       <div class="space-y-4">
         <h1 class="max-w-xl text-4xl font-black tracking-tight text-[var(--text)] sm:text-5xl lg:text-6xl">
@@ -55,17 +57,17 @@ const skillTree = [
 
     <aside class="hero-console rounded-[32px] border border-[var(--border)] p-6">
       <div class="mb-4 flex items-center justify-between">
-        <span class="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">Field console</span>
+        <span class="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">Security operations</span>
         <span class="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-600">Online</span>
       </div>
       <div class="relative z-[1]">
         <p class="font-mono text-xs uppercase tracking-[0.24em] text-[var(--muted)]">Signal / 01</p>
-        <p class="mt-2 text-2xl font-black tracking-tight text-[var(--text)]">Security, with a human signal.</p>
-        <p class="mt-3 text-sm leading-7 text-[var(--muted)]">Exploring the systems, stories, and small details that make technology more trustworthy.</p>
+        <p class="mt-2 text-2xl font-black tracking-tight text-[var(--text)]">Find the signal. Validate the story.</p>
+        <p class="mt-3 text-sm leading-7 text-[var(--muted)]">Security engineering, technical validation, and clear explanations for complex systems.</p>
         <div class="mt-6 grid grid-cols-3 gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
-          <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Observe</span>
+          <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Investigate</span>
           <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Validate</span>
-          <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Explain</span>
+          <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Communicate</span>
         </div>
       </div>
     </aside>
@@ -108,6 +110,32 @@ const skillTree = [
     </div>
   </section>
 
+  <section class="experience-section py-8" aria-labelledby="experience-title">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p class="section-kicker">Professional experience</p>
+        <h2 id="experience-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)]">Security work, in practice.</h2>
+      </div>
+      <a href="/resume" class="text-sm font-medium text-[var(--accent-strong)]">Full resume →</a>
+    </div>
+    <div class="experience-list">
+      {featuredExperience.map((job) => (
+        <article class={`experience-card${job.company === 'Palo Alto Networks' ? ' is-palo-alto' : ''}`}>
+          <div class="experience-mark" aria-hidden="true">{job.company === 'Palo Alto Networks' ? 'PAN' : job.company.slice(0, 3).toUpperCase()}</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3>{job.position}</h3>
+              <span class="experience-date">{job.startDate} — {job.endDate}</span>
+            </div>
+            <p class="experience-company">{job.company}</p>
+            <p class="experience-summary">{job.summary}</p>
+          </div>
+          {job.company === 'Palo Alto Networks' && <span class="experience-badge">CUSTOMER SECURITY</span>}
+        </article>
+      ))}
+    </div>
+  </section>
+
   <section class="py-8">
     <div class="mb-6 flex items-center justify-between">
       <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">Featured projects</h2>
@@ -136,6 +164,6 @@ const skillTree = [
   </section>
 
   <section class="py-6">
-    <FoxTrail client:visible />
+    <SignalDefense client:visible />
   </section>
 </BaseLayout>
