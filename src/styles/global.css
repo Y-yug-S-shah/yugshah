@@ -1460,13 +1460,1105 @@ main article h3 {
 
 @media (prefers-reduced-motion: reduce) {
   .ambient-orb,
-  .field-companion svg,
-  .dog-tail,
-  .dog-leg,
-  .signal-game *,
+  .agent-avatar *,
+  .mori-game *,
   .cli-shell,
   .cli-shell *,
   .ambient-scene::after { animation: none !important; }
 
   .network-packet { display: none; }
+}
+
+.site-shell {
+  display: grid;
+  width: min(100%, 1328px);
+  grid-template-columns: minmax(0, 1fr) 68px;
+  align-items: start;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.site-main {
+  width: 100%;
+}
+
+.site-header {
+  background: color-mix(in srgb, var(--bg) 77%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.12);
+  backdrop-filter: blur(20px) saturate(1.12);
+}
+
+.ambient-scene {
+  background:
+    radial-gradient(ellipse at 15% 12%, rgba(194, 170, 139, 0.08), transparent 37%),
+    radial-gradient(ellipse at 88% 72%, rgba(171, 184, 181, 0.07), transparent 38%),
+    var(--bg);
+}
+
+.ambient-scene::before {
+  background:
+    radial-gradient(ellipse at 50% 42%, transparent 16%, color-mix(in srgb, var(--bg) 44%, transparent) 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 10%, transparent), color-mix(in srgb, var(--bg) 34%, transparent));
+}
+
+.ambient-orb-one {
+  background: radial-gradient(circle, rgba(199, 178, 151, 0.34) 0, rgba(199, 178, 151, 0) 70%);
+}
+
+.ambient-orb-two {
+  background: radial-gradient(circle, rgba(176, 184, 181, 0.22) 0, rgba(176, 184, 181, 0) 70%);
+}
+
+.agent-sidebar {
+  position: sticky;
+  top: 7.8rem;
+  display: flex;
+  height: min(28rem, calc(100vh - 9.2rem));
+  min-height: 17rem;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center;
+  padding: 1rem 0.3rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+  border-radius: 28px;
+  background:
+    radial-gradient(ellipse at 50% 5%, rgba(191, 170, 143, 0.12), transparent 44%),
+    color-mix(in srgb, var(--panel) 56%, transparent);
+  box-shadow: 0 18px 55px -40px var(--shadow), inset 0 1px rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(22px) saturate(1.12);
+  backdrop-filter: blur(22px) saturate(1.12);
+}
+
+.agent-sidebar-label,
+.agent-sidebar-caption,
+.agent-sidebar-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.48rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.agent-sidebar-label {
+  white-space: nowrap;
+}
+
+.agent-sidebar-track {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  justify-content: center;
+  margin-block: 0.7rem;
+}
+
+.agent-sidebar-track::before {
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--accent-strong) 52%, transparent) 18%, color-mix(in srgb, var(--accent-strong) 26%, transparent) 84%, transparent);
+  content: '';
+}
+
+.agent-track-node {
+  position: absolute;
+  left: 50%;
+  z-index: 1;
+  width: 0.36rem;
+  height: 0.36rem;
+  border: 1px solid color-mix(in srgb, var(--accent-strong) 68%, transparent);
+  border-radius: 50%;
+  background: var(--bg);
+  transform: translateX(-50%);
+}
+
+.agent-track-node-top { top: 0; }
+.agent-track-node-bottom { bottom: 0; }
+
+.agent-runner {
+  position: absolute;
+  top: calc(4% + var(--agent-progress, 0%));
+  left: 50%;
+  z-index: 2;
+  width: 3.6rem;
+  transform: translate(-50%, -45%);
+}
+
+.agent-avatar {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 6px 7px rgba(25, 23, 19, 0.18));
+}
+
+.agent-bob {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: agent-run-cycle 720ms ease-in-out infinite;
+}
+
+.agent-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: agent-blink 4.8s ease-in-out infinite;
+}
+
+.agent-shadow {
+  position: absolute;
+  right: 21%;
+  bottom: 0.1rem;
+  left: 21%;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text) 18%, transparent);
+  filter: blur(3px);
+  animation: agent-shadow-pulse 720ms ease-in-out infinite alternate;
+}
+
+.agent-sidebar-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.15rem;
+}
+
+.agent-online-dot {
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: #9b9e88;
+}
+
+.agent-sidebar-note {
+  margin-top: 0.38rem;
+  font-size: 0.43rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.hero-console {
+  background:
+    radial-gradient(ellipse at 78% 12%, rgba(192, 165, 130, 0.14), transparent 39%),
+    linear-gradient(145deg, color-mix(in srgb, var(--panel) 92%, transparent), color-mix(in srgb, var(--bg-soft) 72%, transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(1.14);
+  backdrop-filter: blur(18px) saturate(1.14);
+}
+
+.hero-console::after {
+  border-color: color-mix(in srgb, var(--accent-strong) 35%, transparent);
+  box-shadow:
+    0 0 0 1.2rem color-mix(in srgb, var(--accent) 7%, transparent),
+    0 0 0 2.5rem color-mix(in srgb, #b0b8b5 6%, transparent);
+}
+
+.experience-card,
+.resume-role-card,
+.resume-project-card,
+.resume-skill-card,
+.resume-education-card,
+.resume-document,
+.game-preview,
+.mori-game,
+.mori-journal,
+.site-main form {
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  backdrop-filter: blur(18px) saturate(1.12);
+}
+
+.experience-card.is-palo-alto,
+.resume-role-card.is-palo-alto {
+  border-color: color-mix(in srgb, var(--accent-strong) 36%, var(--border));
+  background: linear-gradient(112deg, color-mix(in srgb, var(--accent) 12%, var(--panel)), color-mix(in srgb, var(--panel) 82%, transparent) 68%);
+}
+
+.experience-mark,
+.resume-role-marker {
+  border-color: color-mix(in srgb, var(--accent-strong) 30%, var(--border));
+  background: color-mix(in srgb, var(--accent) 11%, var(--panel));
+  color: var(--accent-strong);
+}
+
+.experience-badge,
+.resume-emphasis {
+  border-color: color-mix(in srgb, var(--accent-strong) 27%, var(--border));
+  color: var(--accent-strong);
+}
+
+.resume-masthead {
+  background:
+    radial-gradient(ellipse at 90% 4%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 39%),
+    linear-gradient(130deg, color-mix(in srgb, var(--panel) 98%, var(--bg)), color-mix(in srgb, var(--panel) 80%, var(--bg)));
+}
+
+.resume-masthead::after {
+  border-color: color-mix(in srgb, var(--accent-strong) 22%, transparent);
+  box-shadow: 0 0 0 2rem color-mix(in srgb, var(--accent) 4%, transparent), 0 0 0 4rem color-mix(in srgb, var(--accent) 3%, transparent);
+}
+
+.resume-kicker,
+.resume-identity h1,
+.resume-intro,
+.resume-contact-row a,
+.resume-date,
+.resume-role-summary,
+.resume-role-card,
+.resume-project-card,
+.resume-skill-card,
+.resume-education-card {
+  color: var(--text);
+}
+
+.resume-kicker span:first-child {
+  background: var(--accent-strong);
+  box-shadow: none;
+}
+
+.resume-kicker span:last-child,
+.resume-role,
+.resume-section-heading > span {
+  color: var(--accent-strong);
+}
+
+.resume-download,
+.resume-contact-button {
+  border-color: color-mix(in srgb, var(--accent-strong) 40%, var(--border));
+  color: var(--text);
+}
+
+.resume-download {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.resume-download:hover,
+.resume-contact-button:hover {
+  border-color: var(--accent-strong);
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.resume-role-card.is-palo-alto {
+  box-shadow: inset 3px 0 color-mix(in srgb, var(--accent-strong) 66%, transparent);
+}
+
+.resume-role-card.is-palo-alto .resume-role-marker {
+  color: var(--accent-strong);
+}
+
+.resume-section-heading i {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-strong) 30%, transparent), transparent);
+}
+
+.resume-contact-row a:hover {
+  color: var(--accent-strong);
+}
+
+.game-page-intro {
+  max-width: 52rem;
+  padding-block: 1rem 2rem;
+}
+
+.game-page-intro h1 {
+  margin: 0.35rem 0 0.8rem;
+  color: var(--text);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 1.04;
+}
+
+.game-page-intro > p:last-child {
+  max-width: 41rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.mori-game {
+  --mori-ink: #38362f;
+  --mori-muted: #787266;
+  --mori-line: rgba(109, 95, 75, 0.17);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 34px;
+  padding: clamp(1.1rem, 3vw, 2.4rem);
+  background:
+    radial-gradient(ellipse at 88% 0%, rgba(195, 168, 135, 0.1), transparent 35%),
+    color-mix(in srgb, var(--panel) 81%, transparent);
+  box-shadow: 0 34px 85px -60px var(--shadow), inset 0 1px rgba(255, 255, 255, 0.12);
+}
+
+:root[data-theme='dark'] .mori-game {
+  --mori-ink: #e8e3d9;
+  --mori-muted: #b5aea2;
+  --mori-line: rgba(229, 217, 196, 0.16);
+}
+
+.mori-game-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mori-eyebrow {
+  margin: 0;
+  color: var(--mori-muted);
+  font-size: 0.59rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  line-height: 1.6;
+}
+
+.mori-game-heading h2 {
+  margin: 0.3rem 0 0.35rem;
+  color: var(--mori-ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+
+.mori-game-heading > div:first-child > p:last-child,
+.mori-journal-intro {
+  max-width: 38rem;
+  margin: 0;
+  color: var(--mori-muted);
+  font-size: 0.82rem;
+  line-height: 1.75;
+}
+
+.mori-level {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 0.18rem;
+  border: 1px solid var(--mori-line);
+  border-radius: 16px;
+  padding: 0.55rem 0.8rem;
+  background: color-mix(in srgb, var(--bg-soft) 80%, transparent);
+  text-align: right;
+}
+
+.mori-level span {
+  color: var(--mori-muted);
+  font-size: 0.53rem;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+}
+
+.mori-level strong {
+  color: var(--mori-ink);
+  font-size: 0.82rem;
+}
+
+.mori-game-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.8fr);
+  align-items: start;
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.mori-garden-column {
+  min-width: 0;
+}
+
+.mori-garden-scene {
+  position: relative;
+  min-height: 25rem;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid color-mix(in srgb, var(--accent-strong) 20%, var(--border));
+  border-radius: 28px;
+  background:
+    radial-gradient(ellipse at 50% 84%, rgba(180, 167, 145, 0.18), transparent 47%),
+    radial-gradient(ellipse at 17% 20%, rgba(198, 181, 158, 0.14), transparent 44%),
+    linear-gradient(145deg, color-mix(in srgb, var(--panel) 70%, #e1d4c1), color-mix(in srgb, var(--bg) 90%, #d3c5b0));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 16px 45px -40px var(--shadow);
+}
+
+:root[data-theme='dark'] .mori-garden-scene {
+  background:
+    radial-gradient(ellipse at 50% 84%, rgba(179, 153, 119, 0.16), transparent 47%),
+    radial-gradient(ellipse at 17% 20%, rgba(191, 181, 160, 0.09), transparent 44%),
+    linear-gradient(145deg, #292827, #1a1b1d 74%);
+}
+
+.mori-garden-scene::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.22), transparent 39%, rgba(102, 93, 77, 0.04));
+  content: '';
+  pointer-events: none;
+}
+
+.mori-garden-haze {
+  position: absolute;
+  width: 14rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(235, 223, 203, 0.16);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.haze-one { top: 13%; left: 16%; }
+.haze-two { right: 8%; bottom: 10%; width: 18rem; background: rgba(215, 201, 180, 0.13); }
+
+.mori-scene-caption {
+  position: absolute;
+  top: 1rem;
+  left: 1.1rem;
+  color: var(--mori-muted);
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.mori-cloud {
+  position: absolute;
+  z-index: 1;
+  color: color-mix(in srgb, var(--accent-strong) 75%, #fff);
+  font-size: 1.5rem;
+  opacity: 0.78;
+  animation: mori-drift 3.8s ease-in-out infinite alternate;
+}
+
+.cloud-one { top: 25%; left: 31%; }
+.cloud-two { top: 51%; right: 23%; font-size: 1.1rem; animation-delay: -1.9s; }
+
+.mori-thought-seed {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  width: 2.45rem;
+  height: 2.45rem;
+  place-items: center;
+  border: 1px solid rgba(133, 113, 88, 0.25);
+  border-radius: 50%;
+  background: rgba(248, 241, 228, 0.55);
+  box-shadow: 0 6px 22px -12px rgba(74, 60, 43, 0.46), inset 0 1px rgba(255, 255, 255, 0.6);
+  color: #987d5b;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+  transition: opacity 220ms ease, transform 220ms ease, background 220ms ease;
+  animation: mori-seed-float 3.2s ease-in-out infinite alternate;
+}
+
+.mori-thought-seed:nth-of-type(even) { animation-delay: -1.5s; }
+.mori-thought-seed:hover { background: rgba(255, 249, 237, 0.8); transform: translateY(-3px) scale(1.08); }
+.mori-thought-seed:focus-visible { outline-color: var(--accent-strong); }
+.mori-thought-seed.is-collected { opacity: 0; pointer-events: none; transform: translateY(-12px) scale(0.7); }
+
+.mori-pet-wrap {
+  position: absolute;
+  top: 49%;
+  left: 50%;
+  z-index: 3;
+  width: 12rem;
+  height: 13rem;
+  transform: translate(-50%, -50%);
+}
+
+.mori-pet {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  width: 10.2rem;
+  height: 8.5rem;
+  border: 1px solid rgba(123, 109, 88, 0.37);
+  border-radius: 45% 45% 43% 43%;
+  background:
+    radial-gradient(ellipse at 34% 19%, rgba(255, 255, 255, 0.9), transparent 42%),
+    linear-gradient(145deg, #e9e1d5, #bdb2a2);
+  box-shadow: inset -10px -8px 19px rgba(106, 91, 72, 0.11), 0 19px 33px -25px rgba(36, 31, 23, 0.38);
+  transform: translateX(-50%);
+  animation: mori-breathe 3s ease-in-out infinite;
+}
+
+:root[data-theme='dark'] .mori-pet {
+  border-color: rgba(225, 211, 187, 0.3);
+  background:
+    radial-gradient(ellipse at 34% 19%, rgba(255, 250, 238, 0.34), transparent 42%),
+    linear-gradient(145deg, #d1c7b8, #928879);
+}
+
+.mori-ear {
+  position: absolute;
+  top: -1rem;
+  z-index: -1;
+  width: 2.9rem;
+  height: 3.1rem;
+  border: 1px solid rgba(123, 109, 88, 0.38);
+  border-radius: 70% 70% 25% 25%;
+  background: linear-gradient(150deg, #d3c5b1, #aa9e8e);
+}
+
+.ear-left { left: 0.3rem; transform: rotate(-24deg); }
+.ear-right { right: 0.3rem; transform: rotate(24deg); }
+
+.mori-ear::after {
+  position: absolute;
+  inset: 0.55rem 0.65rem 0.4rem;
+  border-radius: inherit;
+  background: rgba(178, 136, 119, 0.34);
+  content: '';
+}
+
+.mori-eye {
+  position: absolute;
+  top: 3.4rem;
+  width: 0.62rem;
+  height: 0.78rem;
+  border-radius: 50%;
+  background: #4c4b45;
+  animation: mori-blink 4.7s ease-in-out infinite;
+}
+
+.eye-left { left: 2.55rem; }
+.eye-right { right: 2.55rem; animation-delay: 0.05s; }
+.mori-eye.is-sleepy { height: 0.12rem; border-radius: 50%; animation: none; }
+
+.mori-cheek {
+  position: absolute;
+  top: 4.45rem;
+  width: 1.2rem;
+  height: 0.48rem;
+  border-radius: 50%;
+  background: rgba(194, 139, 117, 0.3);
+  filter: blur(3px);
+}
+
+.cheek-left { left: 1.4rem; }
+.cheek-right { right: 1.4rem; }
+
+.mori-mouth {
+  position: absolute;
+  top: 4.35rem;
+  left: 50%;
+  width: 1rem;
+  height: 0.48rem;
+  border-bottom: 2px solid #766556;
+  border-radius: 0 0 50% 50%;
+  transform: translateX(-50%);
+}
+
+.mori-pet-shine {
+  position: absolute;
+  top: 1.35rem;
+  left: 1.2rem;
+  width: 1.2rem;
+  height: 0.32rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  filter: blur(1px);
+  transform: rotate(-34deg);
+}
+
+.mori-pet-shadow {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.55rem;
+  left: 1rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: rgba(63, 54, 42, 0.12);
+  filter: blur(8px);
+}
+
+.mori-pet-name {
+  position: absolute;
+  right: 0;
+  bottom: -0.15rem;
+  left: 0;
+  color: var(--mori-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.mood-happy .mori-pet { animation: mori-happy-bounce 560ms ease-in-out 2, mori-breathe 3s ease-in-out infinite; }
+.mood-sleepy .mori-pet { animation: mori-sleep 1.8s ease-in-out infinite; }
+.mood-thoughtful .mori-pet { animation: mori-thought 1.2s ease-in-out 2, mori-breathe 3s ease-in-out infinite; }
+
+.mori-notice {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  left: 0.8rem;
+  z-index: 5;
+  margin: 0;
+  color: var(--mori-muted);
+  font-size: 0.67rem;
+  text-align: center;
+}
+
+.mori-meters {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem 0.2rem;
+}
+
+.mori-meter > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--mori-muted);
+  font-size: 0.62rem;
+}
+
+.mori-meter progress,
+.mori-memory-card progress {
+  display: block;
+  width: 100%;
+  height: 0.33rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--border) 72%, transparent);
+  color: var(--accent-strong);
+  accent-color: var(--accent-strong);
+}
+
+.mori-meter progress::-webkit-progress-bar,
+.mori-memory-card progress::-webkit-progress-bar {
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--border) 72%, transparent);
+}
+
+.mori-meter progress::-webkit-progress-value,
+.mori-memory-card progress::-webkit-progress-value {
+  border-radius: 99px;
+  background: linear-gradient(90deg, #a99375, #d4c09f);
+}
+
+.mori-meter progress::-moz-progress-bar,
+.mori-memory-card progress::-moz-progress-bar {
+  border-radius: 99px;
+  background: linear-gradient(90deg, #a99375, #d4c09f);
+}
+
+.mori-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.mori-actions button,
+.mori-name-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1px solid var(--mori-line);
+  border-radius: 999px;
+  padding: 0.58rem 0.82rem;
+  background: color-mix(in srgb, var(--bg-soft) 84%, transparent);
+  color: var(--mori-ink);
+  font: inherit;
+  font-size: 0.65rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.mori-actions button:hover,
+.mori-name-form button:hover {
+  border-color: color-mix(in srgb, var(--accent-strong) 56%, var(--border));
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-soft));
+  transform: translateY(-1px);
+}
+
+.mori-actions button:focus-visible,
+.mori-lesson:focus-visible,
+.mori-name-form button:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
+.mori-journal {
+  border: 1px solid var(--mori-line);
+  border-radius: 24px;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  background: color-mix(in srgb, var(--bg-soft) 66%, transparent);
+}
+
+.mori-journal-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.mori-journal-heading h3 {
+  margin: 0.25rem 0 0;
+  color: var(--mori-ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.mori-journal-flower {
+  color: var(--accent-strong);
+  font-size: 1.6rem;
+}
+
+.mori-journal-intro {
+  margin-top: 0.6rem;
+  font-size: 0.7rem;
+}
+
+.mori-lessons {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.mori-lesson {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 0.65rem;
+  border: 1px solid var(--mori-line);
+  border-radius: 15px;
+  padding: 0.68rem;
+  background: color-mix(in srgb, var(--panel) 76%, transparent);
+  color: var(--mori-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.mori-lesson:hover { transform: translateY(-1px); }
+.mori-lesson.is-learned { border-color: color-mix(in srgb, var(--accent-strong) 45%, var(--mori-line)); }
+
+.mori-lesson-check {
+  display: grid;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--mori-line);
+  border-radius: 50%;
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+}
+
+.mori-lesson > span:last-child {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.mori-lesson strong {
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.mori-lesson small {
+  color: var(--mori-muted);
+  font-size: 0.59rem;
+  line-height: 1.5;
+}
+
+.mori-memory-card {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+  border: 1px solid var(--mori-line);
+  border-radius: 16px;
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+
+.mori-memory-card > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.mori-memory-card strong {
+  color: var(--mori-ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+
+.mori-memory-caption {
+  color: var(--mori-muted);
+  font-size: 0.58rem;
+}
+
+.mori-name-form {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+
+.mori-name-form label {
+  color: var(--mori-muted);
+  font-size: 0.61rem;
+  font-weight: 650;
+}
+
+.mori-name-form > div {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.mori-name-form input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--mori-line);
+  border-radius: 999px;
+  padding: 0.55rem 0.75rem;
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
+  color: var(--mori-ink);
+  font: inherit;
+  font-size: 0.67rem;
+}
+
+.mori-name-form input:focus-visible {
+  border-color: var(--accent-strong);
+  outline: 2px solid color-mix(in srgb, var(--accent-strong) 32%, transparent);
+  outline-offset: 1px;
+}
+
+.mori-name-form button { flex: 0 0 auto; }
+
+.mori-save-note {
+  margin: 1rem 0 0;
+  color: var(--mori-muted);
+  font-size: 0.6rem;
+  text-align: center;
+}
+
+.game-preview {
+  position: relative;
+  display: grid;
+  min-height: 16rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(13rem, 0.75fr);
+  align-items: center;
+  overflow: hidden;
+  gap: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: clamp(1.4rem, 4vw, 2.8rem);
+  background:
+    radial-gradient(ellipse at 84% 48%, rgba(195, 172, 142, 0.16), transparent 36%),
+    color-mix(in srgb, var(--panel) 72%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+}
+
+.game-preview-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.game-preview-copy h2 {
+  margin: 0.35rem 0 0.6rem;
+  color: var(--text);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+
+.game-preview-copy > p:not(.section-kicker) {
+  max-width: 37rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.game-preview-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.game-preview-link span { transition: transform 160ms ease; }
+.game-preview-link:hover span { transform: translate(2px, -2px); }
+
+.game-preview-art {
+  position: relative;
+  display: grid;
+  min-height: 13rem;
+  place-items: center;
+  isolation: isolate;
+}
+
+.game-preview-art svg {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 14rem);
+  overflow: visible;
+  filter: drop-shadow(0 12px 12px rgba(51, 43, 32, 0.13));
+  animation: mori-breathe 3s ease-in-out infinite;
+}
+
+.preview-orbit {
+  position: absolute;
+  z-index: 1;
+  width: 10rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--accent-strong) 22%, transparent);
+  border-radius: 50%;
+}
+
+.preview-orbit-one { transform: scale(1.14, 0.46) rotate(-18deg); }
+.preview-orbit-two { transform: scale(1.4, 0.62) rotate(30deg); opacity: 0.64; }
+
+.preview-star {
+  position: absolute;
+  z-index: 3;
+  color: var(--accent-strong);
+  font-size: 1.15rem;
+  animation: mori-drift 3.2s ease-in-out infinite alternate;
+}
+
+.preview-star-one { top: 13%; left: 13%; }
+.preview-star-two { right: 9%; bottom: 25%; font-size: 0.85rem; animation-delay: -1.6s; }
+
+@keyframes agent-run-cycle {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-3px) rotate(2deg); }
+}
+
+@keyframes agent-shadow-pulse {
+  from { opacity: 0.35; transform: scaleX(0.86); }
+  to { opacity: 0.65; transform: scaleX(1.04); }
+}
+
+@keyframes agent-blink {
+  0%, 45%, 49%, 100% { transform: scaleY(1); }
+  47%, 48% { transform: scaleY(0.08); }
+}
+
+@keyframes mori-breathe {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+@keyframes mori-happy-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(0); }
+  35% { transform: translateX(-50%) translateY(-12px) rotate(-3deg); }
+  70% { transform: translateX(-50%) translateY(-4px) rotate(3deg); }
+}
+
+@keyframes mori-sleep {
+  0%, 100% { transform: translateX(-50%) translateY(2px) scale(1); }
+  50% { transform: translateX(-50%) translateY(5px) scale(0.98); }
+}
+
+@keyframes mori-thought {
+  0%, 100% { transform: translateX(-50%) rotate(0); }
+  50% { transform: translateX(-50%) rotate(3deg); }
+}
+
+@keyframes mori-blink {
+  0%, 43%, 48%, 100% { transform: scaleY(1); }
+  46% { transform: scaleY(0.08); }
+}
+
+@keyframes mori-drift {
+  from { transform: translateY(2px) rotate(-4deg); }
+  to { transform: translateY(-5px) rotate(4deg); }
+}
+
+@keyframes mori-seed-float {
+  from { translate: 0 0; }
+  to { translate: 0 -5px; }
+}
+
+@media (max-width: 1100px) {
+  .site-shell {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: clamp(1rem, 4vw, 2rem);
+  }
+
+  .agent-sidebar { display: none; }
+}
+
+@media (max-width: 760px) {
+  .mori-game-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mori-garden-scene { min-height: 22rem; }
+
+  .game-preview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .game-preview-art {
+    min-height: 11rem;
+  }
+
+  .game-preview-art svg { width: 11rem; }
+}
+
+@media (max-width: 520px) {
+  .site-shell { padding-inline: 1rem; }
+  .mori-game { border-radius: 24px; padding: 1rem; }
+  .mori-game-heading { align-items: flex-start; }
+  .mori-level { padding: 0.45rem 0.55rem; }
+  .mori-level strong { font-size: 0.72rem; }
+  .mori-garden-scene { min-height: 20rem; border-radius: 22px; }
+  .mori-pet-wrap { transform: translate(-50%, -48%) scale(0.82); }
+  .mori-thought-seed { width: 2.15rem; height: 2.15rem; }
+  .mori-actions button { flex: 1 1 42%; padding-inline: 0.55rem; }
+}
+
+:root[data-theme='light'] .ambient-scene {
+  background:
+    radial-gradient(ellipse at 16% 13%, rgba(190, 166, 136, 0.16), transparent 39%),
+    radial-gradient(ellipse at 84% 74%, rgba(172, 179, 170, 0.12), transparent 36%),
+    #f1eee8;
+}
+
+:root[data-theme='light'] .ambient-scene::before {
+  background: radial-gradient(ellipse at 50% 38%, transparent 12%, rgba(241, 238, 232, 0.58) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb,
+  .agent-avatar *,
+  .agent-shadow,
+  .mori-game *,
+  .game-preview-art svg {
+    animation: none !important;
+  }
+
+  .mori-pet,
+  .mori-thought-seed,
+  .mori-cloud,
+  .preview-star {
+    translate: none;
+  }
 }
