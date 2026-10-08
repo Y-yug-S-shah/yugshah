@@ -11,7 +11,7 @@ const { project } = Astro.props;
 
 <BaseLayout title={`${project.title} | Yug Shah`} description={project.summary}>
   <article class="space-y-8 py-6">
-    <img src={project.image} alt={project.title} class="h-64 w-full rounded-[32px] border border-[var(--border)] object-cover shadow-[0_30px_60px_rgba(15,23,42,0.08)]" />
+    <img src={project.image} alt={project.imageAlt} class="h-64 w-full rounded-[32px] border border-[var(--border)] object-cover shadow-[0_30px_60px_rgba(15,23,42,0.08)]" />
     <div class="space-y-5">
       <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Project</p>
       <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{project.title}</h1>
