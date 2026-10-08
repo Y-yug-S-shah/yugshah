@@ -24,7 +24,6 @@ const { project } = Astro.props;
     </div>
     <div class="flex flex-wrap gap-3">
       {project.links.repo && <a href={project.links.repo} target="_blank" rel="noreferrer" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">View repository</a>}
-      {project.links.live && <a href={project.links.live} target="_blank" rel="noreferrer" class="inline-flex rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950">Live preview</a>}
     </div>
   </article>
 </BaseLayout>
