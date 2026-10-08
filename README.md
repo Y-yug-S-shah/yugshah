@@ -108,7 +108,7 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 - Skip links, visible focus states, and reduced-motion support are included.
 - Forms use semantic labels and live status messages.
 - Content remains readable and crawlable without JavaScript-required features.
-- The decorative glass scene loads after the page is idle, limits rendering resolution and frame rate, pauses in background tabs, and is skipped for reduced-motion and data-saving preferences.
+- The decorative glass scene loads after the page is idle, limits rendering resolution and frame rate, pauses in background tabs, and is skipped on compact/low-memory devices, slow or data-saving connections, and for reduced motion.
 - GSAP scroll reveals are loaded lazily and are disabled when reduced motion is requested.
 - Milo, the AI companion, stays in a dedicated desktop sidebar and follows page progress without covering content.
 - Project cards use screenshots from the corresponding public AuthGuardian and PhishHound repositories.
