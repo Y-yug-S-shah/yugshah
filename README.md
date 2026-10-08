@@ -107,12 +107,13 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 - Skip links, visible focus states, and reduced-motion support are included.
 - Forms use semantic labels and live status messages.
 - Content remains readable and crawlable without JavaScript-required features.
-- The animated woodland background and fox companion use locally hosted, optimized assets. The woodland photo is by David Dixon / Geograph, licensed CC BY-SA 2.0; its attribution and license are linked beside the photo in the game.
+- The site background uses a lightweight Canvas 2D matrix effect and a CSS perspective grid; animation pauses when the page is hidden and respects reduced-motion preferences.
+- A small animated dog companion runs alongside the right viewport edge.
 - Project cards use screenshots from the corresponding public AuthGuardian and PhishHound repositories.
 - The ambient piano chords and short click/clack sounds are synthesized in the browser; audio remains off until enabled with the Sound control.
 - The latest four articles in the AI security series are mirrored in full, with a direct Medium source link on each listing card and article page. Their optimized covers and diagrams are served from `public/media/`.
-- The home page has a small, immediately playable woodland fox trail. The three landmarks are available without visiting other pages; arrow keys, WASD, touch controls, and nearby map patches work.
-- The background and fox motion are CSS-based, with reduced-motion preferences respected. The previous continuously redrawn particle canvas has been removed.
+- The home page has a three-incident network-defense exercise. Visitors investigate identity, endpoint, gateway, and cloud telemetry, then isolate the compromised layer; it has keyboard controls and no countdown.
+- CLI mode includes a browsable portfolio workspace, real project and experience summaries, article links, shell-style commands, command history, and animated terminal output.
 
 ## Publishing workflow
 
