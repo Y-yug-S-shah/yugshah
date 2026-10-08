@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEventHandler } from 'react';
+import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 
 type PalState = {
   name: string;
@@ -30,9 +30,9 @@ function readSavedState(): PalState {
     const value = saved as Partial<PalState>;
     if (
       typeof value.name !== 'string' ||
-      typeof value.bond !== 'number' ||
-      typeof value.energy !== 'number' ||
-      typeof value.memories !== 'number' ||
+      typeof value.bond !== 'number' || !Number.isFinite(value.bond) ||
+      typeof value.energy !== 'number' || !Number.isFinite(value.energy) ||
+      typeof value.memories !== 'number' || !Number.isFinite(value.memories) ||
       !Array.isArray(value.lessons) ||
       value.lessons.some((lesson) => typeof lesson !== 'string')
     ) {
@@ -131,7 +131,7 @@ export default function AIPal() {
     seedTimers.current.push(timer);
   };
 
-  const saveName: FormEventHandler<HTMLFormElement> = (event) => {
+  const saveName = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextName = nickname.trim().slice(0, 12);
     if (!nextName) {
