@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEventHandler } from 'react';
 
 type PalState = {
   name: string;
@@ -131,7 +131,7 @@ export default function AIPal() {
     seedTimers.current.push(timer);
   };
 
-  const saveName = (event: FormEvent<HTMLFormElement>) => {
+  const saveName: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     const nextName = nickname.trim().slice(0, 12);
     if (!nextName) {
