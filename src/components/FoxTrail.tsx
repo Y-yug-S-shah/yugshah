@@ -133,7 +133,7 @@ export default function FoxTrail() {
 
       <div className="trail-layout">
         <div className="trail-scene" aria-label="A woodland trail game">
-          <img className="trail-photo" src="/media/woodland-path.jpg" alt="A sunlit path winding through green woodland" loading="lazy" />
+          <img className="trail-photo" src="/media/woodland-path-optimized.jpg" alt="A sunlit path winding through green woodland" loading="lazy" />
           <div className="trail-photo-shade" />
           <div className="trail-map" role="group" aria-label="Woodland trail. Move one patch at a time.">
             {Array.from({ length: width * height }, (_, index) => {
