@@ -1077,16 +1077,12 @@ main article h3 {
   -webkit-backdrop-filter: blur(9px);
   backdrop-filter: blur(9px);
   transition: opacity 220ms ease, transform 220ms ease, background 220ms ease;
-  animation: mori-seed-float 3.2s ease-in-out infinite alternate;
+  animation: mori-seed-shine 3.2s ease-in-out infinite alternate;
 }
 
 .mori-thought-seed:nth-of-type(even) { animation-delay: -1.5s; }
 .mori-thought-seed:hover,
-.mori-thought-seed:focus-visible {
-  animation-play-state: paused;
-  background: rgba(255, 249, 237, 0.8);
-  transform: translateY(-3px) scale(1.08);
-}
+.mori-thought-seed:focus-visible { background: rgba(255, 249, 237, 0.8); transform: translateY(-3px) scale(1.08); }
 .mori-thought-seed:focus-visible { outline-color: var(--accent-strong); }
 .mori-thought-seed.is-collected { opacity: 0; pointer-events: none; transform: translateY(-12px) scale(0.7); }
 
@@ -1622,9 +1618,9 @@ main article h3 {
   to { transform: translateY(-5px) rotate(4deg); }
 }
 
-@keyframes mori-seed-float {
-  from { translate: 0 0; }
-  to { translate: 0 -5px; }
+@keyframes mori-seed-shine {
+  from { opacity: 0.78; }
+  to { opacity: 1; }
 }
 
 @media (max-width: 1100px) {
