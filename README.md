@@ -71,7 +71,7 @@ npm run preview -- --host 0.0.0.0 --port 4321
 ### Add a blog post
 
 - Create a new `.mdx` file under `src/content/blog/`.
-- Include frontmatter such as `title`, `description`, `pubDate`, `tags`, and optional `cover`.
+- Include frontmatter such as `title`, `description`, `pubDate`, `tags`, and optional `cover` or `mediumUrl`. When a Medium original exists, its URL appears on both the blog card and the local article page.
 
 ## Environment variables
 

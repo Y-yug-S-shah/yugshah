@@ -946,7 +946,7 @@ main article h3 {
   .trail-layout { padding: 0 0.85rem 1rem; }
   .trail-scene { min-height: 16rem; border-radius: 42% 18px 26px 20px; }
   .trail-map { inset: 8% 3% 12%; }
-  .trail-caption { right: 0.55rem; left: 0.55rem; font-size: 0.46rem; }
+  .trail-caption { right: 0.55rem; left: 0.55rem; font-size: 0.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
