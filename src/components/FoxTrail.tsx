@@ -94,13 +94,18 @@ export default function FoxTrail() {
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
       const target = event.target;
-      if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
+      if (target instanceof HTMLElement && (
+        target.isContentEditable
+        || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)
+        || (!target.closest('.trail-game') && target !== document.body && target !== document.documentElement)
+      )) return;
+      const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
       const direction = ({
         ArrowUp: [0, -1], w: [0, -1],
         ArrowDown: [0, 1], s: [0, 1],
         ArrowLeft: [-1, 0], a: [-1, 0],
         ArrowRight: [1, 0], d: [1, 0]
-      } as Record<string, [number, number]>)[event.key];
+      } as Record<string, [number, number]>)[key];
       if (!direction) return;
       event.preventDefault();
       move(direction[0], direction[1]);
