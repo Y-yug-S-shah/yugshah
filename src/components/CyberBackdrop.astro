@@ -8,12 +8,14 @@
   const canvas = document.querySelector<HTMLCanvasElement>('.glass-field');
   const connection = (navigator as Navigator & {
     connection?: { saveData?: boolean; effectiveType?: string };
+    deviceMemory?: number;
   }).connection;
   const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const saveData = connection?.saveData || connection?.effectiveType === 'slow-2g';
+  const lowPowerDevice = ((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8) <= 2;
+  const lowBandwidth = connection?.saveData || ['slow-2g', '2g'].includes(connection?.effectiveType ?? '');
 
   const start = async () => {
-    if (!canvas || saveData || motionPreference.matches || document.hidden) return;
+    if (!canvas || lowBandwidth || lowPowerDevice || window.innerWidth < 760 || motionPreference.matches || document.hidden) return;
     try {
       const { mountGlassScene } = await import('../lib/glassScene');
       mountGlassScene(canvas);
@@ -22,7 +24,7 @@
     }
   };
 
-  const schedule = () => {
+  const requestIdleStart = () => {
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(() => void start(), { timeout: 3200 });
     } else {
@@ -30,6 +32,7 @@
     }
   };
 
-  if (document.readyState === 'complete') schedule();
-  else window.addEventListener('load', schedule, { once: true });
+  const deferStart = () => setTimeout(requestIdleStart, 1200);
+  if (document.readyState === 'complete') deferStart();
+  else window.addEventListener('load', deferStart, { once: true });
 </script>
