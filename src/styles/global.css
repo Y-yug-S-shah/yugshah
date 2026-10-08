@@ -1420,6 +1420,7 @@ main article h3 {
   .resume-identity { grid-template-columns: 1fr; gap: 1rem; }
   .resume-skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .resume-bottom-grid { grid-template-columns: 1fr; }
+  .field-companion { display: none; }
 }
 
 @media (max-width: 620px) {
