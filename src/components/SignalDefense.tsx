@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 
 type Incident = {
   id: string;
@@ -118,7 +118,7 @@ export default function SignalDefense() {
                 key={node.id}
                 type="button"
                 className={`network-node node-${node.id}${contained && node.id === incident.target ? ' is-isolated' : ''}`}
-                style={{ '--node-index': index } as React.CSSProperties}
+                style={{ '--node-index': index } as CSSProperties}
                 onClick={() => isolate(node.id)}
                 aria-label={`Investigate ${node.label}: ${node.detail}`}
                 aria-pressed={contained && node.id === incident.target}
