@@ -105,7 +105,7 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
             scrollFrame = 0;
             const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
             const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-            if (companion) companion.style.setProperty('--companion-top', `${Math.round(window.innerHeight * (0.1 + progress * 0.8))}px`);
+            if (companion) companion.style.setProperty('--companion-top', `${Math.round(window.innerHeight * (0.22 + progress * 0.68))}px`);
           });
         };
         updateScrollEffects();
