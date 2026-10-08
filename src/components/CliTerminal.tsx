@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from 'react';
 import { completeQuest } from '../lib/gameState';
 
 type TerminalLine = {
@@ -353,7 +353,7 @@ export default function CliTerminal() {
     appendOutput('error', `Command not found: ${trimmed}. Try 'help'.`);
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     executeCommand(command);
     setCommand('');
