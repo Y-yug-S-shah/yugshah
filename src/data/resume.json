@@ -34,8 +34,7 @@
         "Abnormal behavior detection"
       ],
       "keywords": ["Splunk", "Authentication Security", "Log Analysis"],
-      "url": "TODO: add AuthGuardian repository URL",
-      "medium": "TODO: add AuthGuardian Medium article URL"
+      "url": "https://github.com/Y-yug-S-shah/AuthGuardian"
     },
     {
       "name": "PhishHound",
@@ -46,9 +45,7 @@
         "Phishing indicators and IOC generation"
       ],
       "keywords": ["Python", "Threat Analysis", "Phishing"],
-      "url": "TODO: add PhishHound repository URL",
-      "medium": "TODO: add PhishHound Medium article URL",
-      "video": "TODO: add YouTube link"
+      "url": "https://github.com/Y-yug-S-shah/phishhound"
     }
   ],
   "skills": [
