@@ -42,6 +42,11 @@ const nav = [
         <span class="hidden sm:inline">Hire me</span>
       </a>
     </div>
+    <nav aria-label="Mobile primary" class="mx-auto flex max-w-6xl items-center gap-5 overflow-x-auto px-4 pb-2 text-xs sm:px-6 lg:hidden">
+      {nav.map((item) => (
+        <a href={item.href} class="shrink-0 text-[var(--muted)] transition-colors hover:text-[var(--text)]">{item.label}</a>
+      ))}
+    </nav>
   </div>
 </header>
 
