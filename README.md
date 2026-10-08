@@ -33,9 +33,9 @@ npm run preview -- --host 0.0.0.0 --port 4321
 ├── functions/
 │   └── api/
 ├── public/
+│   ├── media/
 │   ├── og/
-│   ├── resume.pdf
-│   └── placeholder-project.svg
+│   └── resume.pdf
 ├── scripts/
 │   ├── build-resume-pdf.mjs
 │   └── generate-og-images.mjs
@@ -107,9 +107,11 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 - Skip links, visible focus states, and reduced-motion support are included.
 - Forms use semantic labels and live status messages.
 - Content remains readable and crawlable without JavaScript-required features.
-- Motion is CSS/inline-vector artwork made for this site; there are no third-party image, audio, or 3D template assets. Reduced-motion preferences disable the ambient animation.
-- The ambient nature-and-piano soundscape and per-click tones are synthesized in the browser; both remain off until enabled with the Sound control.
-- The home page has one optional, isometric alien-garden game. Reading a blog post or exploring a project reveals new garden discoveries.
+- The animated woodland background and fox companion use locally hosted, optimized assets. The woodland photo is by David Dixon / Geograph, licensed CC BY-SA 2.0; its attribution and license are linked beside the photo in the game.
+- Project cards use screenshots from the corresponding public AuthGuardian and PhishHound repositories.
+- The ambient piano chords and short click/clack sounds are synthesized in the browser; audio remains off until enabled with the Sound control.
+- The home page has a small, immediately playable woodland fox trail. The three landmarks are available without visiting other pages; arrow keys, WASD, touch controls, and nearby map patches work.
+- The background and fox motion are CSS-based, with reduced-motion preferences respected. The previous continuously redrawn particle canvas has been removed.
 
 ## Publishing workflow
 
