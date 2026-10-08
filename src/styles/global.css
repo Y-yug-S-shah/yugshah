@@ -1370,6 +1370,8 @@ main article h3 {
 .cli-prompt input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #effbff; font: inherit; font-size: 0.72rem; }
 .cli-prompt input::placeholder { color: #516b77; }
 .cli-cursor { width: 0.42rem; height: 1rem; flex: 0 0 auto; background: #67e8f9; animation: cli-cursor-blink 1.1s steps(2, start) infinite; }
+.cli-submit { flex: 0 0 auto; border: 1px solid rgba(103, 232, 249, 0.2); border-radius: 0.35rem; padding: 0.3rem 0.45rem; background: rgba(8, 47, 73, 0.22); color: #8ddce5; font: inherit; font-size: 0.52rem; letter-spacing: 0.06em; cursor: pointer; }
+.cli-submit:hover { border-color: rgba(103, 232, 249, 0.48); background: rgba(8, 47, 73, 0.4); }
 .cli-console-footer { border-top: 1px solid rgba(103, 232, 249, 0.1); font-size: 0.49rem; }
 .cli-profile-card { display: grid; justify-items: start; gap: 0.25rem; margin-top: 0.85rem; border: 1px solid rgba(103, 232, 249, 0.15); border-radius: 0.7rem; padding: 0.75rem; background: linear-gradient(145deg, rgba(8, 47, 73, 0.24), rgba(6, 15, 24, 0.4)); }
 .cli-profile-emblem { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; margin-bottom: 0.3rem; border: 1px solid rgba(103, 232, 249, 0.34); border-radius: 0.75rem; color: #cffafe; font-weight: 700; }
