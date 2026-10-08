@@ -433,6 +433,7 @@ export default function CliTerminal() {
                   }}
                 />
                 <span className="cli-cursor" aria-hidden="true" />
+                <button type="submit" className="cli-submit" aria-label="Run command">RUN ↵</button>
               </form>
             </div>
             <footer className="cli-console-footer"><span>↑↓ COMMAND HISTORY</span><span>CTRL L CLEAR</span><span>TYPE EXIT TO RETURN</span></footer>
