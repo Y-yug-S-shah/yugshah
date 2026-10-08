@@ -1,0 +1,26 @@
+---
+title: 'Agentic Identity Explained: What Happens When Your AI Agent Pretends to Be Someone Else?'
+description: 'Part two of the AI security series asks what identity an agent acts as, how that identity gets authority, and where ordinary identity advice falls short.'
+pubDate: 2026-08-10
+tags: ['ai-security', 'agentic-identity', 'identity-security']
+cover: '/media/agentic-identity.webp'
+mediumUrl: 'https://medium.com/@yugdshahcs/agentic-identity-explained-what-happens-when-your-ai-agent-pretends-to-be-someone-else-8c4c35a43f88'
+draft: false
+author: 'Yug Shah'
+---
+
+# What is the agent acting as?
+
+Part two follows the prompt-injection discussion with a different question: once an AI system has been persuaded to act, what identity is it acting under? An agent may work for a user, call tools, and move between services. If its identity and authority are unclear, it becomes difficult to know who initiated an action or whether the agent was allowed to take it.
+
+## Identity is more than a credential
+
+Human identity systems come with context: a person has a role, an owner, and an expected set of responsibilities. An AI agent is not simply another employee account. The system needs to distinguish the person requesting work from the software carrying it out, and make the delegation visible in logs and policy decisions.
+
+## Fit the control to the agent
+
+The article cautions against taking existing identity advice and merely replacing the word “employee” with “agent.” Credential rotation and least privilege are useful, but they do not answer who owns an agent, what task it is acting for, or how its access should end when that task is done.
+
+## Takeaway
+
+Give agents identities and permissions that make their operator, purpose, and authority clear. Keep the granted access aligned to the task, preserve attribution for actions, and make it possible to revoke that access. Identity is one layer in the series: it follows the question of trusted input and leads into the runtime behavior of deployed agents.

@@ -1,0 +1,32 @@
+---
+title: 'The Invisible Backdoor: How Attackers Hijack AI Models Through Training Data'
+description: 'Part four examines poisoned data, hidden behavior in model weights, and the files and code around a model that can widen its supply-chain attack surface.'
+pubDate: 2026-10-01
+tags: ['ai-security', 'data-poisoning', 'supply-chain-security']
+cover: '/media/training-data-backdoors.webp'
+mediumUrl: 'https://medium.com/@yugdshahcs/the-invisible-backdoor-how-attackers-hijack-ai-models-through-training-data-36323064c6da'
+draft: false
+author: 'Yug Shah'
+---
+
+# The model supply chain is part of the attack surface
+
+The closing article in the series returns to a question raised earlier: how can we verify the integrity of the data, weights, and artifacts that produced a model? A larger model is not automatically safe from training-data poisoning. The article looks beyond obvious trigger phrases to behavior that can be difficult to spot by inspecting the finished model.
+
+## Trust the artifacts around the weights
+
+Model weights are not the only files that matter. Repositories can include configuration, code, and other artifacts that influence how a model is loaded or used. Those surrounding files extend the supply chain and need to be treated as part of the security boundary.
+
+## A practical verification checklist
+
+The article's recommendations focus on provenance and controlled execution:
+
+- Know the training data and freeze approved datasets.
+- Audit fine-tuning data, not just the size of the dataset.
+- Pin and verify model artifacts before using them.
+- Keep remote code disabled unless it has been reviewed.
+- Load untrusted models in a sandbox.
+
+## Close the loop
+
+The four-part series has moved from untrusted inputs, through agent identity and runtime behavior, to the origin and integrity of the model itself. Each layer needs its own checks; confidence in one layer does not establish trust in all the others.

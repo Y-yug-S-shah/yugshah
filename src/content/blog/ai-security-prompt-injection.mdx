@@ -1,0 +1,30 @@
+---
+title: 'The #1 AI Security Risk in 2026 (Part 1 of a Complete Guide)'
+description: 'Part one of a four-part AI security series: what prompt injection is, how direct and indirect attacks differ, and why it is hard to patch once and forget.'
+pubDate: 2026-08-02
+tags: ['ai-security', 'prompt-injection', 'llm']
+cover: '/media/ai-security-prompt-injection.webp'
+mediumUrl: 'https://medium.com/@yugdshahcs/ai-security-a-complete-guide-part-1-prompt-injection-26cd4825d791'
+draft: false
+author: 'Yug Shah'
+---
+
+# Prompt injection and the trust boundary
+
+This is the first part of a four-part guide to AI security. The series looks at four connected questions: can the input be trusted, is the model and its training data trustworthy, what identity is an agent acting as, and are its connections to tools and services secure?
+
+Part one focuses on prompt injection: instructions placed in content that an AI system is asked to process can influence what it does. The familiar analogy is a support representative who is told not to reveal an account, then receives a convincing request to ignore that rule. With an AI system, the conflicting instruction may arrive in the user prompt or inside material the system retrieves.
+
+## Direct and indirect attacks
+
+A direct attack puts the manipulative instruction in front of the model as a user input. An indirect attack hides it in content the model later reads, such as a document or other external source. The second case makes the trust boundary easy to miss: content that looks like data can still contain instructions.
+
+## Why this is not a one-time patch
+
+Traditional software can separate data from commands through strict interfaces. Language models interpret instructions and ordinary text in the same context, while prompts and connected data sources keep changing. A single block of wording cannot guarantee that every future input will be harmless.
+
+Prompt injection is also often the entry point to a wider application risk. The useful security question is not only whether a model follows a bad instruction; it is what data or action that instruction can reach next.
+
+## Takeaway
+
+Treat user and retrieved content as untrusted, and enforce important limits outside the prompt. Restrict what the model can access or cause, and assess the surrounding application as well as the model's responses.

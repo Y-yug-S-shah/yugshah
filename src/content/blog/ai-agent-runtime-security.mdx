@@ -1,0 +1,32 @@
+---
+title: 'Your AI Agent is running right now, who’s watching it?'
+description: 'Part three shifts from pre-deployment testing to production: discover AI systems, inspect their runtime activity, and enforce policy as agents use tools.'
+pubDate: 2026-09-16
+tags: ['ai-security', 'runtime-security', 'ai-agents']
+cover: '/media/ai-agent-runtime-security.webp'
+mediumUrl: 'https://medium.com/@yugdshahcs/your-ai-agent-is-running-right-now-whos-watching-it-90fd27846a21'
+draft: false
+author: 'Yug Shah'
+---
+
+# Who is watching AI in production?
+
+Part three of the guide moves the focus from a model in a test to an AI application that is already running. Production systems span models, users, data, tools, APIs, agents, and external services. Their security posture can change as those pieces interact.
+
+## You cannot secure what you cannot see
+
+The first runtime problem is discovery. AI use can spread across teams and services, leaving security teams without a reliable view of which systems are active or what data and tools they can reach. Inventory gives monitoring and policy a place to start.
+
+## Inspect and enforce at runtime
+
+Once an AI system is active, its interactions become security telemetry. A runtime control can inspect prompts and tool activity and apply policy while the system operates, rather than relying only on what it did in a test.
+
+Agents make this especially important: a chatbot may return text, while an agent can take actions through tools. That changes the consequences of a bad instruction or an overly broad permission.
+
+## Testing and runtime controls work together
+
+Red teaming helps uncover weaknesses before deployment. Runtime monitoring and enforcement address behavior after deployment. The article treats them as complementary controls, not competing choices: production AI needs both a way to test what might go wrong and visibility into what is happening now.
+
+## Takeaway
+
+Build the production picture around discovery, inspection, and policy enforcement. The model is only one part of the system; secure the surrounding interactions and keep observing them as they change.
