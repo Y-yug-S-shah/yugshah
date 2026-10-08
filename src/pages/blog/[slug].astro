@@ -47,6 +47,11 @@ const jsonLd = {
     <div class="prose prose-invert max-w-none rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6 text-base leading-8 text-[var(--muted)]">
       <Content />
     </div>
+    {post.data.mediumUrl && (
+      <a href={post.data.mediumUrl} target="_blank" rel="noreferrer" class="inline-flex text-sm font-semibold text-[var(--accent-strong)]">
+        Read the original on Medium ↗
+      </a>
+    )}
     <a href="/blog" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">Return to blog</a>
   </article>
 </BaseLayout>
