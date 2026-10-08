@@ -883,6 +883,18 @@ main article h3 {
   color: var(--accent-strong);
 }
 
+.resume-project-top span:last-child,
+.resume-education-card > span,
+.resume-achievement article > span,
+.resume-skill-card li::before,
+.resume-cert-list li::before {
+  color: var(--accent-strong);
+}
+
+.resume-achievement article {
+  border-left-color: color-mix(in srgb, var(--accent-strong) 48%, var(--border));
+}
+
 .game-page-intro {
   max-width: 52rem;
   padding-block: 1rem 2rem;
