@@ -1,0 +1,28 @@
+---
+import AIPal from '../components/AIPal';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_URL } from '../config/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Mori’s AI Garden | Yug Shah',
+  description: 'A gentle, cozy little garden where you can care for a tiny AI companion and explore thoughtful AI boundaries.',
+  url: `${SITE_URL}/game`
+};
+---
+
+<BaseLayout
+  title="Mori’s AI Garden | Yug Shah"
+  description="Meet Mori: a cozy, low-pressure AI companion garden. Play, collect tiny memories, and share gentle lessons about thoughtful AI."
+  image="/og/home.svg"
+  jsonLd={jsonLd}
+  canonicalPath="/game"
+>
+  <section class="game-page-intro">
+    <p class="section-kicker">The AI garden</p>
+    <h1>A little room for wonder.</h1>
+    <p>Meet Mori, a tiny AI friend who grows through play, kindness, and good boundaries. Wander at your own pace; this garden never asks you to hurry.</p>
+  </section>
+  <AIPal client:load />
+</BaseLayout>
