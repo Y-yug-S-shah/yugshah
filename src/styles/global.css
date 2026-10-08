@@ -2092,7 +2092,7 @@ main article h3 {
   text-transform: uppercase;
 }
 
-.mood-happy .mori-pet { animation: mori-happy-bounce 560ms ease-in-out 2, mori-breathe 3s ease-in-out infinite; }
+.mood-happy .mori-pet { animation: mori-happy-bounce 560ms ease-in-out 2; }
 .mood-sleepy .mori-pet { animation: mori-sleep 1.8s ease-in-out infinite; }
 .mood-thoughtful .mori-pet { animation: mori-thought 1.2s ease-in-out 2, mori-breathe 3s ease-in-out infinite; }
 
@@ -2418,7 +2418,7 @@ main article h3 {
   width: min(100%, 14rem);
   overflow: visible;
   filter: drop-shadow(0 12px 12px rgba(51, 43, 32, 0.13));
-  animation: mori-breathe 3s ease-in-out infinite;
+  animation: preview-breathe 3s ease-in-out infinite;
 }
 
 .preview-orbit {
@@ -2462,6 +2462,11 @@ main article h3 {
 @keyframes mori-breathe {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+@keyframes preview-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
 @keyframes mori-happy-bounce {
