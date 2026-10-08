@@ -1,11 +1,12 @@
 # Yug Shah Portfolio
 
-A static portfolio site for Yug Shah built with Astro, Tailwind, React islands, Cloudflare Pages compatibility, and a lightweight gamified UX.
+A static portfolio site for Yug Shah built with Astro, Tailwind, React islands, Cloudflare Pages compatibility, a glassy 3D atmosphere, and a cozy AI-companion garden.
 
 ## Stack
 
 - Astro static site with React islands
-- Tailwind CSS and CSS custom properties
+- Tailwind CSS, CSS custom properties, and liquid-glass surfaces
+- Three.js glass objects, particles, and restrained bloom; GSAP scroll reveals
 - MDX blog content collection
 - Cloudflare Pages Functions for contact handling
 - Build-time resume PDF export and OG image generation
@@ -107,13 +108,14 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 - Skip links, visible focus states, and reduced-motion support are included.
 - Forms use semantic labels and live status messages.
 - Content remains readable and crawlable without JavaScript-required features.
-- The site background uses a lightweight Canvas 2D matrix effect and a CSS perspective grid; animation pauses when the page is hidden and respects reduced-motion preferences.
-- A small animated dog companion runs alongside the right viewport edge.
+- The decorative glass scene loads after the page is idle, limits rendering resolution and frame rate, pauses in background tabs, and is skipped for reduced-motion and data-saving preferences.
+- GSAP scroll reveals are loaded lazily and are disabled when reduced motion is requested.
+- Milo, the AI companion, stays in a dedicated desktop sidebar and follows page progress without covering content.
 - Project cards use screenshots from the corresponding public AuthGuardian and PhishHound repositories.
 - The ambient piano chords and short click/clack sounds are synthesized in the browser; audio remains off until enabled with the Sound control.
 - The latest four articles in the AI security series are mirrored in full, with a direct Medium source link on each listing card and article page. Their optimized covers and diagrams are served from `public/media/`.
-- The home page has a three-incident network-defense exercise. Visitors investigate identity, endpoint, gateway, and cloud telemetry, then isolate the compromised layer; it has keyboard controls and no countdown.
-- CLI mode includes a browsable portfolio workspace, real project and experience summaries, article links, shell-style commands, command history, and animated terminal output.
+- The separate `/game` page is a gentle AI-companion garden. Its memories, friendship, and lessons are saved locally in the visitor's browser; there is no account, timer, or penalty.
+- CLI mode includes a browsable portfolio workspace, real project and experience summaries, article links, shell-style commands, command history, and animated terminal output. It supports `ls`, `cat`, `cd`, `grep`, `open`, and other shell-inspired commands.
 
 ## Publishing workflow
 
