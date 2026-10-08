@@ -81,7 +81,6 @@ body > * {
   width: min(54vw, 54rem);
   aspect-ratio: 1;
   border-radius: 50%;
-  filter: blur(72px);
   opacity: 0.22;
   transform: translate3d(0, 0, 0);
   will-change: transform;
