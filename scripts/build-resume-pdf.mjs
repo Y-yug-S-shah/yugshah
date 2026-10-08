@@ -37,6 +37,20 @@ for (const job of resume.work) {
 
 doc.addPage();
 
+doc.fontSize(18).fillColor('#111827').text('Projects');
+for (const project of resume.projects) {
+  doc.moveDown(0.5);
+  const titleY = doc.y;
+  doc.fontSize(12).fillColor('#111827').text(project.name);
+  doc.fontSize(9).fillColor('#2563eb').text(project.url, {
+    link: project.url,
+    underline: true
+  });
+  doc.fontSize(10).fillColor('#374151').text(project.description, { align: 'justify' });
+  if (doc.y < titleY) doc.moveDown();
+}
+
+doc.moveDown();
 doc.fontSize(18).fillColor('#111827').text('Education');
 for (const edu of resume.education) {
   doc.moveDown(0.5);
