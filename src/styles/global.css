@@ -160,7 +160,7 @@ img {
 .field-companion {
   position: fixed;
   top: var(--companion-top, 24vh);
-  right: 0;
+  right: -0.65rem;
   z-index: 45;
   width: clamp(5.5rem, 8vw, 7rem);
   filter: drop-shadow(0 9px 12px rgba(0, 0, 0, 0.5));
@@ -1111,8 +1111,6 @@ main article h3 {
   cursor: pointer;
   transform: translate(-50%, -50%) translateZ(calc(var(--node-index) * 5px));
   transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
-  animation: node-float 4s ease-in-out infinite alternate;
-  animation-delay: calc(var(--node-index) * -0.8s);
 }
 
 .network-node:hover,
@@ -1394,7 +1392,6 @@ main article h3 {
 @keyframes terminal-line-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes network-flow { to { stroke-dashoffset: -30; } }
 @keyframes packet-travel { 0%, 8% { left: 8%; opacity: 0; } 14% { opacity: 1; } 86% { opacity: 1; } 94%, 100% { left: 91%; opacity: 0; } }
-@keyframes node-float { to { translate: 0 -4px; } }
 @keyframes incident-pulse { 0% { opacity: 0.8; scale: 0.55; } 85%, 100% { opacity: 0; scale: 2.6; } }
 @keyframes signal-status-pulse { 50% { opacity: 0.45; } }
 
@@ -1426,7 +1423,7 @@ main article h3 {
 }
 
 @media (max-width: 620px) {
-  .field-companion { width: 4.5rem; }
+  .field-companion { right: -0.35rem; width: 4.5rem; }
   .experience-card { padding: 0.9rem; }
   .experience-badge { display: none; }
   .resume-masthead-top { align-items: flex-start; flex-direction: column; }
@@ -1485,6 +1482,5 @@ main article h3 {
   .cli-shell *,
   .ambient-scene::after { animation: none !important; }
 
-  .network-node { translate: none; }
   .network-packet { display: none; }
 }
