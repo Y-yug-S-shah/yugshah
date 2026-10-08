@@ -1,29 +1,45 @@
 @import 'tailwindcss';
 
 :root {
-  --bg: #f6f1e8;
-  --bg-soft: rgba(255, 255, 255, 0.55);
-  --panel: rgba(255, 255, 255, 0.7);
-  --border: rgba(15, 23, 42, 0.12);
-  --text: #0f172a;
-  --muted: #475569;
-  --accent: #fbbf24;
-  --accent-soft: rgba(251, 191, 36, 0.16);
-  --accent-strong: #f97316;
-  --shadow: rgba(15, 23, 42, 0.12);
+  color-scheme: dark;
+  --bg: #050b12;
+  --bg-soft: rgba(10, 20, 31, 0.72);
+  --panel: rgba(11, 22, 34, 0.84);
+  --border: rgba(125, 170, 190, 0.18);
+  --text: #e5f1f5;
+  --muted: #a1b5c0;
+  --accent: #5eead4;
+  --accent-soft: rgba(45, 212, 191, 0.16);
+  --accent-strong: #67e8f9;
+  --shadow: rgba(0, 0, 0, 0.42);
 }
 
 :root[data-theme='dark'] {
-  --bg: #061018;
-  --bg-soft: rgba(15, 23, 42, 0.7);
-  --panel: rgba(15, 23, 42, 0.76);
-  --border: rgba(148, 163, 184, 0.25);
-  --text: #e2e8f0;
-  --muted: #cbd5e1;
-  --accent: #fbbf24;
-  --accent-soft: rgba(251, 191, 36, 0.2);
-  --accent-strong: #f9a826;
-  --shadow: rgba(2, 6, 23, 0.45);
+  color-scheme: dark;
+  --bg: #050b12;
+  --bg-soft: rgba(10, 20, 31, 0.72);
+  --panel: rgba(11, 22, 34, 0.84);
+  --border: rgba(125, 170, 190, 0.18);
+  --text: #e5f1f5;
+  --muted: #a1b5c0;
+  --accent: #5eead4;
+  --accent-soft: rgba(45, 212, 191, 0.16);
+  --accent-strong: #67e8f9;
+  --shadow: rgba(0, 0, 0, 0.42);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #edf4f6;
+  --bg-soft: rgba(237, 246, 249, 0.8);
+  --panel: rgba(247, 251, 252, 0.9);
+  --border: rgba(20, 51, 66, 0.16);
+  --text: #10212d;
+  --muted: #4c6470;
+  --accent: #0f9f8e;
+  --accent-soft: rgba(15, 159, 142, 0.16);
+  --accent-strong: #087e91;
+  --shadow: rgba(20, 51, 66, 0.16);
 }
 
 html {
@@ -55,25 +71,46 @@ body > * {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  background:
+    radial-gradient(ellipse at 14% 12%, rgba(14, 116, 144, 0.12), transparent 38%),
+    radial-gradient(ellipse at 86% 74%, rgba(5, 150, 105, 0.09), transparent 35%),
+    #050b12;
 }
 
 .ambient-scene::before {
   position: absolute;
-  inset: -4%;
+  inset: 0;
   background:
-    linear-gradient(180deg, rgba(246, 241, 232, 0.66), rgba(246, 241, 232, 0.76)),
-    url('/media/woodland-path-optimized.jpg') center 47% / cover;
+    radial-gradient(ellipse at 50% 38%, transparent 10%, rgba(3, 9, 15, 0.52) 100%),
+    linear-gradient(180deg, rgba(5, 11, 18, 0.14), rgba(5, 11, 18, 0.44));
   content: '';
-  opacity: 0.52;
-  transform: translate3d(0, 0, 0) scale(1.04);
-  will-change: transform;
-  animation: landscape-drift 54s ease-in-out infinite alternate;
+  opacity: 0.9;
 }
 
-:root[data-theme='dark'] .ambient-scene::before {
-  background:
-    linear-gradient(180deg, rgba(6, 16, 24, 0.78), rgba(6, 16, 24, 0.86)),
-    url('/media/woodland-path-optimized.jpg') center 47% / cover;
+.ambient-scene::after {
+  position: absolute;
+  right: -30%;
+  bottom: -52%;
+  left: -30%;
+  height: 82%;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.12) 1px, transparent 1px);
+  background-size: 48px 48px;
+  content: '';
+  mask-image: linear-gradient(transparent, #000 24%, #000 76%, transparent);
+  opacity: 0.46;
+  transform: perspective(460px) rotateX(63deg);
+  transform-origin: center top;
+  animation: cyber-grid-drift 28s linear infinite;
+}
+
+.matrix-rain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.24;
 }
 
 .ambient-orb {
@@ -81,35 +118,26 @@ body > * {
   width: min(54vw, 54rem);
   aspect-ratio: 1;
   border-radius: 50%;
-  opacity: 0.22;
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
+  opacity: 0.18;
+  filter: blur(18px);
 }
 
 .ambient-orb-one {
   top: -28%;
   left: -16%;
-  background: radial-gradient(circle, #a9c9a1 0, rgba(169, 201, 161, 0) 70%);
-  animation: canopy-drift-one 31s ease-in-out infinite alternate;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.5) 0, rgba(34, 211, 238, 0) 70%);
+  animation: cyber-orb-drift 34s ease-in-out infinite alternate;
 }
 
 .ambient-orb-two {
   right: -19%;
   bottom: -42%;
-  background: radial-gradient(circle, #ddb889 0, rgba(221, 184, 137, 0) 70%);
-  animation: canopy-drift-two 37s ease-in-out infinite alternate;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.34) 0, rgba(52, 211, 153, 0) 70%);
+  animation: cyber-orb-drift 39s ease-in-out infinite alternate-reverse;
 }
 
-.ambient-orb-three {
-  top: 26%;
-  left: 39%;
-  width: min(34vw, 34rem);
-  background: radial-gradient(circle, #96b7ab 0, rgba(150, 183, 171, 0) 70%);
-  opacity: 0.13;
-  animation: canopy-drift-three 43s ease-in-out infinite alternate;
-}
-
-:root[data-theme='dark'] .ambient-orb { opacity: 0.12; }
+.cyber-grid-plane,
+.cyber-scanline { display: none; }
 
 * {
   box-sizing: border-box;
@@ -132,10 +160,10 @@ img {
 .field-companion {
   position: fixed;
   top: var(--companion-top, 24vh);
-  right: 0.15rem;
+  right: 0;
   z-index: 45;
-  width: clamp(2.8rem, 4vw, 3.4rem);
-  filter: drop-shadow(0 8px 8px rgba(26, 34, 24, 0.24));
+  width: clamp(5.5rem, 8vw, 7rem);
+  filter: drop-shadow(0 9px 12px rgba(0, 0, 0, 0.5));
   pointer-events: none;
   transform: translate3d(0, -50%, 0);
 }
@@ -143,22 +171,34 @@ img {
 .field-companion svg {
   width: 100%;
   overflow: visible;
-  animation: fox-run-bob 470ms ease-in-out infinite alternate;
+  animation: dog-run-bob 320ms ease-in-out infinite alternate;
 }
 
-.edge-fox-tail {
-  transform-origin: 89px 55px;
-  animation: fox-tail-swing 620ms ease-in-out infinite alternate;
+.field-companion::after {
+  position: absolute;
+  top: -50vh;
+  right: 0;
+  width: 2px;
+  height: 100vh;
+  background: linear-gradient(transparent, rgba(94, 234, 212, 0.22), rgba(103, 232, 249, 0.48), rgba(94, 234, 212, 0.18), transparent);
+  content: '';
+  opacity: 0.75;
 }
 
-.edge-fox-leg-one {
-  transform-origin: 60px 60px;
-  animation: fox-leg-run 260ms ease-in-out infinite alternate;
+.dog-tail {
+  transform-box: fill-box;
+  transform-origin: 95% 75%;
+  animation: dog-tail-wag 260ms ease-in-out infinite alternate;
 }
 
-.edge-fox-leg-two {
-  transform-origin: 52px 60px;
-  animation: fox-leg-run 260ms ease-in-out infinite alternate-reverse;
+.dog-leg {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: dog-leg-run 210ms ease-in-out infinite alternate;
+}
+
+.dog-leg-back {
+  animation-direction: alternate-reverse;
 }
 
 .motion-ready [data-reveal] {
@@ -223,35 +263,27 @@ html.cli-active .field-companion {
   display: none;
 }
 
-@keyframes canopy-drift-one {
-  to { transform: translate3d(12vw, 15vh, 0) scale(1.08); }
+@keyframes cyber-grid-drift {
+  to { background-position: 0 48px, 48px 0; }
 }
 
-@keyframes canopy-drift-two {
-  to { transform: translate3d(-13vw, -9vh, 0) scale(0.94); }
+@keyframes cyber-orb-drift {
+  to { transform: translate3d(8vw, 10vh, 0) scale(1.12); }
 }
 
-@keyframes canopy-drift-three {
-  to { transform: translate3d(-9vw, 11vh, 0) scale(1.12); }
+@keyframes dog-run-bob {
+  from { transform: translate3d(-1px, -2px, 0) rotate(-1deg); }
+  to { transform: translate3d(0, 2px, 0) rotate(1deg); }
 }
 
-@keyframes landscape-drift {
-  to { transform: translate3d(1.2%, -0.8%, 0) scale(1.1); }
+@keyframes dog-tail-wag {
+  from { rotate: -8deg; }
+  to { rotate: 9deg; }
 }
 
-@keyframes fox-run-bob {
-  from { transform: translate3d(-1px, -2px, 0); }
-  to { transform: translate3d(2px, 1px, 0); }
-}
-
-@keyframes fox-tail-swing {
-  from { rotate: -6deg; }
-  to { rotate: 7deg; }
-}
-
-@keyframes fox-leg-run {
-  from { rotate: -24deg; }
-  to { rotate: 24deg; }
+@keyframes dog-leg-run {
+  from { rotate: -28deg; }
+  to { rotate: 28deg; }
 }
 
 @keyframes orbit-pulse {
@@ -280,11 +312,7 @@ html.cli-active .field-companion {
 }
 
 @media (max-width: 640px) {
-  .field-companion {
-    right: 0.08rem;
-    width: 2.7rem;
-    opacity: 0.92;
-  }
+  .field-companion { width: 5rem; }
 
   .hero-console {
     transform: none;
