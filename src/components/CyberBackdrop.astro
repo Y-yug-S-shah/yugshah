@@ -1,0 +1,35 @@
+<div class="ambient-scene" aria-hidden="true">
+  <canvas class="glass-field"></canvas>
+  <span class="ambient-orb ambient-orb-one"></span>
+  <span class="ambient-orb ambient-orb-two"></span>
+</div>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.glass-field');
+  const connection = (navigator as Navigator & {
+    connection?: { saveData?: boolean; effectiveType?: string };
+  }).connection;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const saveData = connection?.saveData || connection?.effectiveType === 'slow-2g';
+
+  const start = async () => {
+    if (!canvas || saveData || motionPreference.matches || document.hidden) return;
+    try {
+      const { mountGlassScene } = await import('../lib/glassScene');
+      mountGlassScene(canvas);
+    } catch (error) {
+      console.error('The decorative glass scene could not be loaded.', error);
+    }
+  };
+
+  const schedule = () => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(() => void start(), { timeout: 3200 });
+    } else {
+      setTimeout(() => void start(), 1200);
+    }
+  };
+
+  if (document.readyState === 'complete') schedule();
+  else window.addEventListener('load', schedule, { once: true });
+</script>
