@@ -57,6 +57,25 @@ body > * {
   pointer-events: none;
 }
 
+.ambient-scene::before {
+  position: absolute;
+  inset: -4%;
+  background:
+    linear-gradient(180deg, rgba(246, 241, 232, 0.66), rgba(246, 241, 232, 0.76)),
+    url('/media/woodland-path-optimized.jpg') center 47% / cover;
+  content: '';
+  opacity: 0.52;
+  transform: translate3d(0, 0, 0) scale(1.04);
+  will-change: transform;
+  animation: landscape-drift 54s ease-in-out infinite alternate;
+}
+
+:root[data-theme='dark'] .ambient-scene::before {
+  background:
+    linear-gradient(180deg, rgba(6, 16, 24, 0.78), rgba(6, 16, 24, 0.86)),
+    url('/media/woodland-path-optimized.jpg') center 47% / cover;
+}
+
 .ambient-orb {
   position: absolute;
   width: min(54vw, 54rem);
@@ -215,6 +234,10 @@ html.cli-active .field-companion {
 
 @keyframes canopy-drift-three {
   to { transform: translate3d(-9vw, 11vh, 0) scale(1.12); }
+}
+
+@keyframes landscape-drift {
+  to { transform: translate3d(1.2%, -0.8%, 0) scale(1.1); }
 }
 
 @keyframes fox-run-bob {
@@ -929,6 +952,7 @@ main article h3 {
 
 @media (prefers-reduced-motion: reduce) {
   .ambient-orb,
+  .ambient-scene::before,
   .field-companion svg,
   .edge-fox-tail,
   .edge-fox-leg,

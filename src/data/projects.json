@@ -10,7 +10,7 @@
     },
     "year": 2026,
     "featured": true,
-    "image": "/media/authguardian-dashboard.png"
+    "image": "/media/authguardian-dashboard.jpg"
   },
   {
     "title": "PhishHound",
@@ -23,6 +23,6 @@
     },
     "year": 2026,
     "featured": true,
-    "image": "/media/phishhound-analysis.png"
+    "image": "/media/phishhound-analysis.jpg"
   }
 ]
