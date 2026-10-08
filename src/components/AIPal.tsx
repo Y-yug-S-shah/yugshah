@@ -52,7 +52,8 @@ function readSavedState(): PalState {
 }
 
 export default function AIPal() {
-  const [pal, setPal] = useState<PalState>(readSavedState);
+  const [pal, setPal] = useState<PalState>(INITIAL_STATE);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [notice, setNotice] = useState('A tiny garden, just for the two of you.');
   const [nickname, setNickname] = useState(pal.name);
   const [pickedSeeds, setPickedSeeds] = useState<string[]>([]);
@@ -61,12 +62,20 @@ export default function AIPal() {
   const seedTimers = useRef<number[]>([]);
 
   useEffect(() => {
+    const saved = readSavedState();
+    setPal(saved);
+    setNickname(saved.name);
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(pal));
     } catch (error) {
       console.error('Could not save the AI garden in this browser.', error);
     }
-  }, [pal]);
+  }, [isLoaded, pal]);
 
   useEffect(() => () => {
     if (toastTimer.current !== undefined) window.clearTimeout(toastTimer.current);
