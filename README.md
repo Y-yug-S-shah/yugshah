@@ -110,6 +110,7 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 - The animated woodland background and fox companion use locally hosted, optimized assets. The woodland photo is by David Dixon / Geograph, licensed CC BY-SA 2.0; its attribution and license are linked beside the photo in the game.
 - Project cards use screenshots from the corresponding public AuthGuardian and PhishHound repositories.
 - The ambient piano chords and short click/clack sounds are synthesized in the browser; audio remains off until enabled with the Sound control.
+- The blog includes on-site companion notes for the latest four articles in the AI security series, with a direct Medium source link on each listing card and article page. Their locally optimized cover artwork is served from `public/media/`.
 - The home page has a small, immediately playable woodland fox trail. The three landmarks are available without visiting other pages; arrow keys, WASD, touch controls, and nearby map patches work.
 - The background and fox motion are CSS-based, with reduced-motion preferences respected. The previous continuously redrawn particle canvas has been removed.
 
