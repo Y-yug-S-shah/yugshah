@@ -160,7 +160,7 @@ const nav = [
     if (!soundEnabled || ambienceGain) return;
 
     ambienceGain = audioContext.createGain();
-    ambienceGain.gain.setValueAtTime(0.55, audioContext.currentTime);
+    ambienceGain.gain.setValueAtTime(0.66, audioContext.currentTime);
     ambienceGain.connect(audioContext.destination);
     playPianoChord();
     ambienceTimer = window.setInterval(playPianoChord, 5600);
@@ -183,7 +183,7 @@ const nav = [
     filter.frequency.value = 1900;
     filter.Q.value = 0.8;
     noiseGain.gain.setValueAtTime(0.0001, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.045, now + 0.002);
+    noiseGain.gain.exponentialRampToValueAtTime(0.036, now + 0.002);
     noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
     noise.connect(filter);
     filter.connect(noiseGain);
@@ -197,7 +197,7 @@ const nav = [
     oscillator.frequency.setValueAtTime(920, now);
     oscillator.frequency.exponentialRampToValueAtTime(390, now + 0.035);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.016, now + 0.002);
+    gain.gain.exponentialRampToValueAtTime(0.0128, now + 0.002);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
