@@ -3,6 +3,7 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import CliTerminal from '../components/CliTerminal.tsx';
+import CyberBackdrop from '../components/CyberBackdrop.astro';
 import { SITE_URL } from '../config/site';
 import profile from '../data/profile.json';
 
@@ -19,7 +20,7 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
 ---
 
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,37 +55,39 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
   </head>
   <body class="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[var(--panel)] focus:px-4 focus:py-2 focus:text-[var(--text)]">Skip to content</a>
-    <div class="ambient-scene" aria-hidden="true">
-      <span class="ambient-orb ambient-orb-one"></span>
-      <span class="ambient-orb ambient-orb-two"></span>
-      <span class="ambient-orb ambient-orb-three"></span>
-    </div>
+    <CyberBackdrop />
     <SiteHeader />
     <CliTerminal client:only="react" />
-    <div class="field-companion" aria-hidden="true" title="A fox on the woodland trail">
-      <svg viewBox="0 0 120 88" role="presentation">
+    <div class="field-companion" aria-hidden="true">
+      <svg viewBox="0 0 184 126" role="presentation">
         <defs>
-          <linearGradient id="fox-edge-coat" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#efa65f" />
-            <stop offset="1" stop-color="#a84f2d" />
+          <linearGradient id="dog-coat" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f8bd72" />
+            <stop offset="1" stop-color="#c8783c" />
           </linearGradient>
         </defs>
-        <ellipse cx="59" cy="77" rx="38" ry="5" fill="#172419" opacity=".22" />
-        <g class="edge-fox-tail">
-          <path d="M86 49c21-18 34-8 25 8-6 11-18 16-30 12" fill="url(#fox-edge-coat)" />
-          <path d="M105 49c9-5 11 2 6 8-3 5-8 8-13 9 5-6 8-11 7-17Z" fill="#f2e8db" />
+        <ellipse cx="101" cy="115" rx="68" ry="6" fill="#020617" opacity=".35" />
+        <g class="dog-tail">
+          <path d="M137 62c25-22 43-9 33 12-7 15-21 17-33 7 18 0 23-9 15-15-4-4-9-4-15-4Z" fill="url(#dog-coat)" stroke="#a95632" stroke-width="2" />
+          <path d="M165 57c7-2 10 3 7 9-3 5-7 7-12 8 5-6 7-11 5-17Z" fill="#fff0d7" />
         </g>
-        <g class="edge-fox-body">
-          <path d="M31 51c8-19 24-27 44-24 15 2 24 12 25 25l-8 16H42L29 60Z" fill="url(#fox-edge-coat)" />
-          <path d="M59 51c10 4 20 4 31 0l9 17H43c4-9 9-14 16-17Z" fill="#efe3d2" />
-          <path d="m35 40-4-22 18 13M72 31l10-21 9 24" fill="#bb633b" />
-          <path d="m35 32-1-8 9 6M77 31l5-12 4 13" fill="#3a2922" />
-          <path d="M40 42c9-11 24-13 37-7 9 4 15 12 14 21-14 4-32 2-51-4Z" fill="#dc8846" />
-          <path d="M81 47c13-5 21-2 21 6 0 8-10 13-25 11 7-5 10-9 4-17Z" fill="#f4e9da" />
-          <circle cx="81" cy="43" r="1.8" fill="#201c19" />
-          <path d="m100 49 5 2-5 3" fill="#211b18" />
-          <path class="edge-fox-leg edge-fox-leg-one" d="m53 62-5 11m19-10 4 10" fill="none" stroke="#80432b" stroke-linecap="round" stroke-width="6" />
-          <path class="edge-fox-leg edge-fox-leg-two" d="m38 62-3 10m35-9 4 10" fill="none" stroke="#693a2a" stroke-linecap="round" stroke-width="6" />
+        <g class="dog-body">
+          <path d="M52 58c15-19 49-22 77-9 13 6 20 20 14 37-7 16-35 22-66 15-21-5-35-19-34-34Z" fill="url(#dog-coat)" stroke="#a95632" stroke-width="2" />
+          <path d="M78 70c18 8 38 9 57 2l11 18c-16 14-50 16-76 4 10-4 16-12 8-24Z" fill="#fff0d7" />
+          <path d="M43 65c-10-11-20-18-28-21-6-3-8 1-6 6 4 11 13 19 25 25Z" fill="url(#dog-coat)" stroke="#a95632" stroke-width="2" />
+          <path d="M13 47c-3-3-5 0-3 4 3 7 8 12 15 16-2-7-5-14-12-20Z" fill="#fff0d7" />
+          <path d="M29 55c-8-14-5-31 8-40l12 22M46 37c-1-18 9-29 23-31l2 34" fill="#d8874c" stroke="#a95632" stroke-width="2" stroke-linejoin="round" />
+          <path d="m35 25 3-4 6 13M55 34l3-17 9-3 1 21" fill="#543323" />
+          <path d="M29 56c8-13 24-19 41-14 13 4 20 14 18 26-8 14-31 17-51 8-8-4-13-12-8-20Z" fill="url(#dog-coat)" />
+          <path d="M29 68c10 1 18-3 25 4 6 6 3 17-7 20-12 4-29-2-35-11-4-6 3-13 17-13Z" fill="#fff0d7" />
+          <circle cx="44" cy="55" r="2.8" fill="#24180f" />
+          <circle cx="45" cy="54" r=".8" fill="#fff" />
+          <path d="M14 73c-1-4 3-6 7-4l5 4-6 5c-3 1-5-2-6-5Z" fill="#302018" />
+          <path d="M28 80c4 5 9 6 13 5" fill="none" stroke="#8a4c36" stroke-linecap="round" stroke-width="1.6" />
+          <path class="dog-leg dog-leg-rear" d="M119 87v20q0 5 6 5h8" fill="none" stroke="#a95632" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" />
+          <path class="dog-leg dog-leg-front" d="M77 85v21q0 5 6 5h8" fill="none" stroke="#b96a3c" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" />
+          <path class="dog-leg dog-leg-rear dog-leg-back" d="M138 83v20q0 5 6 5h7" fill="none" stroke="#82472e" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
+          <path class="dog-leg dog-leg-front dog-leg-back" d="M94 86v19q0 5 6 5h7" fill="none" stroke="#945433" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
         </g>
       </svg>
     </div>
@@ -102,7 +105,7 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
             scrollFrame = 0;
             const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
             const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-            if (companion) companion.style.setProperty('--companion-top', `${Math.round(window.innerHeight * (0.06 + progress * 0.88))}px`);
+            if (companion) companion.style.setProperty('--companion-top', `${Math.round(window.innerHeight * (0.1 + progress * 0.8))}px`);
           });
         };
         updateScrollEffects();
