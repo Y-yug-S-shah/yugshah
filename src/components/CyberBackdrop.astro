@@ -214,7 +214,7 @@
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(() => void start(), { timeout: 2400 });
     } else {
-      window.setTimeout(() => void start(), 900);
+      setTimeout(() => void start(), 900);
     }
   };
 
