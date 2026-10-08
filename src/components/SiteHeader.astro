@@ -103,52 +103,53 @@ const nav = [
   let soundEnabled = localStorage.getItem(soundStorageKey) === 'on';
   let audioContext;
   let ambienceGain;
-  let ambienceSource;
   let ambienceTimer;
-  let pianoStep = 0;
-  const pianoNotes = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880, 698.46];
+  let clickBuffer;
+  let chordStep = 0;
+  const pianoChords = [
+    [261.63, 329.63, 392],
+    [220, 261.63, 329.63],
+    [174.61, 220, 261.63],
+    [196, 246.94, 293.66]
+  ];
   const stopAmbience = () => {
     if (ambienceTimer) window.clearInterval(ambienceTimer);
     ambienceTimer = undefined;
-    if (ambienceGain && audioContext) {
-      ambienceGain.gain.cancelScheduledValues(audioContext.currentTime);
-      ambienceGain.gain.setTargetAtTime(0, audioContext.currentTime, 0.18);
-    }
-    if (ambienceSource) {
-      const source = ambienceSource;
-      ambienceSource = undefined;
-      window.setTimeout(() => {
-        try { source.stop(); } catch { /* It may already have stopped. */ }
-        source.disconnect();
-      }, 800);
-    }
+    if (!ambienceGain || !audioContext) return;
+    const gain = ambienceGain;
+    ambienceGain = undefined;
+    gain.gain.cancelScheduledValues(audioContext.currentTime);
+    gain.gain.setTargetAtTime(0, audioContext.currentTime, 0.12);
+    window.setTimeout(() => gain.disconnect(), 800);
   };
-  const playPianoNote = () => {
+  const playPianoChord = () => {
     if (!audioContext || !ambienceGain || audioContext.state !== 'running') return;
-    const now = audioContext.currentTime;
-    const frequency = pianoNotes[pianoStep % pianoNotes.length];
-    pianoStep += pianoStep % 3 === 0 ? 2 : 1;
-    const noteGain = audioContext.createGain();
-    noteGain.gain.setValueAtTime(0.0001, now);
-    noteGain.gain.exponentialRampToValueAtTime(0.014, now + 0.025);
-    noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
-    noteGain.connect(ambienceGain);
-    [1, 2.01].forEach((harmonic, index) => {
-      const oscillator = audioContext.createOscillator();
-      oscillator.type = 'sine';
-      oscillator.frequency.value = frequency * harmonic;
-      const overtoneGain = audioContext.createGain();
-      overtoneGain.gain.value = index === 0 ? 0.72 : 0.12;
-      oscillator.connect(overtoneGain);
-      overtoneGain.connect(noteGain);
-      oscillator.start(now);
-      oscillator.stop(now + 2.25);
-      oscillator.addEventListener('ended', () => {
-        oscillator.disconnect();
-        overtoneGain.disconnect();
-      }, { once: true });
+    const chord = pianoChords[chordStep % pianoChords.length];
+    chordStep += 1;
+    chord.forEach((frequency, index) => {
+      const startAt = audioContext.currentTime + index * 0.16;
+      const noteGain = audioContext.createGain();
+      noteGain.gain.setValueAtTime(0.0001, startAt);
+      noteGain.gain.exponentialRampToValueAtTime(0.022 / (index + 1), startAt + 0.018);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 2.6);
+      noteGain.connect(ambienceGain);
+      [1, 2, 3].forEach((harmonic, partial) => {
+        const oscillator = audioContext.createOscillator();
+        const partialGain = audioContext.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.value = frequency * harmonic;
+        partialGain.gain.value = [1, 0.11, 0.025][partial];
+        oscillator.connect(partialGain);
+        partialGain.connect(noteGain);
+        oscillator.start(startAt);
+        oscillator.stop(startAt + 2.65);
+        oscillator.addEventListener('ended', () => {
+          oscillator.disconnect();
+          partialGain.disconnect();
+        }, { once: true });
+      });
+      window.setTimeout(() => noteGain.disconnect(), 2800);
     });
-    window.setTimeout(() => noteGain.disconnect(), 2400);
   };
   const startAmbience = async () => {
     if (!soundEnabled) return;
@@ -156,53 +157,60 @@ const nav = [
     if (!AudioContextConstructor) return;
     audioContext ??= new AudioContextConstructor();
     if (audioContext.state === 'suspended') await audioContext.resume();
-    if (!soundEnabled || ambienceSource) return;
+    if (!soundEnabled || ambienceGain) return;
 
-    const length = audioContext.sampleRate * 3;
-    const noiseBuffer = audioContext.createBuffer(1, length, audioContext.sampleRate);
-    const channel = noiseBuffer.getChannelData(0);
-    let filteredNoise = 0;
-    for (let index = 0; index < length; index += 1) {
-      filteredNoise = filteredNoise * 0.94 + (Math.random() * 2 - 1) * 0.06;
-      channel[index] = filteredNoise * 3.5;
-    }
-    ambienceSource = audioContext.createBufferSource();
-    ambienceSource.buffer = noiseBuffer;
-    ambienceSource.loop = true;
-    const natureFilter = audioContext.createBiquadFilter();
-    natureFilter.type = 'lowpass';
-    natureFilter.frequency.value = 780;
-    const natureGain = audioContext.createGain();
-    natureGain.gain.value = 0.18;
     ambienceGain = audioContext.createGain();
-    ambienceGain.gain.setValueAtTime(0.0001, audioContext.currentTime);
-    ambienceGain.gain.setTargetAtTime(0.42, audioContext.currentTime, 0.5);
-    ambienceSource.connect(natureFilter);
-    natureFilter.connect(natureGain);
-    natureGain.connect(ambienceGain);
+    ambienceGain.gain.setValueAtTime(0.55, audioContext.currentTime);
     ambienceGain.connect(audioContext.destination);
-    ambienceSource.start();
-    playPianoNote();
-    ambienceTimer = window.setInterval(playPianoNote, 4300);
+    playPianoChord();
+    ambienceTimer = window.setInterval(playPianoChord, 5600);
   };
   const playClick = () => {
     if (!soundEnabled || !audioContext || audioContext.state !== 'running') return;
+    if (!clickBuffer) {
+      clickBuffer = audioContext.createBuffer(1, Math.ceil(audioContext.sampleRate * 0.02), audioContext.sampleRate);
+      const samples = clickBuffer.getChannelData(0);
+      for (let index = 0; index < samples.length; index += 1) {
+        samples[index] = (Math.random() * 2 - 1) * (1 - index / samples.length);
+      }
+    }
+    const now = audioContext.currentTime;
+    const noise = audioContext.createBufferSource();
+    const filter = audioContext.createBiquadFilter();
+    const noiseGain = audioContext.createGain();
+    noise.buffer = clickBuffer;
+    filter.type = 'bandpass';
+    filter.frequency.value = 1900;
+    filter.Q.value = 0.8;
+    noiseGain.gain.setValueAtTime(0.0001, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.045, now + 0.002);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(audioContext.destination);
+    noise.start(now);
+    noise.stop(now + 0.026);
+
     const oscillator = audioContext.createOscillator();
     const gain = audioContext.createGain();
-    const now = audioContext.currentTime;
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(740, now);
-    oscillator.frequency.exponentialRampToValueAtTime(510, now + 0.045);
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(920, now);
+    oscillator.frequency.exponentialRampToValueAtTime(390, now + 0.035);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.025, now + 0.006);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.016, now + 0.002);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
     oscillator.start(now);
-    oscillator.stop(now + 0.065);
+    oscillator.stop(now + 0.05);
     oscillator.addEventListener('ended', () => {
       oscillator.disconnect();
       gain.disconnect();
+    }, { once: true });
+    noise.addEventListener('ended', () => {
+      noise.disconnect();
+      filter.disconnect();
+      noiseGain.disconnect();
     }, { once: true });
   };
   const syncSoundButton = () => {
@@ -232,6 +240,5 @@ const nav = [
     }
     playClick();
   }, { capture: true });
-  window.addEventListener('portfolio:garden-sound', playClick);
   window.addEventListener('pagehide', stopAmbience);
 </script>
