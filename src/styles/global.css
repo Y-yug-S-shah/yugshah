@@ -2,44 +2,44 @@
 
 :root {
   color-scheme: dark;
-  --bg: #050b12;
-  --bg-soft: rgba(10, 20, 31, 0.72);
-  --panel: rgba(11, 22, 34, 0.84);
-  --border: rgba(125, 170, 190, 0.18);
-  --text: #e5f1f5;
-  --muted: #a1b5c0;
-  --accent: #5eead4;
-  --accent-soft: rgba(45, 212, 191, 0.16);
-  --accent-strong: #67e8f9;
+  --bg: #101114;
+  --bg-soft: rgba(25, 25, 28, 0.76);
+  --panel: rgba(31, 31, 34, 0.78);
+  --border: rgba(225, 214, 194, 0.17);
+  --text: #eeeae2;
+  --muted: #b8b1a6;
+  --accent: #b49878;
+  --accent-soft: rgba(180, 152, 120, 0.17);
+  --accent-strong: #d2b896;
   --shadow: rgba(0, 0, 0, 0.42);
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #050b12;
-  --bg-soft: rgba(10, 20, 31, 0.72);
-  --panel: rgba(11, 22, 34, 0.84);
-  --border: rgba(125, 170, 190, 0.18);
-  --text: #e5f1f5;
-  --muted: #a1b5c0;
-  --accent: #5eead4;
-  --accent-soft: rgba(45, 212, 191, 0.16);
-  --accent-strong: #67e8f9;
+  --bg: #101114;
+  --bg-soft: rgba(25, 25, 28, 0.76);
+  --panel: rgba(31, 31, 34, 0.78);
+  --border: rgba(225, 214, 194, 0.17);
+  --text: #eeeae2;
+  --muted: #b8b1a6;
+  --accent: #b49878;
+  --accent-soft: rgba(180, 152, 120, 0.17);
+  --accent-strong: #d2b896;
   --shadow: rgba(0, 0, 0, 0.42);
 }
 
 :root[data-theme='light'] {
   color-scheme: light;
-  --bg: #edf4f6;
-  --bg-soft: rgba(237, 246, 249, 0.8);
-  --panel: rgba(247, 251, 252, 0.9);
-  --border: rgba(20, 51, 66, 0.16);
-  --text: #10212d;
-  --muted: #4c6470;
-  --accent: #0f9f8e;
-  --accent-soft: rgba(15, 159, 142, 0.16);
-  --accent-strong: #087e91;
-  --shadow: rgba(20, 51, 66, 0.16);
+  --bg: #f1eee8;
+  --bg-soft: rgba(249, 247, 242, 0.76);
+  --panel: rgba(255, 253, 248, 0.76);
+  --border: rgba(84, 72, 58, 0.16);
+  --text: #282621;
+  --muted: #716b61;
+  --accent: #927657;
+  --accent-soft: rgba(146, 118, 87, 0.15);
+  --accent-strong: #755a3e;
+  --shadow: rgba(46, 38, 28, 0.16);
 }
 
 html {
@@ -72,45 +72,30 @@ body > * {
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 14% 12%, rgba(14, 116, 144, 0.12), transparent 38%),
-    radial-gradient(ellipse at 86% 74%, rgba(5, 150, 105, 0.09), transparent 35%),
-    #050b12;
+    radial-gradient(ellipse at 18% 14%, rgba(184, 157, 125, 0.09), transparent 40%),
+    radial-gradient(ellipse at 84% 72%, rgba(157, 166, 166, 0.06), transparent 36%),
+    #101114;
 }
 
 .ambient-scene::before {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 38%, transparent 10%, rgba(3, 9, 15, 0.52) 100%),
-    linear-gradient(180deg, rgba(5, 11, 18, 0.14), rgba(5, 11, 18, 0.44));
+    radial-gradient(ellipse at 50% 38%, transparent 10%, rgba(8, 9, 10, 0.36) 100%),
+    linear-gradient(180deg, rgba(16, 17, 20, 0.12), rgba(16, 17, 20, 0.35));
   content: '';
   opacity: 0.9;
 }
 
 .ambient-scene::after {
-  position: absolute;
-  right: -30%;
-  bottom: -52%;
-  left: -30%;
-  height: 82%;
-  background-image:
-    linear-gradient(rgba(34, 211, 238, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.12) 1px, transparent 1px);
-  background-size: 48px 48px;
-  content: '';
-  mask-image: linear-gradient(transparent, #000 24%, #000 76%, transparent);
-  opacity: 0.46;
-  transform: perspective(460px) rotateX(63deg);
-  transform-origin: center top;
-  animation: cyber-grid-drift 28s linear infinite;
+  display: none;
 }
 
-.matrix-rain {
+.glass-field {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.24;
 }
 
 .ambient-orb {
@@ -125,14 +110,14 @@ body > * {
 .ambient-orb-one {
   top: -28%;
   left: -16%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.5) 0, rgba(34, 211, 238, 0) 70%);
+  background: radial-gradient(circle, rgba(198, 174, 145, 0.3) 0, rgba(198, 174, 145, 0) 70%);
   animation: cyber-orb-drift 34s ease-in-out infinite alternate;
 }
 
 .ambient-orb-two {
   right: -19%;
   bottom: -42%;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.34) 0, rgba(52, 211, 153, 0) 70%);
+  background: radial-gradient(circle, rgba(176, 182, 176, 0.2) 0, rgba(176, 182, 176, 0) 70%);
   animation: cyber-orb-drift 39s ease-in-out infinite alternate-reverse;
 }
 
