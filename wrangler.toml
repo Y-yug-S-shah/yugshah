@@ -7,7 +7,7 @@ SITE_URL = "https://yugshah.pages.dev"
 
 # D1 is optional for the static portfolio site.
 # Remove this section until you have created a real database in Cloudflare.
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "portfolio-site-db"
-# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-site-db"
+database_id = "e027e4c1-e799-4ded-bfff-2662a70512fc"
