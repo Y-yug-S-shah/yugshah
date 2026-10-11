@@ -473,11 +473,9 @@ export default function AgentMission() {
     <section className="agent-mission" aria-label="Milo's AI security mission">
       <div className="mission-topline">
         <div>
-          <p className="mission-eyebrow">LIVE AGENT RUNTIME · SIMULATION 01</p>
           <h2>Milo: Trust Protocol</h2>
-          <p>Move Milo through a live AI security environment. Collect the three trust policies, avoid the injected payload, and reach the secure gateway.</p>
+          <p>Collect three policy keys, isolate the instruction hidden in external content, and reach the secure gateway without letting the roaming payload catch Milo.</p>
         </div>
-        <div className="mission-status-pill"><i />{snapshot.status === 'running' ? 'LIVE' : snapshot.status.toUpperCase()}</div>
       </div>
 
       <div className="mission-hud" aria-label="Mission status">
