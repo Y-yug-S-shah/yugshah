@@ -53,7 +53,10 @@ html {
   color: var(--text);
   overflow-x: clip;
   scroll-behavior: smooth;
+  scrollbar-width: none;
 }
+
+html::-webkit-scrollbar { display: none; }
 
 body {
   position: relative;
@@ -625,7 +628,7 @@ main article h3 {
   .ambient-scene::after { animation: none !important; }
 }
 
-.site-shell {
+body > .site-shell {
   display: grid;
   width: min(100%, 1328px);
   grid-template-columns: minmax(0, 1fr) 68px;
@@ -1443,7 +1446,7 @@ main article h3 {
   50% { transform: translateY(-4px); }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 760px) {
   .site-shell {
     grid-template-columns: minmax(0, 1fr);
     padding-inline: clamp(1rem, 4vw, 2rem);
