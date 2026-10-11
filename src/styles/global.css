@@ -11,6 +11,8 @@
   --accent: #a995ed;
   --accent-soft: rgba(169, 149, 237, 0.19);
   --accent-strong: #c5b8ff;
+  --accent-coral: #ed8b68;
+  --accent-teal: #70c7b1;
   --shadow: rgba(0, 0, 0, 0.42);
 }
 
@@ -25,6 +27,8 @@
   --accent: #a995ed;
   --accent-soft: rgba(169, 149, 237, 0.19);
   --accent-strong: #c5b8ff;
+  --accent-coral: #ed8b68;
+  --accent-teal: #70c7b1;
   --shadow: rgba(0, 0, 0, 0.42);
 }
 
@@ -39,6 +43,8 @@
   --accent: #7662bd;
   --accent-soft: rgba(118, 98, 189, 0.15);
   --accent-strong: #5e4b9f;
+  --accent-coral: #b94c2d;
+  --accent-teal: #16796f;
   --shadow: rgba(46, 38, 28, 0.16);
 }
 
@@ -53,11 +59,19 @@ body {
   position: relative;
   margin: 0;
   min-height: 100vh;
+  padding: 16px;
   background: var(--bg);
   color: var(--text);
   font-family:
-    'Segoe UI', 'Inter', 'Helvetica Neue', Arial, 'Nimbus Sans L', sans-serif;
+    'Manrope Variable', 'Segoe UI', Arial, sans-serif;
   line-height: 1.6;
+}
+
+body :is(h1, h2, h3) {
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-optical-sizing: auto;
+  font-weight: 550;
+  letter-spacing: -0.035em;
 }
 
 body::after {
@@ -117,6 +131,11 @@ body > * {
   width: 100%;
   height: 100%;
   opacity: 0.36;
+}
+
+:root[data-theme='light'] .security-network-canvas {
+  opacity: 0.1;
+  mix-blend-mode: multiply;
 }
 
 .ambient-orb {
@@ -626,6 +645,11 @@ main article h3 {
   backdrop-filter: blur(20px) saturate(1.12);
 }
 
+.site-header > div,
+.site-footer-inner {
+  max-width: 1328px;
+}
+
 .ambient-scene {
   background:
     radial-gradient(ellipse at 15% 12%, rgba(194, 170, 139, 0.08), transparent 37%),
@@ -1132,7 +1156,7 @@ main article h3 {
 .skill-card h3 {
   margin: 0;
   color: var(--text);
-  font-family: 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Manrope Variable', 'Segoe UI', Arial, sans-serif;
   font-size: 0.98rem;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -1429,6 +1453,7 @@ main article h3 {
 }
 
 @media (max-width: 760px) {
+  body { padding: 12px; }
 
   .game-preview {
     grid-template-columns: minmax(0, 1fr);
@@ -1443,7 +1468,8 @@ main article h3 {
 }
 
 @media (max-width: 520px) {
-  .site-shell { padding-inline: 1rem; }
+  body { padding: 10px; }
+  .site-shell { padding-inline: 0.5rem; }
 }
 
 @media (max-width: 760px) {
@@ -1505,6 +1531,7 @@ main article h3 {
 }
 
 @media (max-width: 440px) {
+  body { padding: 8px; }
   .agent-mission {
     margin-inline: -0.2rem;
     border-radius: 22px;
