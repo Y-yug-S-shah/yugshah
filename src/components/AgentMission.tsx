@@ -949,8 +949,9 @@ export default function AgentMission() {
       if (result.entries) setLeaderboard(result.entries);
       setLeaderboardMessage('Score added to the board.');
       setScoreSubmitted(true);
-    } catch {
-      setLeaderboardMessage('Could not save the score. Try again later.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Could not save the score. Try again later.';
+      setLeaderboardMessage(message);
     } finally {
       setSubmittingScore(false);
     }

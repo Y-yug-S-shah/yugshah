@@ -37,6 +37,14 @@ CREATE TABLE IF NOT EXISTS ai_mission_scores (
 CREATE INDEX IF NOT EXISTS ai_mission_scores_rank
   ON ai_mission_scores (score DESC, created_at ASC, id ASC);
 
+CREATE TABLE IF NOT EXISTS leaderboard_meta (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+INSERT OR IGNORE INTO leaderboard_meta (key, value) VALUES
+  ('last_reset', CURRENT_TIMESTAMP);
+
 INSERT OR IGNORE INTO site_stats (key, value) VALUES
   ('total_visits', '0'),
   ('pets_fed', '0'),
