@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 type MissionStatus = 'running' | 'paused' | 'secured' | 'lost';
@@ -295,7 +295,6 @@ export default function AgentMission() {
     if (!canvas || !context) return;
 
     let animationFrame = 0;
-    let drawFrame = 0;
     let previousDraw = 0;
     let lastHudUpdate = 0;
     let pixelRatio = 1;
@@ -373,9 +372,8 @@ export default function AgentMission() {
 
       const delta = lastTimeRef.current ? Math.min((time - lastTimeRef.current) / 1000, 0.04) : 0;
       lastTimeRef.current = time;
-      elapsedRef.current += delta;
-
       if (mission.status === 'running') {
+        elapsedRef.current += delta;
         const directions = heldDirections.current;
         let dx = Number(directions.has('right')) - Number(directions.has('left'));
         let dy = Number(directions.has('down')) - Number(directions.has('up'));
@@ -446,7 +444,6 @@ export default function AgentMission() {
 
     return () => {
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
-      if (drawFrame) window.cancelAnimationFrame(drawFrame);
       resizeObserver.disconnect();
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
@@ -455,7 +452,7 @@ export default function AgentMission() {
     };
   }, []);
 
-  const onDirectionPointerDown = (direction: Direction) => (event: React.PointerEvent<HTMLButtonElement>) => {
+  const onDirectionPointerDown = (direction: Direction) => (event: ReactPointerEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     const directions = heldDirections.current;
