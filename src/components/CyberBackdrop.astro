@@ -1,0 +1,26 @@
+<div class="ambient-scene" aria-hidden="true">
+  <canvas class="security-network-canvas"></canvas>
+  <span class="ambient-orb ambient-orb-one"></span>
+  <span class="ambient-orb ambient-orb-two"></span>
+</div>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.security-network-canvas');
+
+  if (canvas) {
+    const initialize = async () => {
+      try {
+        const { mountAgentSecurityBackdrop } = await import('../lib/agentSecurityBackdrop');
+        mountAgentSecurityBackdrop(canvas);
+      } catch (error) {
+        console.error('The decorative AI security network could not be loaded.', error);
+      }
+    };
+
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(() => void initialize(), { timeout: 900 });
+    } else {
+      window.setTimeout(() => void initialize(), 250);
+    }
+  }
+</script>
