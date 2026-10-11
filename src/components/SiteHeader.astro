@@ -135,7 +135,7 @@ const nav = [
     const chord = pianoChords[chordStep % pianoChords.length];
     chordStep += 1;
     chord.forEach((frequency, index) => {
-      const startAt = audioContext.currentTime + index * 0.16;
+      const startAt = audioContext.currentTime + index * 0.128;
       const noteGain = audioContext.createGain();
       noteGain.gain.setValueAtTime(0.0001, startAt);
       noteGain.gain.exponentialRampToValueAtTime(0.022 / (index + 1), startAt + 0.018);
@@ -171,7 +171,7 @@ const nav = [
     ambienceGain.gain.setValueAtTime(0.66, audioContext.currentTime);
     ambienceGain.connect(audioContext.destination);
     playPianoChord();
-    ambienceTimer = window.setInterval(playPianoChord, 5600);
+    ambienceTimer = window.setInterval(playPianoChord, 4480);
   };
   const playClick = () => {
     if (!soundEnabled || !audioContext || audioContext.state !== 'running') return;
