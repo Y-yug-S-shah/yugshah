@@ -3,10 +3,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import profile from '../data/profile.json';
 import projects from '../data/projects.json';
 import resume from '../data/resume.json';
+import { getCollection } from 'astro:content';
 import { SITE_URL } from '../config/site';
 
 const featuredProjects = projects.filter((project) => project.featured);
 const featuredExperience = resume.work;
+const fieldNotes = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+  .slice(0, 2);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -53,10 +58,10 @@ const skillAreas = [
 ---
 
 <BaseLayout title="Yug Shah | Security Engineer" description={profile.bio} image="/og/home.svg" jsonLd={jsonLd}>
-  <section class="grid gap-8 py-8 md:grid-cols-[1.3fr_0.7fr] md:items-center lg:py-14">
+  <section class="home-hero grid gap-8 py-8 md:grid-cols-[1.15fr_0.85fr] md:items-center lg:py-14">
     <div class="space-y-6">
-      <p class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-[var(--muted)]">
-        AI SECURITY · HUMAN-CENTERED SYSTEMS
+      <p class="hero-discipline">
+        Security engineering / intelligent systems
       </p>
       <div class="space-y-4">
         <h1 class="max-w-xl text-4xl font-black tracking-tight text-[var(--text)] sm:text-5xl lg:text-6xl">
@@ -67,7 +72,7 @@ const skillAreas = [
       <div class="flex flex-wrap gap-3">
         <a href="/resume" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[var(--accent-soft)] transition-transform hover:-translate-y-0.5">View resume</a>
         <a href="/projects" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 py-3 text-sm font-semibold text-[var(--text)] transition-transform hover:-translate-y-0.5">Browse projects</a>
-        <a href="/game" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-5 py-3 text-sm font-semibold text-[var(--text)] transition-transform hover:-translate-y-0.5">Meet an AI friend</a>
+        <a href="/game" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-5 py-3 text-sm font-semibold text-[var(--text)] transition-transform hover:-translate-y-0.5">Play Milo’s security simulation</a>
       </div>
       <div class="flex flex-wrap gap-6 pt-2 text-sm text-[var(--muted)]">
         <a href={profile.socialLinks.linkedin} class="hover:text-[var(--text)]">LinkedIn</a>
@@ -78,19 +83,14 @@ const skillAreas = [
     </div>
 
     <aside class="hero-console rounded-[32px] border border-[var(--border)] p-6">
-      <div class="mb-4 flex items-center justify-between">
-        <span class="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">AI security</span>
-        <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">Thoughtful</span>
-      </div>
-      <div class="relative z-[1]">
-        <p class="font-mono text-xs uppercase tracking-[0.24em] text-[var(--muted)]">Human + machine</p>
-        <p class="mt-2 text-2xl font-black tracking-tight text-[var(--text)]">Useful AI starts with thoughtful security.</p>
-        <p class="mt-3 text-sm leading-7 text-[var(--muted)]">Exploring how people, intelligent systems, and practical security can work better together.</p>
-        <div class="mt-6 grid grid-cols-3 gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
-          <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Investigate</span>
-          <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Validate</span>
-          <span class="rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-3 text-center">Communicate</span>
-        </div>
+      <p class="hero-note-reference">FIELD NOTE / 01</p>
+      <h2>When an AI reads a webpage, whose instructions does it trust?</h2>
+      <p>My field notes unpack indirect prompt injection and practical ways to limit what an agent can see and do.</p>
+      <a class="hero-note-link" href="/blog/ai-security-prompt-injection">Read the investigation <span aria-hidden="true">↗</span></a>
+      <div class="hero-note-rule" aria-hidden="true"></div>
+      <div class="hero-note-meta">
+        <span>Prompt injection</span>
+        <span>Research and controls</span>
       </div>
     </aside>
   </section>
@@ -106,7 +106,7 @@ const skillAreas = [
 
   <section class="py-8">
     <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">Security focus</h2>
+      <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">Areas I work in</h2>
     </div>
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {skillAreas.map((skill) => (
@@ -127,7 +127,7 @@ const skillAreas = [
   <section class="experience-section py-8" aria-labelledby="experience-title">
     <div class="mb-6 flex items-end justify-between gap-4">
       <div>
-        <p class="section-kicker">Professional experience</p>
+        <p class="section-kicker">Selected work</p>
         <h2 id="experience-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)]">AI security, in practice.</h2>
       </div>
       <a href="/resume" class="text-sm font-medium text-[var(--accent-strong)]">Full resume →</a>
@@ -177,19 +177,44 @@ const skillAreas = [
     </div>
   </section>
 
+  <section class="home-field-notes py-8" aria-labelledby="field-notes-title">
+    <div class="home-section-heading">
+      <div>
+        <p class="section-kicker">From the research notebook</p>
+        <h2 id="field-notes-title">Field notes on AI security</h2>
+      </div>
+      <a href="/blog">All articles <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="field-note-grid">
+      {fieldNotes.map((post, index) => (
+        <article class={`field-note-card field-note-card-${index + 1}`}>
+          <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="field-note-cover">
+            <img src={post.data.cover || '/placeholder-project.svg'} alt="" loading="lazy" />
+            <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+          </a>
+          <div class="field-note-copy">
+            <h3><a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>{post.data.title}</a></h3>
+            <p>{post.data.description}</p>
+            <a class="field-note-read" href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>Read the field note <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
   <section class="game-preview py-8">
     <div class="game-preview-copy">
-      <p class="section-kicker">A little interlude</p>
-      <h2>Guide Milo through a live AI runtime.</h2>
-      <p>Move through a digital operations floor, collect trusted policies, avoid an injected payload, and secure the agent’s tool gateway.</p>
-      <a href="/game" class="game-preview-link">Play Milo’s mission <span aria-hidden="true">↗</span></a>
+      <p class="section-kicker">Interactive threat exercise</p>
+      <h2>Can you spot the instruction hidden in the data?</h2>
+      <p>Guide Milo through a compromised runtime. Collect controls, contain an indirect prompt injection, and keep a roaming threat away from the agent.</p>
+      <a href="/game" class="game-preview-link">Enter Milo’s simulation <span aria-hidden="true">↗</span></a>
     </div>
     <div class="game-preview-art" aria-hidden="true">
       <span class="preview-orbit preview-orbit-one"></span>
       <span class="preview-orbit preview-orbit-two"></span>
-      <span class="preview-security-node node-ai">AI</span>
-      <span class="preview-security-node node-edge">EDGE</span>
-      <span class="preview-security-node node-cloud">CLOUD</span>
+      <span class="preview-security-node node-ai">UNTRUSTED INPUT</span>
+      <span class="preview-security-node node-edge">POLICY</span>
+      <span class="preview-security-node node-cloud">TOOL ACCESS</span>
       <span class="preview-agent-core">M</span>
     </div>
   </section>
