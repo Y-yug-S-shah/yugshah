@@ -439,7 +439,7 @@ export default function CliTerminal() {
             <p className="cli-section-label cli-quick-label">FOCUS AREAS</p>
             <div className="cli-signal-list">
               <span><i className="signal-cyan" /> Technical validation</span>
-              <span><i className="signal-green" /> Security operations</span>
+              <span><i className="signal-green" /> AI security</span>
               <span><i className="signal-red" /> Threat analysis</span>
               <span><i className="signal-amber" /> AI security</span>
             </div>
