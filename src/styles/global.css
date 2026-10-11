@@ -1115,7 +1115,7 @@ main article h3 {
   font-weight: 650;
 }
 
-.skill-card > span {
+.skill-card-heading > span {
   display: grid;
   width: 2.35rem;
   height: 2.35rem;
