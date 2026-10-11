@@ -20,13 +20,11 @@ const jsonLd = {
     email: profile.email
   }
 };
-const skillTree = [
-  'Threat hunting',
-  'Identity security',
-  'Network validation',
-  'SOC workflows',
-  'Automation',
-  'Customer enablement'
+const skillAreas = [
+  { name: 'AI security', label: 'AI', tone: 'violet' },
+  { name: 'Endpoint security', label: 'EDR', tone: 'blue' },
+  { name: 'Cloud security', label: 'CLD', tone: 'mint' },
+  { name: 'Network security', label: 'NET', tone: 'amber' }
 ];
 ---
 
@@ -84,16 +82,13 @@ const skillTree = [
 
   <section class="py-8">
     <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">Areas of focus</h2>
+      <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">Security focus</h2>
     </div>
-    <div class="grid gap-4 md:grid-cols-3">
-      {skillTree.map((skill, index) => (
-        <div class="rounded-[24px] border border-[var(--border)] bg-[var(--panel)] p-4">
-          <div class="mb-3 flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">Lv. {index + 1}</span>
-            <span class="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-soft)] font-mono text-xs text-[var(--muted)]">{String(index + 1).padStart(2, '0')}</span>
-          </div>
-          <h3 class="text-lg font-bold text-[var(--text)]">{skill}</h3>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {skillAreas.map((skill) => (
+        <article class={`skill-card skill-${skill.tone}`}>
+          <span aria-hidden="true">{skill.label}</span>
+          <h3>{skill.name}</h3>
         </div>
       ))}
     </div>
@@ -166,26 +161,17 @@ const skillTree = [
   <section class="game-preview py-8">
     <div class="game-preview-copy">
       <p class="section-kicker">A little interlude</p>
-      <h2>Say hello to Mori.</h2>
-      <p>Grow a gentle AI companion by sharing curious little memories and teaching it thoughtful boundaries. No timer, no score pressure—just a tiny garden that remembers you.</p>
-      <a href="/game" class="game-preview-link">Visit the AI garden <span aria-hidden="true">↗</span></a>
+      <h2>Guide Milo through a live AI runtime.</h2>
+      <p>Move through a digital operations floor, collect trusted policies, avoid an injected payload, and secure the agent’s tool gateway.</p>
+      <a href="/game" class="game-preview-link">Play Milo’s mission <span aria-hidden="true">↗</span></a>
     </div>
     <div class="game-preview-art" aria-hidden="true">
       <span class="preview-orbit preview-orbit-one"></span>
       <span class="preview-orbit preview-orbit-two"></span>
-      <span class="preview-star preview-star-one">✳</span>
-      <span class="preview-star preview-star-two">✦</span>
-      <svg viewBox="0 0 180 160">
-        <ellipse cx="90" cy="141" rx="51" ry="9" fill="#514b43" opacity=".12" />
-        <path d="M46 71 39 42q-2-9 7-6l22 19m45 16 9-29q3-8 10-2l13 22" fill="#c6b49c" stroke="#85745f" stroke-width="3" stroke-linejoin="round" />
-        <rect x="37" y="51" width="106" height="81" rx="34" fill="#e8e0d2" stroke="#a99a83" stroke-width="2" />
-        <path d="M47 66q8-11 24-11h30" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="5" opacity=".8" />
-        <ellipse cx="68" cy="87" rx="5" ry="7" fill="#555652" />
-        <ellipse cx="112" cy="87" rx="5" ry="7" fill="#555652" />
-        <path d="M79 105q11 10 22 0" fill="none" stroke="#957c63" stroke-linecap="round" stroke-width="3" />
-        <circle cx="52" cy="100" r="6" fill="#d2a992" opacity=".38" />
-        <circle cx="128" cy="100" r="6" fill="#d2a992" opacity=".38" />
-      </svg>
+      <span class="preview-security-node node-ai">AI</span>
+      <span class="preview-security-node node-edge">EDGE</span>
+      <span class="preview-security-node node-cloud">CLOUD</span>
+      <span class="preview-agent-core">M</span>
     </div>
   </section>
 </BaseLayout>
