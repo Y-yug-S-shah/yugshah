@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Agent identity and scoped permissions</title>
+  <desc id="desc">A verified agent receives a short-lived identity token with narrowly scoped read and search permissions.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#1c2130"/><stop offset="1" stop-color="#263a3b"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#d4d9e0" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="1200" height="800" rx="38" fill="url(#bg)"/><rect width="1200" height="800" rx="38" fill="url(#grid)"/>
+  <text x="72" y="90" fill="#f1edf8" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="4">AGENT IDENTITY / 02</text>
+  <text x="72" y="139" fill="#bbc6cf" font-family="Arial,sans-serif" font-size="18">Authentication establishes who acts. Authorization limits what it can do.</text>
+  <rect x="83" y="293" width="270" height="220" rx="22" fill="#292f44" stroke="#a89ad9" stroke-width="2"/>
+  <circle cx="218" cy="368" r="42" fill="#b8aadf" fill-opacity=".18" stroke="#d5c8ff" stroke-width="3"/>
+  <path d="M198 370v-12a20 20 0 0 1 40 0v12m-46 0h52v43h-52z" fill="none" stroke="#e1d6ff" stroke-width="4" stroke-linejoin="round"/>
+  <text x="218" y="460" fill="#eee8ff" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="middle">AGENT ID</text>
+  <text x="218" y="490" fill="#b8b5ca" font-family="Arial,sans-serif" font-size="15" text-anchor="middle">verified workload</text>
+  <path d="M356 403H478" stroke="#8fcdb7" stroke-width="5" stroke-linecap="round"/><path d="m461 392 17 11-17 11" fill="none" stroke="#8fcdb7" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="480" y="262" width="275" height="282" rx="22" fill="#213d3b" stroke="#7bceb4" stroke-width="2"/>
+  <path d="M617 306l42 16v33c0 38-21 60-42 72-21-12-42-34-42-72v-33z" fill="none" stroke="#a3e2c7" stroke-width="4"/>
+  <path d="m600 355 12 12 24-28" fill="none" stroke="#a3e2c7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="617" y="457" fill="#d8f5e8" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">SHORT-LIVED TOKEN</text>
+  <text x="617" y="489" fill="#b5d8cb" font-family="Arial,sans-serif" font-size="15" text-anchor="middle">audience · expiry · scope</text>
+  <text x="617" y="517" fill="#b5d8cb" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">issued for one task</text>
+  <path d="M759 403H843" stroke="#8fcdb7" stroke-width="5" stroke-linecap="round"/><path d="m826 392 17 11-17 11" fill="none" stroke="#8fcdb7" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="845" y="292" width="270" height="218" rx="22" fill="#30333b" stroke="#e4b37c" stroke-width="2"/>
+  <path d="M897 350h48m-48 25h88m-88 25h70m-70 25h93" stroke="#d8c3a1" stroke-width="5" stroke-linecap="round"/>
+  <text x="980" y="470" fill="#f2e1c3" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">APPROVED TOOLS</text>
+  <text x="600" y="684" fill="#eac49e" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">Grant the smallest permission set, then revoke it when the task ends.</text>
+</svg>

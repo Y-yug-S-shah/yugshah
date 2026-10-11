@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const contactSchema = z.object({
   name: z.string().trim().min(2).max(120),
-  email: z.string().trim().email(),
+  email: z.string().trim().pipe(z.email()),
   subject: z.string().trim().min(2).max(180),
   message: z.string().trim().min(10).max(2500)
 });
@@ -52,13 +52,22 @@ async function sendEmail(
   env: Record<string, string | undefined>
 ) {
   const key = env.RESEND_API_KEY;
-  if (!key) {
+  const from = env.RESEND_FROM_EMAIL;
+  if (!key || !from) {
     return {
-      success: true,
-      preview: true,
-      message: 'Preview mode: message accepted locally. Add RESEND_API_KEY in production to send mail.'
+      success: false,
+      preview: false,
+      status: 503,
+      message: 'Message delivery is temporarily unavailable.'
     };
   }
+
+  const escapeHtml = (value: string) => value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -67,27 +76,27 @@ async function sendEmail(
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      from: 'portfolio@pages.dev',
+      from,
       to: [env.CONTACT_TO_EMAIL || 'yugdshahcs@gmail.com'],
-      subject: `Portfolio contact: ${payload.subject}`,
+      subject: `Portfolio contact: ${escapeHtml(payload.subject)}`,
       reply_to: payload.email,
       html: `
         <h2>New portfolio message</h2>
-        <p><strong>Name:</strong> ${payload.name}</p>
-        <p><strong>Email:</strong> ${payload.email}</p>
-        <p><strong>Subject:</strong> ${payload.subject}</p>
+        <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
+        <p><strong>Subject:</strong> ${escapeHtml(payload.subject)}</p>
         <p><strong>Message:</strong></p>
-        <p>${payload.message.replace(/\n/g, '<br />')}</p>
+        <p>${escapeHtml(payload.message).replace(/\n/g, '<br />')}</p>
       `
     })
   });
 
   if (!response.ok) {
-    const result = (await response.json()) as { message?: string };
     return {
       success: false,
       preview: false,
-      message: result.message || 'Unable to send email right now.'
+      status: 502,
+      message: 'Unable to send your message right now. Please try again or email directly.'
     };
   }
 
@@ -145,7 +154,7 @@ export async function onRequest({ request, env }: { request: Request; env: Recor
 
   const emailResult = await sendEmail(parsed.data, env);
   if (!emailResult.success) {
-    return Response.json({ success: false, error: emailResult.message }, { status: 500 });
+    return Response.json({ success: false, error: emailResult.message }, { status: emailResult.status });
   }
 
   return Response.json({

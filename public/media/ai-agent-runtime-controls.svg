@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Policy checks on an AI agent's tool path</title>
+  <desc id="desc">An agent request passes through identity, authorization, and data-loss checks before a protected tool is called.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#1a202c"/><stop offset="1" stop-color="#243d39"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#d4ded8" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="1200" height="800" rx="38" fill="url(#bg)"/><rect width="1200" height="800" rx="38" fill="url(#grid)"/>
+  <text x="72" y="90" fill="#f0f2ec" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="4">TOOL GATE / 04</text>
+  <text x="72" y="139" fill="#bbc9c0" font-family="Arial,sans-serif" font-size="18">Inspect intent and permissions at the point of execution.</text>
+  <path d="M199 397H370m176 0h142m176 0h134" fill="none" stroke="#89c6ad" stroke-width="5" stroke-linecap="round"/>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <circle cx="155" cy="397" r="64" fill="#353046" stroke="#b59de6" stroke-width="3"/><text x="155" y="405" fill="#ece4ff" font-size="18" font-weight="700">AGENT</text>
+    <rect x="372" y="313" width="174" height="168" rx="19" fill="#263d3a" stroke="#85cfb3" stroke-width="2"/><text x="459" y="373" fill="#d9f2e6" font-size="17" font-weight="700">IDENTITY</text><text x="459" y="407" fill="#c3d7cd" font-size="14">who acts?</text><text x="459" y="438" fill="#96d3b7" font-size="14">short-lived</text>
+    <rect x="688" y="313" width="176" height="168" rx="19" fill="#383546" stroke="#b49ce7" stroke-width="2"/><text x="776" y="373" fill="#e8ddff" font-size="17" font-weight="700">AUTHZ</text><text x="776" y="407" fill="#cac4d7" font-size="14">what is allowed?</text><text x="776" y="438" fill="#c5b7ee" font-size="14">least privilege</text>
+    <rect x="920" y="304" width="205" height="186" rx="19" fill="#3b3131" stroke="#e29379" stroke-width="2"/><path d="M984 348h68v70h-68z" fill="none" stroke="#ffd0b7" stroke-width="3"/><path d="m997 369 12 12 25-28" fill="none" stroke="#96d8b7" stroke-width="5" stroke-linecap="round"/><text x="1022" y="454" fill="#ffe3d1" font-size="16" font-weight="700">DATA GATE</text>
+  </g>
+  <path d="m354 386 16 11-16 11m176-11h16m288 0h16" fill="none" stroke="#a6dcc3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="600" y="628" fill="#dfc79f" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">A valid tool call still needs a valid identity and a narrow scope.</text>
+</svg>

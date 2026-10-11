@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">PhishHound email-header analysis</title>
+  <desc id="desc">A terminal-style report checks SPF, DKIM, DMARC, and sender alignment to explain a phishing verdict.</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#141b24"/><stop offset="1" stop-color="#253a3d"/></linearGradient></defs>
+  <rect width="1200" height="800" rx="34" fill="url(#bg)"/>
+  <rect x="58" y="58" width="1084" height="684" rx="22" fill="#111820" stroke="#637582"/>
+  <path d="M58 128h1084" stroke="#536875"/>
+  <circle cx="98" cy="94" r="9" fill="#e88772"/><circle cx="127" cy="94" r="9" fill="#e4bf79"/><circle cx="156" cy="94" r="9" fill="#78c5a4"/>
+  <text x="203" y="103" fill="#d6e1e5" font-family="Arial,sans-serif" font-size="20" font-weight="700">PHISHOUND / HEADER TRIAGE</text>
+  <text x="101" y="184" fill="#81cbb1" font-family="monospace" font-size="18">$ phishhound analyze sample.eml</text>
+  <text x="101" y="235" fill="#a7b4bd" font-family="monospace" font-size="15">SENDER ALIGNMENT</text>
+  <text x="101" y="272" fill="#f0a07f" font-family="monospace" font-size="17">From:    billing@secure-payments.example</text>
+  <text x="101" y="307" fill="#f0a07f" font-family="monospace" font-size="17">Reply-To: claims@unrelated.example</text>
+  <path d="M101 340h997" stroke="#4f626e"/>
+  <text x="101" y="385" fill="#a7b4bd" font-family="monospace" font-size="15">AUTHENTICATION RESULTS</text>
+  <g font-family="monospace" font-size="18"><text x="101" y="435" fill="#e5e9e9">SPF</text><text x="260" y="435" fill="#f0a07f">FAIL</text><text x="415" y="435" fill="#9faeb7">sender IP not authorized</text><text x="101" y="487" fill="#e5e9e9">DKIM</text><text x="260" y="487" fill="#e6c47c">NONE</text><text x="415" y="487" fill="#9faeb7">no signature present</text><text x="101" y="539" fill="#e5e9e9">DMARC</text><text x="260" y="539" fill="#f0a07f">FAIL</text><text x="415" y="539" fill="#9faeb7">domain alignment failed</text></g>
+  <rect x="101" y="590" width="997" height="94" rx="12" fill="#392b2b" stroke="#d77d6e"/>
+  <text x="133" y="632" fill="#ffb49b" font-family="monospace" font-size="20" font-weight="700">VERDICT: HIGH RISK</text>
+  <text x="133" y="661" fill="#d4b7ae" font-family="monospace" font-size="15">Three sender-authentication signals need investigation.</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Runtime controls for an AI agent</title>
+  <desc id="desc">Runtime security monitors prompts, model decisions, identities, data access, and tool calls, with policy enforcement and incident response.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#17202d"/><stop offset="1" stop-color="#302636"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#d6d4dd" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="1200" height="800" rx="38" fill="url(#bg)"/><rect width="1200" height="800" rx="38" fill="url(#grid)"/>
+  <text x="72" y="90" fill="#f4edf1" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="4">RUNTIME CONTROL / 03</text>
+  <text x="72" y="139" fill="#c5bdc9" font-family="Arial,sans-serif" font-size="18">Observe each decision before it becomes an external action.</text>
+  <path d="M190 350H999M190 580H999" fill="none" stroke="#8993a4" stroke-width="2" stroke-dasharray="8 12"/>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <g><rect x="85" y="279" width="190" height="142" rx="18" fill="#3b3032" stroke="#e38f76" stroke-width="2"/><text x="180" y="337" fill="#ffd1bd" font-size="17" font-weight="700">INPUT</text><text x="180" y="371" fill="#ddc6c0" font-size="14">user prompt</text></g>
+    <g><rect x="310" y="279" width="190" height="142" rx="18" fill="#343046" stroke="#b49ce7" stroke-width="2"/><text x="405" y="337" fill="#e8dcff" font-size="17" font-weight="700">INSPECT</text><text x="405" y="371" fill="#c8bfd7" font-size="14">policy + context</text></g>
+    <g><rect x="535" y="279" width="190" height="142" rx="18" fill="#263844" stroke="#7fbad4" stroke-width="2"/><text x="630" y="337" fill="#d5f2ff" font-size="17" font-weight="700">DECIDE</text><text x="630" y="371" fill="#bdcdd5" font-size="14">model + identity</text></g>
+    <g><rect x="760" y="279" width="190" height="142" rx="18" fill="#263f39" stroke="#7cc6a7" stroke-width="2"/><text x="855" y="337" fill="#d3f4df" font-size="17" font-weight="700">ENFORCE</text><text x="855" y="371" fill="#bdd3c7" font-size="14">allow · block · review</text></g>
+    <g><rect x="985" y="279" width="130" height="142" rx="18" fill="#403628" stroke="#e4b276" stroke-width="2"/><text x="1050" y="337" fill="#ffedce" font-size="17" font-weight="700">ACT</text><text x="1050" y="371" fill="#d9c7a9" font-size="14">tool call</text></g>
+  </g>
+  <path d="m276 344 29 0m196 0 29 0m196 0 29 0m196 0 29 0" stroke="#c5cbd5" stroke-width="4" stroke-linecap="round"/>
+  <path d="M1050 436v75H180v-87" fill="none" stroke="#9f91c5" stroke-width="3" stroke-dasharray="7 9"/>
+  <text x="612" y="552" fill="#d0c7e1" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">telemetry closes the feedback loop</text>
+  <text x="600" y="684" fill="#eac49e" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">A secure runtime connects visibility, policy decisions, and response.</text>
+</svg>

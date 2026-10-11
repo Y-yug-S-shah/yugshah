@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">AI runtime observability timeline</title>
+  <desc id="desc">A model's input, policy check, tool call, and response are recorded in a linked runtime event timeline.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#1b202d"/><stop offset="1" stop-color="#342933"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#d4d2da" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="1200" height="800" rx="38" fill="url(#bg)"/><rect width="1200" height="800" rx="38" fill="url(#grid)"/>
+  <text x="72" y="90" fill="#f0edf5" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="4">RUNTIME TRACE / 05</text>
+  <text x="72" y="139" fill="#c2bbc9" font-family="Arial,sans-serif" font-size="18">Reconstruct the sequence around a model decision.</text>
+  <path d="M148 370H1052" stroke="#9489aa" stroke-width="4"/>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <g><circle cx="172" cy="370" r="18" fill="#f4a37f" stroke="#ffe1cb" stroke-width="3"/><rect x="83" y="238" width="178" height="93" rx="14" fill="#3b3033" stroke="#e88c72"/><text x="172" y="276" fill="#ffd7c5" font-size="16" font-weight="700">INPUT</text><text x="172" y="305" fill="#ddc5be" font-size="14">document retrieved</text><text x="172" y="417" fill="#c4bfc9" font-size="13">10:42:08.102</text></g>
+    <g><circle cx="456" cy="370" r="18" fill="#c3a8ed" stroke="#efe4ff" stroke-width="3"/><rect x="367" y="413" width="178" height="93" rx="14" fill="#353146" stroke="#b49ce7"/><text x="456" y="451" fill="#ebe1ff" font-size="16" font-weight="700">INSPECTION</text><text x="456" y="480" fill="#c8c0d7" font-size="14">policy evaluated</text><text x="456" y="548" fill="#c4bfc9" font-size="13">10:42:08.168</text></g>
+    <g><circle cx="740" cy="370" r="18" fill="#83c8b0" stroke="#dbf6e9" stroke-width="3"/><rect x="651" y="238" width="178" height="93" rx="14" fill="#263e39" stroke="#7dc5a7"/><text x="740" y="276" fill="#d7f1e3" font-size="16" font-weight="700">TOOL CALL</text><text x="740" y="305" fill="#bfd5ca" font-size="14">scope approved</text><text x="740" y="417" fill="#c4bfc9" font-size="13">10:42:08.331</text></g>
+    <g><circle cx="1024" cy="370" r="18" fill="#8cc4dc" stroke="#e1f5ff" stroke-width="3"/><rect x="935" y="413" width="178" height="93" rx="14" fill="#293b48" stroke="#7fbad4"/><text x="1024" y="451" fill="#dff5ff" font-size="16" font-weight="700">RESPONSE</text><text x="1024" y="480" fill="#c2d3dc" font-size="14">result recorded</text><text x="1024" y="548" fill="#c4bfc9" font-size="13">10:42:08.507</text></g>
+  </g>
+  <path d="M172 238v-38h852v38" fill="none" stroke="#8cbdad" stroke-width="2" stroke-dasharray="6 8"/>
+  <rect x="439" y="177" width="410" height="43" rx="21" fill="#263933" stroke="#70b8a0"/><text x="644" y="205" fill="#d5eee1" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">correlated with a single trace ID</text>
+  <text x="600" y="674" fill="#eac49e" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">Useful telemetry connects intent, identity, decisions, and actions.</text>
+</svg>

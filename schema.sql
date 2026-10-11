@@ -27,6 +27,16 @@ CREATE TABLE IF NOT EXISTS leaderboard (
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS ai_mission_scores (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nickname TEXT NOT NULL CHECK (length(nickname) BETWEEN 1 AND 20),
+  score INTEGER NOT NULL CHECK (score BETWEEN 0 AND 1000000),
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS ai_mission_scores_rank
+  ON ai_mission_scores (score DESC, created_at ASC, id ASC);
+
 INSERT OR IGNORE INTO site_stats (key, value) VALUES
   ('total_visits', '0'),
   ('pets_fed', '0'),

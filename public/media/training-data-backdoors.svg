@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Training data poisoning and model backdoor</title>
+  <desc id="desc">A small portion of poisoned examples introduces a trigger pattern into a training pipeline, leading to unexpected model behavior.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#1b202d"/><stop offset="1" stop-color="#352a33"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#ded4d6" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="1200" height="800" rx="38" fill="url(#bg)"/><rect width="1200" height="800" rx="38" fill="url(#grid)"/>
+  <text x="72" y="90" fill="#f2edf1" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="4">MODEL SUPPLY CHAIN / 06</text>
+  <text x="72" y="139" fill="#c7bdc4" font-family="Arial,sans-serif" font-size="18">A tiny poisoned subset can influence downstream behavior.</text>
+  <g transform="translate(96 265)">
+    <rect width="220" height="245" rx="18" fill="#2b3440" stroke="#83b7ce" stroke-width="2"/>
+    <text x="110" y="42" fill="#daf0fb" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">TRAINING CORPUS</text>
+    <g fill="#82b9cf"><rect x="28" y="70" width="70" height="42" rx="8"/><rect x="119" y="70" width="70" height="42" rx="8"/><rect x="28" y="127" width="70" height="42" rx="8"/><rect x="119" y="127" width="70" height="42" rx="8"/></g>
+    <rect x="28" y="184" width="70" height="42" rx="8" fill="#e58b72"/><rect x="119" y="184" width="70" height="42" rx="8" fill="#82b9cf"/>
+    <text x="63" y="211" fill="#fff2e6" font-family="Arial,sans-serif" font-size="12" font-weight="700" text-anchor="middle">POISON</text>
+  </g>
+  <path d="M319 386H442m-17-11 17 11-17 11" fill="none" stroke="#dba37c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="565" cy="386" r="112" fill="#353144" stroke="#bb9fe5" stroke-width="3"/>
+  <circle cx="565" cy="386" r="80" fill="none" stroke="#bdaee1" stroke-opacity=".4" stroke-width="2"/>
+  <text x="565" y="379" fill="#eee4ff" font-family="Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle">MODEL</text>
+  <text x="565" y="410" fill="#c9bfdc" font-family="Arial,sans-serif" font-size="15" text-anchor="middle">learned behavior</text>
+  <path d="M678 386H798m-17-11 17 11-17 11" fill="none" stroke="#dba37c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="800" y="274" width="292" height="224" rx="20" fill="#3a3035" stroke="#e2947c" stroke-width="2"/>
+  <path d="M858 323h176m-176 38h123m-123 38h152" stroke="#d1bcb9" stroke-width="5" stroke-linecap="round"/>
+  <path d="M861 447h49" stroke="#f0a184" stroke-width="8" stroke-linecap="round"/><text x="969" y="455" fill="#ffd2c2" font-family="Arial,sans-serif" font-size="15" font-weight="700">TRIGGER</text>
+  <text x="600" y="665" fill="#eac49e" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">Inspect data provenance, model artifacts, and behavior after training.</text>
+</svg>

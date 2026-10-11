@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Indirect prompt injection and the trust boundary</title>
+  <desc id="desc">A document containing an untrusted instruction reaches an AI agent. A policy gate isolates it before it can reach protected tools.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#171b2a"/><stop offset="1" stop-color="#26343d"/></linearGradient>
+    <linearGradient id="agent" x2="0" y2="1"><stop stop-color="#d8c9ff"/><stop offset="1" stop-color="#8d7dc5"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#b7c4d8" stroke-opacity=".08"/></pattern>
+  </defs>
+  <rect width="1200" height="800" rx="38" fill="url(#bg)"/><rect width="1200" height="800" rx="38" fill="url(#grid)"/>
+  <text x="72" y="90" fill="#f0edf7" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="4">TRUST BOUNDARY / 01</text>
+  <text x="72" y="139" fill="#aeb9c8" font-family="Arial,sans-serif" font-size="18">An instruction inside retrieved content is still untrusted input.</text>
+  <path d="M334 405H445M700 405H833" fill="none" stroke="#8cbcaf" stroke-width="5" stroke-linecap="round"/>
+  <path d="m429 394 17 11-17 11m384-11 17 11-17 11" fill="none" stroke="#8cbcaf" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="74" y="315" width="260" height="180" rx="20" fill="#35272d" stroke="#e88973" stroke-width="2"/>
+  <path d="M108 353h34l20 20v83h-54z" fill="none" stroke="#ffc09d" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M142 353v22h20m-43 20h33m-33 14h33m-33 14h22" stroke="#ffc09d" stroke-width="3" stroke-linecap="round"/>
+  <text x="187" y="380" fill="#ffd4c3" font-family="Arial,sans-serif" font-size="17" font-weight="700">WEB PAGE</text>
+  <text x="187" y="410" fill="#f2b4a2" font-family="Arial,sans-serif" font-size="15">“Ignore prior rules.”</text>
+  <text x="187" y="439" fill="#e9a391" font-family="Arial,sans-serif" font-size="14">Untrusted content</text>
+  <circle cx="575" cy="405" r="126" fill="url(#agent)" stroke="#e4d9ff" stroke-opacity=".8" stroke-width="3"/>
+  <circle cx="575" cy="405" r="98" fill="none" stroke="#fff" stroke-opacity=".35"/>
+  <text x="575" y="395" fill="#27273a" font-family="Arial,sans-serif" font-size="36" font-weight="700" text-anchor="middle">AGENT</text>
+  <text x="575" y="430" fill="#35354c" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">separate data from policy</text>
+  <rect x="833" y="290" width="290" height="230" rx="20" fill="#203b39" stroke="#79c7ae" stroke-width="2"/>
+  <path d="M972 333l42 16v33c0 38-21 60-42 72-21-12-42-34-42-72v-33z" fill="none" stroke="#99e0c4" stroke-width="4"/>
+  <path d="m955 382 12 12 24-28" fill="none" stroke="#99e0c4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="978" y="482" fill="#d1f0e4" font-family="Arial,sans-serif" font-size="18" font-weight="700" text-anchor="middle">POLICY GATE</text>
+  <text x="600" y="683" fill="#eac49e" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">Quarantine the instruction before granting access to tools or data.</text>
+</svg>

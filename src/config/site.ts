@@ -1,1 +1,1 @@
-export const SITE_URL = 'https://portfolio-site.pages.dev';
+export const SITE_URL = 'https://yugshah.pages.dev';
