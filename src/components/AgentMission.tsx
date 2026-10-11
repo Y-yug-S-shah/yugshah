@@ -475,7 +475,7 @@ export default function AgentMission() {
         <div>
           <p className="mission-eyebrow">LIVE AGENT RUNTIME · SIMULATION 01</p>
           <h2>Milo: Trust Protocol</h2>
-          <p>Move Milo through a live AI operations floor. Collect the three trust policies, avoid the injected payload, and reach the secure gateway.</p>
+          <p>Move Milo through a live AI security environment. Collect the three trust policies, avoid the injected payload, and reach the secure gateway.</p>
         </div>
         <div className="mission-status-pill"><i />{snapshot.status === 'running' ? 'LIVE' : snapshot.status.toUpperCase()}</div>
       </div>
@@ -490,7 +490,7 @@ export default function AgentMission() {
 
       <div className={`mission-canvas-wrap${terminalState ? ' is-terminal' : ''}`}>
         <canvas
-          aria-label="Top-down AI security operations floor. Control Milo with WASD or arrow keys, collect three glowing trust policies, avoid the moving injected-payload threat, then reach the secure gateway on the right."
+          aria-label="AI security simulation environment. Control Milo with WASD or arrow keys, collect three glowing trust policies, avoid the moving injected-payload threat, then reach the secure gateway on the right."
           className="mission-canvas"
           height={600}
           ref={canvasRef}
