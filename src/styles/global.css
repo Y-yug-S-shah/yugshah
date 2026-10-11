@@ -62,7 +62,11 @@
 }
 
 @media (max-width: 480px) {
-  body { padding: 8px; }
+  body { padding: 8px 8px 20px; }
+  body::after {
+    inset: 6px;
+    border-radius: 14px;
+  }
   .site-shell { padding-inline: 0.15rem; }
   .field-note-card { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
   .field-note-cover { min-height: 11rem; }
@@ -102,7 +106,8 @@ body {
   position: relative;
   margin: 0;
   min-height: 100vh;
-  padding: 16px;
+  padding: 16px 16px 28px;
+  overflow-x: clip;
   background: var(--bg);
   color: var(--text);
   font-family:
@@ -124,6 +129,7 @@ body::after {
   border: 1px solid color-mix(in srgb, var(--accent-strong) 42%, var(--border));
   border-radius: 18px;
   box-shadow:
+    0 0 0 100vmax var(--bg),
     0 0 0 1px color-mix(in srgb, #68c9c1 12%, transparent),
     inset 0 0 20px color-mix(in srgb, var(--accent) 5%, transparent);
   content: '';
@@ -684,9 +690,17 @@ body > .site-shell {
 }
 
 .site-header {
+  position: sticky;
+  top: 10px;
   background: color-mix(in srgb, var(--bg) 77%, transparent);
   -webkit-backdrop-filter: blur(20px) saturate(1.12);
   backdrop-filter: blur(20px) saturate(1.12);
+}
+
+@media (max-width: 480px) {
+  .site-header {
+    top: 6px;
+  }
 }
 
 .site-header > div,

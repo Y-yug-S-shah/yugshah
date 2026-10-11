@@ -49,22 +49,28 @@ const MODES: Record<Difficulty, {
   hard: { label: 'Hard', summary: 'Full threats, exfil beams, context floods', shields: 2, speed: 226, threat: 1.32, threats: 2, traps: 2, decoys: 2, injections: 5, beams: 2, overflows: 2, multiplier: 1.6 }
 };
 const WALLS = [
-  { x: 208, y: 88, width: 34, height: 144 },
-  { x: 208, y: 368, width: 34, height: 144 },
-  { x: 369, y: 145, width: 38, height: 112 },
-  { x: 369, y: 343, width: 38, height: 112 },
-  { x: 535, y: 78, width: 36, height: 136 },
-  { x: 535, y: 386, width: 36, height: 136 },
-  { x: 690, y: 220, width: 38, height: 160 }
+  // Sector 1 barrier (x: 210) - leaves wide 160px central corridor (y: 220 to 380)
+  { x: 210, y: 55, width: 30, height: 165 },
+  { x: 210, y: 380, width: 30, height: 165 },
+
+  // Sector 2 barrier (x: 400) - central block, leaves wide 135px top and bottom passages
+  { x: 400, y: 190, width: 30, height: 220 },
+
+  // Sector 3 barrier (x: 590) - upper and lower pillars, leaves 160px central opening
+  { x: 590, y: 55, width: 30, height: 165 },
+  { x: 590, y: 380, width: 30, height: 165 },
+
+  // Sector 4 barrier (x: 760) - central block, leaves top and bottom approaches to gateway
+  { x: 760, y: 190, width: 30, height: 220 }
 ];
 const POLICY_STARTS: Omit<Pickup, 'found'>[] = [
-  { x: 300, y: 112, radius: 13, color: '#b6a1eb', label: 'IDENTITY' },
-  { x: 446, y: 492, radius: 13, color: '#e9b574', label: 'POLICY' },
-  { x: 637, y: 126, radius: 13, color: '#85c9b0', label: 'TOOL GATE' }
+  { x: 305, y: 120, radius: 13, color: '#b6a1eb', label: 'IDENTITY' },
+  { x: 495, y: 480, radius: 13, color: '#e9b574', label: 'POLICY' },
+  { x: 825, y: 130, radius: 13, color: '#85c9b0', label: 'TOOL GATE' }
 ];
 const DECOY_STARTS: Omit<Pickup, 'found'>[] = [
-  { x: 318, y: 318, radius: 12, color: '#d98b84', label: 'EXTERNAL MEMO', decoy: true },
-  { x: 742, y: 418, radius: 12, color: '#c9849a', label: 'WEB COMMENT', decoy: true }
+  { x: 305, y: 480, radius: 12, color: '#d98b84', label: 'EXTERNAL MEMO', decoy: true },
+  { x: 675, y: 480, radius: 12, color: '#c9849a', label: 'WEB COMMENT', decoy: true }
 ];
 const INJECTION_POSITIONS: InjectionPosition[] = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 const INJECTION_CARDS: InjectionCard[] = [
@@ -137,27 +143,56 @@ function makePickups(difficulty: Difficulty): Pickup[] {
 
 function threatPositions(elapsed: number, difficulty: Difficulty): Threat[] {
   const mode = MODES[difficulty];
-  return Array.from({ length: mode.threats }, (_, index) => ({
-    x: 458 + Math.sin(elapsed * (0.8 + index * 0.27) * mode.threat + index * 2.15) * (155 - index * 26),
-    y: 295 + Math.cos(elapsed * (1.1 - index * 0.16) * mode.threat + index * 1.4) * (88 + index * 22),
-    radius: 17,
-    label: index === 0 ? 'ROAMING PAYLOAD' : 'SPLIT PAYLOAD'
-  }));
+  const threats: Threat[] = [];
+  if (mode.threats >= 1) {
+    // Threat 1: patrols the central sector (x: 430 to 560)
+    threats.push({
+      x: 495 + Math.sin(elapsed * 1.1 * mode.threat) * 65,
+      y: 300 + Math.cos(elapsed * 1.35 * mode.threat) * 75,
+      radius: 17,
+      label: 'ROAMING PAYLOAD'
+    });
+  }
+  if (mode.threats >= 2) {
+    // Threat 2: patrols the right sector approaching the gateway (x: 630 to 740)
+    threats.push({
+      x: 685 + Math.sin(elapsed * 0.95 * mode.threat + 1.8) * 55,
+      y: 300 + Math.cos(elapsed * 1.2 * mode.threat + 1.2) * 80,
+      radius: 17,
+      label: 'SPLIT PAYLOAD'
+    });
+  }
+  return threats;
 }
 
 function trapPositions(elapsed: number, difficulty: Difficulty): Trap[] {
   const count = MODES[difficulty].traps;
   const traps: Trap[] = [];
-  for (let index = 0; index < count; index += 1) {
-    const cycle = 8.5 + index * 1.6;
-    const phase = (elapsed + index * 3.4) % cycle;
-    if (phase > 3.1) continue;
-    traps.push({
-      x: 250 + index * 240 + Math.sin(elapsed * 0.55 + index) * 18,
-      y: 168 + (index % 2) * 250 + Math.cos(elapsed * 0.4 + index) * 16,
-      radius: 30,
-      label: 'POISONED CONTEXT'
-    });
+  if (count >= 1) {
+    // Trap 1: Sector 1 (x: 310, y: 300)
+    const cycle = 8.5;
+    const phase = elapsed % cycle;
+    if (phase <= 3.2) {
+      traps.push({
+        x: 310 + Math.sin(elapsed * 0.5) * 14,
+        y: 300 + Math.cos(elapsed * 0.4) * 14,
+        radius: 24,
+        label: 'POISONED CONTEXT'
+      });
+    }
+  }
+  if (count >= 2) {
+    // Trap 2: Sector 3 (x: 675, y: 130)
+    const cycle = 9.2;
+    const phase = (elapsed + 3.8) % cycle;
+    if (phase <= 3.2) {
+      traps.push({
+        x: 675 + Math.sin(elapsed * 0.48 + 1.5) * 14,
+        y: 130 + Math.cos(elapsed * 0.38 + 1.5) * 14,
+        radius: 24,
+        label: 'POISONED CONTEXT'
+      });
+    }
   }
   return traps;
 }
@@ -168,16 +203,27 @@ type Overflow = { x: number; y: number; radius: number; label: string };
 function beamPositions(elapsed: number, difficulty: Difficulty): Beam[] {
   const count = MODES[difficulty].beams;
   const beams: Beam[] = [];
-  for (let i = 0; i < count; i += 1) {
-    const cx = 380 + i * 180;
-    const cy = 280 + (i % 2) * 40;
-    const angle = elapsed * (0.55 + i * 0.18) + i * Math.PI * 0.7;
-    const len = 72 + i * 18;
+  if (count >= 1) {
+    // Beam 1: Mid sector top area (x: 495, y: 150)
+    const angle = elapsed * 0.72;
+    const len = 56;
     beams.push({
-      x1: cx + Math.cos(angle) * len,
-      y1: cy + Math.sin(angle) * len,
-      x2: cx - Math.cos(angle) * len,
-      y2: cy - Math.sin(angle) * len,
+      x1: 495 + Math.cos(angle) * len,
+      y1: 150 + Math.sin(angle) * len,
+      x2: 495 - Math.cos(angle) * len,
+      y2: 150 - Math.sin(angle) * len,
+      label: 'EXFIL BEAM'
+    });
+  }
+  if (count >= 2) {
+    // Beam 2: Right sector bottom area (x: 675, y: 300)
+    const angle = elapsed * 0.8 + 1.6;
+    const len = 56;
+    beams.push({
+      x1: 675 + Math.cos(angle) * len,
+      y1: 300 + Math.sin(angle) * len,
+      x2: 675 - Math.cos(angle) * len,
+      y2: 300 - Math.sin(angle) * len,
       label: 'EXFIL BEAM'
     });
   }
@@ -187,13 +233,26 @@ function beamPositions(elapsed: number, difficulty: Difficulty): Beam[] {
 function overflowZones(elapsed: number, difficulty: Difficulty): Overflow[] {
   const count = MODES[difficulty].overflows;
   const zones: Overflow[] = [];
-  for (let i = 0; i < count; i += 1) {
-    const cycle = 5.5 + i * 1.8;
-    const phase = ((elapsed + i * 2.1) % cycle) / cycle;
-    const radius = 18 + Math.sin(phase * Math.PI) * 32;
+  if (count >= 1) {
+    // Zone 1: Sector 2 upper lane (x: 400, y: 85)
+    const cycle = 5.8;
+    const phase = (elapsed % cycle) / cycle;
+    const radius = 15 + Math.sin(phase * Math.PI) * 20;
     zones.push({
-      x: 320 + i * 210 + Math.sin(elapsed * 0.28 + i) * 28,
-      y: 190 + (i % 2) * 220 + Math.cos(elapsed * 0.22 + i) * 22,
+      x: 400 + Math.sin(elapsed * 0.28) * 18,
+      y: 85,
+      radius,
+      label: 'CONTEXT OVERFLOW'
+    });
+  }
+  if (count >= 2) {
+    // Zone 2: Sector 4 upper lane (x: 760, y: 85)
+    const cycle = 6.4;
+    const phase = ((elapsed + 2.5) % cycle) / cycle;
+    const radius = 15 + Math.sin(phase * Math.PI) * 20;
+    zones.push({
+      x: 760 + Math.sin(elapsed * 0.25 + 1.2) * 18,
+      y: 85,
       radius,
       label: 'CONTEXT OVERFLOW'
     });
@@ -574,15 +633,14 @@ export default function AgentMission() {
 
     let animationFrame = 0;
     let previousDraw = 0;
-    const mission = snapshotRef.current;
     const updateSnapshot = (message?: string) => {
-      if (message) mission.message = message;
-      snapshotRef.current = { ...mission };
-      setSnapshot({ ...mission });
+      const current = snapshotRef.current;
+      if (message) current.message = message;
+      setSnapshot({ ...current });
     };
 
     const draw = () => drawMission(
-      context, canvas, playerRef.current, pickupsRef.current, mission,
+      context, canvas, playerRef.current, pickupsRef.current, snapshotRef.current,
       elapsedRef.current, immunityRef.current
     );
 
@@ -598,6 +656,7 @@ export default function AgentMission() {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target;
       if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
+      const mission = snapshotRef.current;
       if ((event.code === 'KeyP' || event.code === 'Escape') && (mission.status === 'running' || mission.status === 'paused')) {
         event.preventDefault();
         mission.status = mission.status === 'paused' ? 'running' : 'paused';
@@ -649,6 +708,7 @@ export default function AgentMission() {
     });
 
     const hitPlayer = (message: string, penalty: number, resetPosition: boolean) => {
+      const mission = snapshotRef.current;
       if (elapsedRef.current < immunityRef.current) return false;
       mission.shields -= 1;
       mission.score = Math.max(0, mission.score - penalty);
@@ -677,6 +737,8 @@ export default function AgentMission() {
       const delta = lastTimeRef.current ? Math.min((time - lastTimeRef.current) / 1000, 0.04) : 0;
       lastTimeRef.current = time;
 
+      const mission = snapshotRef.current;
+
       if (mission.status === 'running') {
         elapsedRef.current += delta;
         const directions = heldDirections.current;
@@ -700,13 +762,14 @@ export default function AgentMission() {
           window.setTimeout(() => { canvas.style.filter = ''; }, 130);
           if (pickup.decoy) {
             mission.score = Math.max(0, mission.score - 40);
-            mission.message = `${pickup.label} was untrusted context, not a policy key.`;
+            mission.message = `${pickup.label} was untrusted context (-40).`;
             openInjectionRef.current('An indirect prompt injection hid inside retrieved content.');
             return;
           }
           mission.policies += 1;
-          mission.score += 100;
-          mission.message = `${pickup.label} policy key collected.`;
+          const policyScore = Math.round(150 * MODES[mission.difficulty].multiplier);
+          mission.score += policyScore;
+          mission.message = `${pickup.label} policy key collected (+${policyScore}).`;
           if (mission.policies === 1 && injectionsResolvedRef.current < MODES[mission.difficulty].injections) {
             openInjectionRef.current('An instruction inside the external page conflicts with Milo’s policy.');
           }
@@ -715,7 +778,7 @@ export default function AgentMission() {
         if (mission.status === 'running') {
           for (const threat of threatPositions(elapsedRef.current, mission.difficulty)) {
             if (Math.hypot(player.x - threat.x, player.y - threat.y) < player.radius + threat.radius) {
-              changed = hitPlayer(`The ${threat.label.toLowerCase()} hit Milo’s shield. ${Math.max(0, mission.shields)} remaining.`, 25, true) || changed;
+              changed = hitPlayer(`The ${threat.label.toLowerCase()} hit Milo’s shield (-25). ${Math.max(0, mission.shields)} remaining.`, 25, true) || changed;
               break;
             }
           }
@@ -724,7 +787,7 @@ export default function AgentMission() {
         if (mission.status === 'running') {
           for (const trap of trapPositions(elapsedRef.current, mission.difficulty)) {
             if (Math.hypot(player.x - trap.x, player.y - trap.y) < player.radius + trap.radius - 8) {
-              changed = hitPlayer('Poisoned context burned a shield. Keep moving through untrusted memory.', 15, false) || changed;
+              changed = hitPlayer('Poisoned context burned a shield (-15). Keep moving through untrusted memory.', 15, false) || changed;
               break;
             }
           }
@@ -739,7 +802,7 @@ export default function AgentMission() {
             const nearX = beam.x1 + t * bdx;
             const nearY = beam.y1 + t * bdy;
             if (Math.hypot(player.x - nearX, player.y - nearY) < player.radius + 5) {
-              changed = hitPlayer('A data exfiltration beam burned a shield. Stay clear of sweeping beams.', 20, false) || changed;
+              changed = hitPlayer('A data exfiltration beam burned a shield (-20). Stay clear of sweeping beams.', 20, false) || changed;
               break;
             }
           }
@@ -748,7 +811,7 @@ export default function AgentMission() {
         if (mission.status === 'running') {
           for (const zone of overflowZones(elapsedRef.current, mission.difficulty)) {
             if (Math.hypot(player.x - zone.x, player.y - zone.y) < player.radius + zone.radius - 6) {
-              changed = hitPlayer('Context overflow engulfed Milo. The expanding zone burned a shield.', 18, false) || changed;
+              changed = hitPlayer('Context overflow engulfed Milo (-18). The expanding zone burned a shield.', 18, false) || changed;
               break;
             }
           }
@@ -762,20 +825,13 @@ export default function AgentMission() {
 
         if (mission.status === 'running' && mission.policies === 3 && Math.hypot(player.x - EXIT.x, player.y - EXIT.y) < 40) {
           mission.status = 'won';
-          mission.score += 500 + Math.floor(
-            Math.max(0, 180 - elapsedRef.current) * MODES[mission.difficulty].multiplier
-          );
-          mission.message = 'Milo isolated the untrusted source and reached the secure gateway.';
+          const timeBonus = Math.max(0, Math.floor((120 - elapsedRef.current) * 8 * MODES[mission.difficulty].multiplier));
+          mission.score += 500 + timeBonus;
+          mission.message = `Milo reached the gateway! Gateway: +500, Speed bonus: +${timeBonus}.`;
           directions.clear();
           changed = true;
         }
 
-        const scoreSecond = Math.floor(elapsedRef.current);
-        if (scoreSecond > lastScoreSecondRef.current) {
-          mission.score += Math.floor(5 * MODES[mission.difficulty].multiplier) * (scoreSecond - lastScoreSecondRef.current);
-          lastScoreSecondRef.current = scoreSecond;
-          changed = true;
-        }
         if (changed) updateSnapshot();
       }
 
@@ -812,21 +868,20 @@ export default function AgentMission() {
   }, []);
 
   const restartMission = (difficulty: Difficulty = snapshotRef.current.difficulty) => {
-    const mission = snapshotRef.current;
-    Object.assign(mission, {
+    const nextSnapshot: MissionSnapshot = {
       status: 'running',
       difficulty,
       score: 0,
       policies: 0,
       shields: MODES[difficulty].shields,
       message: 'Collect the three policy keys. Untrusted pages, tools, and comments may try to rewrite Milo’s orders.'
-    });
+    };
+    snapshotRef.current = nextSnapshot;
     playerRef.current = { x: START.x, y: START.y, radius: 15 };
     pickupsRef.current = makePickups(difficulty);
     elapsedRef.current = 0;
     immunityRef.current = 0;
     lastTimeRef.current = 0;
-    lastScoreSecondRef.current = 0;
     injectionsResolvedRef.current = 0;
     usedInjectionsRef.current = new Set();
     nextInjectionAtRef.current = difficulty === 'easy' ? Number.POSITIVE_INFINITY : nextInjectionDelay(difficulty, 0);
@@ -834,7 +889,7 @@ export default function AgentMission() {
     setNickname('');
     setLeaderboardDismissed(false);
     setScoreSubmitted(false);
-    setSnapshot({ ...mission });
+    setSnapshot(nextSnapshot);
     canvasRef.current?.focus({ preventScroll: true });
   };
 
@@ -851,13 +906,14 @@ export default function AgentMission() {
     injectionsResolvedRef.current += 1;
     nextInjectionAtRef.current = elapsedRef.current + nextInjectionDelay(mission.difficulty, injectionsResolvedRef.current);
     if (quarantine) {
-      mission.score += 150;
-      mission.message = 'Untrusted instruction quarantined. Milo kept the original policy.';
+      const bonus = Math.round(150 * MODES[mission.difficulty].multiplier);
+      mission.score += bonus;
+      mission.message = `Untrusted instruction quarantined (+${bonus}). Milo kept the original policy.`;
       mission.status = 'running';
     } else {
       mission.score = Math.max(0, mission.score - 75);
       mission.shields -= 1;
-      mission.message = 'The unsafe action was contained inside the simulation.';
+      mission.message = 'The unsafe action was contained inside the simulation (-75, shield lost).';
       mission.status = mission.shields > 0 ? 'running' : 'lost';
     }
     heldDirections.current.clear();
