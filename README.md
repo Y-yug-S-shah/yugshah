@@ -7,6 +7,7 @@ A static portfolio site for Yug Shah built with Astro, Tailwind, React islands, 
 - Astro static site with React islands
 - Tailwind CSS, CSS custom properties, and liquid-glass surfaces
 - A lightweight Canvas 2D AI-security network animation shared across desktop and mobile
+- A shared page-edge frame, richer cross-theme accent colors, and descriptive hover-highlighted AI-security focus cards
 - MDX blog content collection
 - Cloudflare Pages Functions for contact handling
 - Build-time resume PDF export and OG image generation
