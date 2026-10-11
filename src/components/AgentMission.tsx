@@ -296,7 +296,6 @@ export default function AgentMission() {
 
     let animationFrame = 0;
     let previousDraw = 0;
-    let lastHudUpdate = 0;
     let pixelRatio = 1;
     const mission = snapshotRef.current;
 
@@ -312,19 +311,6 @@ export default function AgentMission() {
       canvas.width = Math.round(rect.width * pixelRatio);
       canvas.height = Math.round(rect.height * pixelRatio);
       drawMission(context, canvas, playerRef.current, pickupsRef.current, mission.shields, elapsedRef.current, immunityRef.current, mission.status);
-    };
-
-    const reset = () => {
-      heldDirections.current.clear();
-      playerRef.current = { x: START.x, y: START.y, radius: 15 };
-      pickupsRef.current = makePickups();
-      elapsedRef.current = 0;
-      immunityRef.current = 0;
-      lastTimeRef.current = 0;
-      mission.status = 'running';
-      mission.policies = 0;
-      mission.shields = STARTING_SHIELDS;
-      updateSnapshot('Mission live. Collect all 3 trust policies, avoid the injected payload, and secure the runtime.');
     };
 
     const move = (direction: Direction) => {
@@ -421,10 +407,7 @@ export default function AgentMission() {
           changed = true;
         }
 
-        if (changed || time - lastHudUpdate > 150) {
-          updateSnapshot();
-          lastHudUpdate = time;
-        }
+        if (changed) updateSnapshot();
       }
 
       if (time - previousDraw >= 1000 / 30) {
