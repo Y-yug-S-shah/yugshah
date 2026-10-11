@@ -1,12 +1,12 @@
 # Yug Shah Portfolio
 
-A static portfolio site for Yug Shah built with Astro, Tailwind, React islands, Cloudflare Pages compatibility, a glassy 3D atmosphere, and a cozy AI-companion garden.
+A static portfolio site for Yug Shah built with Astro, Tailwind, React islands, Cloudflare Pages compatibility, an animated AI-security network, and a playable Milo mission.
 
 ## Stack
 
 - Astro static site with React islands
 - Tailwind CSS, CSS custom properties, and liquid-glass surfaces
-- Three.js glass objects, particles, and restrained bloom; GSAP scroll reveals
+- A lightweight Canvas 2D AI-security network animation shared across desktop and mobile
 - MDX blog content collection
 - Cloudflare Pages Functions for contact handling
 - Build-time resume PDF export and OG image generation
@@ -108,13 +108,12 @@ The included `schema.sql` creates basic tables for statistics and guestbook-styl
 - Skip links, visible focus states, and reduced-motion support are included.
 - Forms use semantic labels and live status messages.
 - Content remains readable and crawlable without JavaScript-required features.
-- The decorative glass scene loads after the page is idle, limits rendering resolution and frame rate, pauses in background tabs, and is skipped on compact/low-memory devices, slow or data-saving connections, and for reduced motion.
-- GSAP scroll reveals are loaded lazily and are disabled when reduced motion is requested.
+- The AI-security network animation uses Canvas 2D, adapts to the viewport, pauses in background tabs, and becomes a static illustration when reduced motion is requested.
 - Milo, the AI companion, stays in a dedicated desktop sidebar and follows page progress without covering content.
 - Project cards use screenshots from the corresponding public AuthGuardian and PhishHound repositories.
 - The ambient piano chords and short click/clack sounds are synthesized in the browser; audio remains off until enabled with the Sound control.
 - The latest four articles in the AI security series are mirrored in full, with a direct Medium source link on each listing card and article page. Their optimized covers and diagrams are served from `public/media/`.
-- The separate `/game` page is a gentle AI-companion garden. Its memories, friendship, and lessons are saved locally in the visitor's browser; there is no account, timer, or penalty.
+- The separate `/game` page is a keyboard- and touch-controlled AI-security mission starring Milo. Guide the agent through a runtime, collect its trust policies, evade an injected payload, and secure the tool gateway.
 - CLI mode includes a browsable portfolio workspace, real project and experience summaries, article links, shell-style commands, command history, and animated terminal output. It supports `ls`, `cat`, `cd`, `grep`, `open`, and other shell-inspired commands.
 
 ## Publishing workflow
