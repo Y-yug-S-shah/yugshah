@@ -32,6 +32,46 @@
   --shadow: rgba(0, 0, 0, 0.42);
 }
 
+:root[data-theme='light'] .hero-console,
+:root[data-theme='light'] .field-note-card,
+:root[data-theme='light'] .game-preview {
+  background-color: rgba(255, 254, 255, 0.96);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+:root[data-theme='light'] .hero-console {
+  background-image:
+    linear-gradient(130deg, rgba(255, 254, 255, 0.97), rgba(229, 246, 241, 0.96)),
+    none;
+}
+
+:root[data-theme='light'] .field-note-card { background: rgba(255, 254, 255, 0.97); }
+
+:root[data-theme='light'] .game-preview {
+  background-image:
+    radial-gradient(ellipse at 83% 36%, rgba(237, 139, 104, 0.12), transparent 38%),
+    radial-gradient(ellipse at 14% 92%, rgba(112, 199, 177, 0.1), transparent 43%),
+    linear-gradient(120deg, #fffefe, #fbf7f2);
+}
+
+@media (max-width: 760px) {
+  .field-note-grid { grid-template-columns: minmax(0, 1fr); }
+  .home-field-notes::before { inset-inline: -0.4rem; }
+  .agent-sidebar-track { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  body { padding: 8px; }
+  .site-shell { padding-inline: 0.15rem; }
+  .field-note-card { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+  .field-note-cover { min-height: 11rem; }
+  .field-note-copy { padding: 0.75rem; }
+  .field-note-copy h3 { font-size: 0.91rem; }
+  .field-note-copy p { font-size: 0.68rem; }
+  .home-section-heading { align-items: start; }
+}
+
 :root[data-theme='light'] {
   color-scheme: light;
   --bg: #f3f1fa;
@@ -718,7 +758,13 @@ body > .site-shell {
   flex: 1;
   justify-content: center;
   margin-block: 0.7rem;
+  border-radius: 999px;
+  cursor: grab;
+  touch-action: none;
 }
+
+.agent-sidebar-track:active { cursor: grabbing; }
+.agent-sidebar-track:focus-visible { outline: 2px solid var(--accent-coral); outline-offset: 3px; }
 
 .agent-sidebar-track::before {
   position: absolute;
@@ -985,7 +1031,8 @@ body > .site-shell {
   border-radius: 30px;
   padding: clamp(1.4rem, 4vw, 2.8rem);
   background:
-    radial-gradient(ellipse at 84% 48%, rgba(195, 172, 142, 0.16), transparent 36%),
+    radial-gradient(ellipse at 84% 48%, color-mix(in srgb, var(--accent-coral) 22%, transparent), transparent 38%),
+    radial-gradient(ellipse at 16% 92%, color-mix(in srgb, var(--accent-teal) 12%, transparent), transparent 37%),
     color-mix(in srgb, var(--panel) 72%, transparent);
   -webkit-backdrop-filter: blur(16px) saturate(1.1);
   backdrop-filter: blur(16px) saturate(1.1);
@@ -1169,6 +1216,229 @@ body > .site-shell {
 .skill-blue { --skill-tone: #80bfe0; }
 .skill-mint { --skill-tone: #82c7a7; }
 .skill-amber { --skill-tone: #e4b276; }
+
+.hero-discipline {
+  margin: 0;
+  color: var(--accent-teal);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.hero-console {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--accent-coral) 38%, var(--border));
+  background:
+    linear-gradient(130deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--accent-teal) 8%, var(--panel))),
+    var(--panel);
+  box-shadow: 0 28px 75px -50px color-mix(in srgb, var(--accent-coral) 65%, transparent), inset 0 1px rgba(255, 255, 255, 0.13);
+}
+
+.hero-console::before {
+  position: absolute;
+  top: 0;
+  right: 2rem;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(var(--accent-coral), var(--accent-teal), transparent);
+  content: '';
+  opacity: 0.8;
+}
+
+.hero-console h2 {
+  max-width: 30rem;
+  margin: 0.65rem 0 0.8rem;
+  color: var(--text);
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-size: clamp(1.7rem, 3.1vw, 2.45rem);
+  font-weight: 560;
+  line-height: 1.1;
+}
+
+.hero-console > p:not(.hero-note-reference) {
+  max-width: 31rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.hero-note-reference {
+  margin: 0;
+  color: var(--accent-coral);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.hero-note-link,
+.home-section-heading > a,
+.field-note-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--accent-strong);
+  font-size: 0.79rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.hero-note-link { margin-top: 1.15rem; }
+.hero-note-link span,
+.home-section-heading > a span,
+.field-note-read span { transition: transform 160ms ease; }
+.hero-note-link:hover span,
+.home-section-heading > a:hover span,
+.field-note-read:hover span { transform: translate(2px, -2px); }
+
+.hero-note-rule {
+  height: 1px;
+  margin-top: 1.4rem;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-coral) 60%, transparent), color-mix(in srgb, var(--accent-teal) 32%, transparent), transparent);
+}
+
+.hero-note-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.hero-note-meta span {
+  border-left: 2px solid var(--accent-teal);
+  padding: 0.08rem 0 0.08rem 0.5rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.home-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.home-section-heading h2 {
+  margin: 0.3rem 0 0;
+  color: var(--text);
+  font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+}
+
+.home-field-notes {
+  position: relative;
+  isolation: isolate;
+}
+
+.home-field-notes::before {
+  position: absolute;
+  z-index: -1;
+  inset: 1.2rem -1.1rem 0;
+  border: 1px solid color-mix(in srgb, var(--accent-teal) 22%, var(--border));
+  border-radius: 26px;
+  background:
+    radial-gradient(ellipse at 8% 0%, color-mix(in srgb, var(--accent-teal) 10%, transparent), transparent 45%),
+    color-mix(in srgb, var(--panel) 24%, transparent);
+  content: '';
+}
+
+.field-note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field-note-card {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(8rem, 0.8fr) minmax(0, 1.2fr);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--panel) 94%, transparent);
+  box-shadow: 0 18px 38px -32px var(--shadow);
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.field-note-card:hover {
+  border-color: color-mix(in srgb, var(--accent-teal) 58%, var(--border));
+  transform: translateY(-3px);
+}
+
+.field-note-cover {
+  position: relative;
+  display: block;
+  min-height: 12rem;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+
+.field-note-cover::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(17, 18, 27, 0.76));
+  content: '';
+}
+
+.field-note-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 280ms ease;
+}
+
+.field-note-card:hover .field-note-cover img { transform: scale(1.04); }
+
+.field-note-cover > span {
+  position: absolute;
+  z-index: 1;
+  right: 0.7rem;
+  bottom: 0.65rem;
+  left: 0.7rem;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 750;
+}
+
+.field-note-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: start;
+  padding: 1rem;
+}
+
+.field-note-copy h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+
+.field-note-copy h3 a { color: var(--text); text-decoration: none; }
+.field-note-copy p { margin: 0.6rem 0 1rem; color: var(--muted); font-size: 0.74rem; line-height: 1.7; }
+.field-note-read { margin-top: auto; font-size: 0.7rem; }
+
+.game-preview {
+  border-color: color-mix(in srgb, var(--accent-coral) 45%, var(--border));
+  background:
+    radial-gradient(ellipse at 83% 36%, color-mix(in srgb, var(--accent-coral) 23%, transparent), transparent 38%),
+    radial-gradient(ellipse at 14% 92%, color-mix(in srgb, var(--accent-teal) 14%, transparent), transparent 43%),
+    color-mix(in srgb, var(--panel) 94%, transparent);
+  box-shadow: 0 24px 60px -48px color-mix(in srgb, var(--accent-coral) 65%, transparent);
+}
+
+.game-preview-copy .section-kicker { color: var(--accent-coral); }
+
+.game-preview-copy h2 {
+  max-width: 44rem;
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  line-height: 1.08;
+}
+
+.game-preview-art { filter: drop-shadow(0 20px 45px color-mix(in srgb, var(--accent-teal) 17%, transparent)); }
 
 .agent-mission {
   --mission-ink: #eeeae2;
