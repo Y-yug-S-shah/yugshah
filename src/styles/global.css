@@ -63,7 +63,15 @@
 
 @media (max-width: 480px) {
   body { padding: 8px 8px 20px; }
-  body::after {
+  .viewport-frame-top,
+  .viewport-frame-bottom {
+    height: 6px;
+  }
+  .viewport-frame-left,
+  .viewport-frame-right {
+    width: 6px;
+  }
+  .viewport-frame-border {
     inset: 6px;
     border-radius: 14px;
   }
@@ -122,17 +130,57 @@ body :is(h1, h2, h3) {
   letter-spacing: -0.035em;
 }
 
-body::after {
+.viewport-frame {
+  pointer-events: none;
+}
+
+.viewport-frame-top,
+.viewport-frame-bottom,
+.viewport-frame-left,
+.viewport-frame-right {
   position: fixed;
-  z-index: 1000;
+  z-index: 9998;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+.viewport-frame-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.viewport-frame-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.viewport-frame-left {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+}
+
+.viewport-frame-right {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+}
+
+.viewport-frame-border {
+  position: fixed;
+  z-index: 9999;
   inset: 10px;
-  border: 1px solid color-mix(in srgb, var(--accent-strong) 42%, var(--border));
+  border: 1.5px solid color-mix(in srgb, var(--accent-strong) 48%, var(--border));
   border-radius: 18px;
   box-shadow:
-    0 0 0 100vmax var(--bg),
-    0 0 0 1px color-mix(in srgb, #68c9c1 12%, transparent),
+    0 0 0 1.5px color-mix(in srgb, #68c9c1 16%, transparent),
     inset 0 0 20px color-mix(in srgb, var(--accent) 5%, transparent);
-  content: '';
   pointer-events: none;
 }
 
@@ -692,9 +740,8 @@ body > .site-shell {
 .site-header {
   position: sticky;
   top: 10px;
-  background: color-mix(in srgb, var(--bg) 77%, transparent);
-  -webkit-backdrop-filter: blur(20px) saturate(1.12);
-  backdrop-filter: blur(20px) saturate(1.12);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 @media (max-width: 480px) {
