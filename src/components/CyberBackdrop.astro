@@ -20,7 +20,7 @@
     if ('requestIdleCallback' in window) {
       window.requestIdleCallback(() => void initialize(), { timeout: 900 });
     } else {
-      window.setTimeout(() => void initialize(), 250);
+      setTimeout(() => void initialize(), 250);
     }
   }
 </script>
