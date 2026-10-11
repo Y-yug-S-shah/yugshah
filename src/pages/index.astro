@@ -21,10 +21,34 @@ const jsonLd = {
   }
 };
 const skillAreas = [
-  { name: 'AI security', label: 'AI', tone: 'violet' },
-  { name: 'Endpoint security', label: 'EDR', tone: 'blue' },
-  { name: 'Cloud security', label: 'CLD', tone: 'mint' },
-  { name: 'Network security', label: 'NET', tone: 'amber' }
+  {
+    name: 'AI security',
+    label: 'AI',
+    tone: 'violet',
+    detail: 'Protecting intelligent systems from prompt injection, unsafe tools, and untrusted data.',
+    topics: ['Agent safety', 'Runtime trust']
+  },
+  {
+    name: 'Endpoint security',
+    label: 'EDR',
+    tone: 'blue',
+    detail: 'Building visibility into endpoint activity and investigating suspicious behavior.',
+    topics: ['Threat detection', 'Response']
+  },
+  {
+    name: 'Cloud security',
+    label: 'CLD',
+    tone: 'mint',
+    detail: 'Reducing cloud risk through identity controls, secure configuration, and monitoring.',
+    topics: ['Cloud posture', 'Identity']
+  },
+  {
+    name: 'Network security',
+    label: 'NET',
+    tone: 'amber',
+    detail: 'Understanding traffic, strengthening boundaries, and spotting threats in motion.',
+    topics: ['Traffic analysis', 'Defense']
+  }
 ];
 ---
 
@@ -55,7 +79,7 @@ const skillAreas = [
 
     <aside class="hero-console rounded-[32px] border border-[var(--border)] p-6">
       <div class="mb-4 flex items-center justify-between">
-        <span class="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">Security operations</span>
+        <span class="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">AI security</span>
         <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">Thoughtful</span>
       </div>
       <div class="relative z-[1]">
@@ -87,21 +111,16 @@ const skillAreas = [
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {skillAreas.map((skill) => (
         <article class={`skill-card skill-${skill.tone}`}>
-          <span aria-hidden="true">{skill.label}</span>
-          <h3>{skill.name}</h3>
+          <div class="skill-card-heading">
+            <span aria-hidden="true">{skill.label}</span>
+            <h3>{skill.name}</h3>
+          </div>
+          <p>{skill.detail}</p>
+          <ul aria-label={`${skill.name} topics`}>
+            {skill.topics.map((topic) => <li>{topic}</li>)}
+          </ul>
         </article>
       ))}
-    </div>
-
-    <div class="mt-6 rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6">
-      <p class="mb-3 text-xs font-semibold uppercase tracking-[0.28em] text-[var(--muted)]">Project map</p>
-      <div class="flex flex-wrap gap-3">
-        {projects.map((project) => (
-          <a href={`/projects/${project.slug}`} class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text)]">
-            {project.title}
-          </a>
-        ))}
-      </div>
     </div>
   </section>
 
