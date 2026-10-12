@@ -2,15 +2,15 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-[var(--border)] bg-[var(--bg)]">
-  <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-[var(--muted)] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-    <p>© {year} Yug Shah. Built for security, clarity, and curiosity.</p>
-    <div class="flex flex-wrap gap-4">
-      <a href="/resume" class="hover:text-[var(--text)]">Resume</a>
-      <a href="/projects" class="hover:text-[var(--text)]">Projects</a>
-      <a href="/blog" class="hover:text-[var(--text)]">Blog</a>
-      <a href="/game" class="hover:text-[var(--text)]">Milo’s mission</a>
-      <a href="/contact" class="hover:text-[var(--text)]">Contact</a>
+<footer class="mt-16 border-t border-[var(--border)] bg-[var(--bg)]/60 backdrop-blur-md">
+  <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs font-mono text-[var(--muted)] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+    <p>© {year} Yug Shah · Engineered for security, clarity, and runtime resilience.</p>
+    <div class="flex flex-wrap items-center gap-5">
+      <a href="/resume" class="transition-colors hover:text-[var(--accent-strong)]">Resume</a>
+      <a href="/projects" class="transition-colors hover:text-[var(--accent-strong)]">Projects</a>
+      <a href="/blog" class="transition-colors hover:text-[var(--accent-strong)]">Blog</a>
+      <a href="/game" class="transition-colors hover:text-[var(--accent-strong)]">Milo’s mission</a>
+      <a href="/contact" class="transition-colors hover:text-[var(--accent-strong)]">Contact</a>
     </div>
   </div>
 </footer>
