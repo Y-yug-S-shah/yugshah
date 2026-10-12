@@ -974,7 +974,7 @@ main article:nth-of-type(even) {
   max-width: 66rem;
   margin-inline: auto;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: var(--border-thick) solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--panel);
   -webkit-backdrop-filter: blur(16px);
@@ -985,7 +985,7 @@ main article:nth-of-type(even) {
 .resume-masthead {
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--border);
+  border-bottom: var(--border-thick) solid var(--border);
   padding: clamp(1.5rem, 4vw, 3rem);
   background:
     radial-gradient(ellipse at 90% 4%, var(--accent-glow), transparent 45%),
@@ -998,7 +998,7 @@ main article:nth-of-type(even) {
   bottom: -9rem;
   width: 19rem;
   height: 19rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  border: var(--border-w) solid color-mix(in srgb, var(--accent) 12%, transparent);
   border-radius: 50%;
   box-shadow: 0 0 0 2rem color-mix(in srgb, var(--accent) 3%, transparent), 0 0 0 4rem color-mix(in srgb, var(--accent) 2%, transparent);
   content: '';
@@ -1039,7 +1039,7 @@ main article:nth-of-type(even) {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  border: 1px solid var(--border-accent);
+  border: var(--border-w) solid var(--border-accent);
   border-radius: 999px;
   padding: 0.55rem 0.85rem;
   color: var(--text);
@@ -1052,7 +1052,18 @@ main article:nth-of-type(even) {
 .resume-download:hover,.resume-contact-button:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
 
 .resume-identity { position: relative; z-index: 1; display: grid; grid-template-columns: 0.9fr 1.1fr; align-items: end; gap: 2rem; padding: 2rem 0 1.8rem; }
-.resume-identity h1 { margin: 0; color: var(--text); font-size: clamp(2.5rem, 6vw, 4.4rem); font-weight: 800; letter-spacing: -0.06em; line-height: 1; }
+.resume-identity h1 {
+  margin: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 30%, #7dd3fc 65%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 20px rgba(56, 189, 248, 0.25));
+  font-size: clamp(2.5rem, 6vw, 4.4rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
 .resume-role { margin: 0.65rem 0 0; color: var(--accent-strong); font-size: 1.05rem; font-weight: 600; }
 .resume-intro { max-width: 36rem; margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.75; }
 
@@ -1070,7 +1081,7 @@ main article:nth-of-type(even) {
 .resume-role-card {
   display: flex;
   gap: 1rem;
-  border: 1px solid var(--border);
+  border: var(--border-w) solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.1rem;
   background: var(--surface);
@@ -1079,9 +1090,10 @@ main article:nth-of-type(even) {
 }
 
 .resume-role-card.is-palo-alto {
-  border-color: rgba(56, 189, 248, 0.2);
-  background: linear-gradient(110deg, rgba(56, 189, 248, 0.06), var(--surface) 72%);
-  box-shadow: inset 3px 0 var(--accent);
+  border-color: rgba(56, 189, 248, 0.35);
+  border-width: var(--border-thick);
+  background: linear-gradient(110deg, rgba(56, 189, 248, 0.08), var(--surface) 72%);
+  box-shadow: inset 3.5px 0 var(--accent);
 }
 
 .resume-role-marker {
