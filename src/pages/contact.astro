@@ -126,8 +126,9 @@ const jsonLd = {
         status.style.color = '#34d399';
         form.reset();
       } catch (error) {
-        status.textContent = '× ' + (error?.message || 'Unable to send your message right now. Please try again or email directly.');
-        status.style.color = '#f87171';
+        const errorMsg = error instanceof Error ? error.message : 'Unable to send your message right now.';
+        const mailtoUrl = `mailto:${encodeURIComponent('yugdshahcs@gmail.com')}?subject=${encodeURIComponent(payload.subject || 'Portfolio Inquiry')}&body=${encodeURIComponent((payload.name ? 'From: ' + payload.name + '\n\n' : '') + (payload.message || ''))}`;
+        status.innerHTML = `<span style="color: #f87171;">× ${errorMsg}</span> <a href="${mailtoUrl}" class="underline transition-colors hover:text-white" style="color: #38bdf8; margin-left: 6px;">Draft in email app ↗</a>`;
       } finally {
         if (submitBtn) submitBtn.disabled = false;
       }
