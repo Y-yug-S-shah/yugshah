@@ -203,7 +203,7 @@ function normalizePath(input: string, cwd: string) {
 
 function resolvePath(input: string, cwd: string) {
   const path = normalizePath(input, cwd);
-  return path in virtualFs ? path : null;
+  return Object.prototype.hasOwnProperty.call(virtualFs, path) ? path : null;
 }
 
 export default function CliTerminal() {
