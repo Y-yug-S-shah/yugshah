@@ -33,27 +33,44 @@ const jsonLd = {
 ---
 
 <BaseLayout title={`${post.data.title} | Blog | Yug Shah`} description={post.data.description} image={`/og/blog-${slug}.svg`} jsonLd={jsonLd} canonicalPath={`/blog/${slug}`} type="article">
-  <article class="mx-auto max-w-3xl space-y-6 py-8">
-    <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Blog post</p>
-    <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{post.data.title}</h1>
-    <div class="flex flex-wrap gap-2">
-      {post.data.tags.map((tag) => (
-        <a href={`/blog/tags/${tag}`} class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">{tag}</a>
-      ))}
+  <article class="mx-auto max-w-4xl space-y-8 py-8">
+    <div>
+      <a href="/blog" class="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-strong)] hover:underline">
+        <span aria-hidden="true">←</span> Return to field notes
+      </a>
     </div>
-    <p class="text-sm uppercase tracking-[0.18em] text-[var(--muted)]">
-      {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-    </p>
-    <div class="prose prose-invert max-w-none rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6 text-base leading-8 text-[var(--muted)]">
+
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-medium text-[var(--accent-strong)]">RESEARCH NOTE</span>
+        <span class="text-xs font-mono text-[var(--muted)]">
+          {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        </span>
+      </div>
+      <h1 class="hero-main-title text-4xl font-black tracking-tight sm:text-5xl leading-tight">{post.data.title}</h1>
+      <p class="text-lg text-[var(--text-secondary)] leading-relaxed">{post.data.description}</p>
+      
+      <div class="flex flex-wrap gap-2 pt-1">
+        {post.data.tags.map((tag) => (
+          <a href={`/blog/tags/${tag}`} class="rounded-full border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1 text-xs font-mono uppercase tracking-[0.08em] text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--text)] transition-colors">{tag}</a>
+        ))}
+      </div>
+    </div>
+
+    <div class="rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 sm:p-10 backdrop-blur-md shadow-2xl text-base leading-relaxed text-[var(--text)]">
       {post.data.contentHtml
         ? <div class="medium-article" set:html={post.data.contentHtml} />
-        : <Content />}
+        : <div class="prose prose-invert max-w-none"><Content /></div>}
     </div>
-    {post.data.mediumUrl && (
-      <a href={post.data.mediumUrl} target="_blank" rel="noreferrer" class="inline-flex text-sm font-semibold text-[var(--accent-strong)]">
-        Read the original on Medium ↗
-      </a>
-    )}
-    <a href="/blog" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">Return to blog</a>
+
+    <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[var(--border)]">
+      <a href="/blog" class="btn-cinematic-secondary">← Back to all notes</a>
+      {post.data.mediumUrl && (
+        <a href={post.data.mediumUrl} target="_blank" rel="noreferrer" class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[var(--accent-strong)] hover:underline">
+          <span>Read original on Medium</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </div>
   </article>
 </BaseLayout>
