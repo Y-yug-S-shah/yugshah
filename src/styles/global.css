@@ -1876,31 +1876,342 @@ html.cli-active .ambient-scene { display: none; }
 .mission-touch-controls button:focus-visible { outline: 2px solid #c4b1ed; outline-offset: 3px; }
 
 /* ═══════════════════════════════════════════════════════
-   LIGHT THEME — Specific overrides for hero/field/game
+   LIGHT THEME — High Contrast, Crisp Typography & Surfaces
    ═══════════════════════════════════════════════════════ */
 
-:root[data-theme='light'] .hero-console,
-:root[data-theme='light'] .field-note-card,
-:root[data-theme='light'] .game-preview {
-  background-color: rgba(255, 255, 255, 0.92);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+:root[data-theme='light'] {
+  --bg: #f8fafc;
+  --bg-soft: rgba(241, 245, 249, 0.94);
+  --panel: rgba(255, 255, 255, 0.92);
+  --panel-solid: #ffffff;
+  --surface: rgba(241, 245, 249, 0.85);
+  --border: rgba(15, 23, 42, 0.12);
+  --border-accent: rgba(14, 165, 233, 0.35);
+  --text: #090d16;
+  --text-secondary: #334155;
+  --muted: #64748b;
+  --accent: #0284c7;
+  --accent-soft: rgba(14, 165, 233, 0.12);
+  --accent-strong: #0369a1;
+  --accent-glow: rgba(14, 165, 233, 0.15);
+  --accent-coral: #c2410c;
+  --accent-teal: #0f766e;
+  --accent-violet: #6d28d9;
+  --shadow: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='light'] body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme='light'] .site-header > div:first-child {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 8px 30px -10px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='light'] .site-header nav a {
+  color: #475569;
+}
+
+:root[data-theme='light'] .site-header nav a:hover {
+  color: #0284c7;
 }
 
 :root[data-theme='light'] .hero-console {
-  background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 249, 255, 0.9));
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 12px 36px -12px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='light'] .hero-console::before {
+  opacity: 0.15;
+}
+
+:root[data-theme='light'] .hero-console::after {
+  border-color: rgba(14, 165, 233, 0.15);
+  box-shadow:
+    0 0 0 1.2rem rgba(14, 165, 233, 0.04),
+    0 0 0 2.5rem rgba(14, 165, 233, 0.02);
+}
+
+:root[data-theme='light'] .hero-console h2 {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .hero-console > p:not(.hero-note-reference) {
+  color: #334155;
+}
+
+:root[data-theme='light'] .hero-telemetry-box {
+  background: #f1f5f9;
+  border-color: rgba(14, 165, 233, 0.25);
+  color: #1e293b;
+}
+
+:root[data-theme='light'] .hero-telemetry-tag {
+  color: #0284c7;
+}
+
+:root[data-theme='light'] .hero-telemetry-alert {
+  color: #dc2626;
+}
+
+:root[data-theme='light'] .hero-telemetry-ok {
+  color: #16a34a;
+}
+
+:root[data-theme='light'] .btn-cinematic-secondary {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.16);
+  color: #090d16;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='light'] .btn-cinematic-secondary:hover {
+  background: #f8fafc;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+:root[data-theme='light'] .btn-cinematic-agent {
+  background: #f0fdfa;
+  border-color: rgba(13, 148, 136, 0.35);
+  color: #090d16;
+  box-shadow: 0 1px 3px rgba(13, 148, 136, 0.08);
+}
+
+:root[data-theme='light'] .btn-cinematic-agent:hover {
+  background: #ccfbf1;
+  border-color: #0d9488;
+  color: #090d16;
+}
+
+:root[data-theme='light'] .about-card-main {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 8px 30px -12px rgba(15, 23, 42, 0.06);
+}
+
+:root[data-theme='light'] .about-card-main h3 {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .about-stat-tile {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+:root[data-theme='light'] .about-stat-tile:hover {
+  border-color: #0284c7;
+  background: #ffffff;
+  box-shadow: 0 8px 24px -10px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='light'] .about-stat-title {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .skill-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 16px -8px rgba(15, 23, 42, 0.06);
+}
+
+:root[data-theme='light'] .skill-card h3 {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .skill-violet { --skill-tone: #6d28d9; }
+:root[data-theme='light'] .skill-blue   { --skill-tone: #0284c7; }
+:root[data-theme='light'] .skill-mint   { --skill-tone: #0f766e; }
+:root[data-theme='light'] .skill-amber  { --skill-tone: #b45309; }
+
+:root[data-theme='light'] .experience-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 16px -8px rgba(15, 23, 42, 0.06);
+}
+
+:root[data-theme='light'] .experience-card h3 {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .experience-card.is-palo-alto {
+  border-color: rgba(14, 165, 233, 0.35);
+  background: linear-gradient(112deg, rgba(14, 165, 233, 0.06), #ffffff 65%);
 }
 
 :root[data-theme='light'] .field-note-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 16px -8px rgba(15, 23, 42, 0.06);
+}
+
+:root[data-theme='light'] .field-note-copy h3 a {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .home-field-notes {
+  background: #ffffff;
+  border-color: rgba(13, 148, 136, 0.28);
 }
 
 :root[data-theme='light'] .game-preview {
   background-image:
-    radial-gradient(ellipse at 83% 36%, rgba(249, 115, 22, 0.08), transparent 38%),
-    radial-gradient(ellipse at 14% 92%, rgba(45, 212, 191, 0.06), transparent 43%),
-    linear-gradient(135deg, #ffffff, #f0f9ff);
+    radial-gradient(ellipse at 83% 36%, rgba(249, 115, 22, 0.05), transparent 38%),
+    radial-gradient(ellipse at 14% 92%, rgba(45, 212, 191, 0.04), transparent 43%),
+    linear-gradient(135deg, #ffffff, #f0fdfa);
+  border-color: rgba(194, 65, 12, 0.25);
+  box-shadow: 0 12px 36px -16px rgba(194, 65, 12, 0.1);
+}
+
+:root[data-theme='light'] .game-preview-copy h2 {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .preview-agent-core {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #090d16;
+  box-shadow: 0 4px 16px rgba(109, 40, 217, 0.12);
+}
+
+:root[data-theme='light'] .node-ai    { --security-tone: #6d28d9; background: #ffffff; }
+:root[data-theme='light'] .node-edge  { --security-tone: #0284c7; background: #ffffff; }
+:root[data-theme='light'] .node-cloud { --security-tone: #0f766e; background: #ffffff; }
+
+:root[data-theme='light'] main article {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 20px -8px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='light'] main article:hover {
+  border-color: rgba(14, 165, 233, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.12);
+}
+
+:root[data-theme='light'] .resume-document {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+:root[data-theme='light'] .resume-masthead {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+:root[data-theme='light'] .resume-role-card,
+:root[data-theme='light'] .resume-project-card,
+:root[data-theme='light'] .resume-skill-card,
+:root[data-theme='light'] .resume-education-card {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+:root[data-theme='light'] .resume-role-card.is-palo-alto {
+  background: linear-gradient(110deg, rgba(14, 165, 233, 0.08), #f8fafc 72%);
+  border-color: rgba(14, 165, 233, 0.35);
+}
+
+:root[data-theme='light'] .medium-article pre {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+}
+
+:root[data-theme='light'] .medium-article h1,
+:root[data-theme='light'] .medium-article h2,
+:root[data-theme='light'] .medium-article h3,
+:root[data-theme='light'] .medium-article h4 {
+  color: #090d16;
+}
+
+:root[data-theme='light'] .medium-article blockquote {
+  color: #1e293b;
+  border-left-color: #0284c7;
+}
+
+:root[data-theme='light'] input,
+:root[data-theme='light'] textarea {
+  color: #090d16 !important;
+}
+
+:root[data-theme='light'] footer {
+  border-color: rgba(15, 23, 42, 0.1);
+  background: rgba(248, 250, 252, 0.85);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM SMOOTH ANIMATIONS & MICRO-INTERACTIONS (GPU-ACCELERATED)
+   ═══════════════════════════════════════════════════════ */
+
+@keyframes smoothFadeUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Hero Section Entrance Stagger */
+.home-hero > div:first-child {
+  animation: smoothFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.home-hero aside {
+  animation: smoothFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+/* Micro-interaction on arrow icons */
+.btn-cinematic-primary span:last-child,
+.btn-cinematic-secondary span:last-child,
+.hero-note-link span,
+.field-note-read span,
+.game-preview-link span {
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.btn-cinematic-primary:hover span:last-child,
+.btn-cinematic-secondary:hover span:last-child,
+.hero-note-link:hover span,
+.field-note-read:hover span {
+  transform: translate3d(3px, 0, 0);
+}
+
+.game-preview-link:hover span {
+  transform: translate3d(2px, -2px, 0);
+}
+
+/* Smooth tactile click feel */
+.btn-cinematic-primary:active,
+.btn-cinematic-secondary:active,
+.btn-cinematic-agent:active {
+  transform: scale(0.975);
+  transition: transform 90ms ease;
+}
+
+/* Silky Hover on Cards */
+.about-card-main,
+.about-stat-tile,
+.skill-card,
+.experience-card,
+.field-note-card {
+  will-change: transform;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 260ms ease,
+              box-shadow 260ms ease;
+}
+
+.about-card-main:hover {
+  transform: translate3d(0, -2.5px, 0);
 }
 
 /* ═══════════════════════════════════════════════════════
