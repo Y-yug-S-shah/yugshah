@@ -40,7 +40,11 @@ function getRateLimitMap() {
   return globalThis.__contactRateLimit;
 }
 
-async function verifyTurnstile(token: string | undefined, ip: string, env: Record<string, string | undefined>) {
+async function verifyTurnstile(
+  token: string | undefined,
+  ip: string,
+  env: Record<string, string | undefined>
+): Promise<{ success: boolean; preview: boolean; error?: string }> {
   const secret = env.TURNSTILE_SECRET_KEY;
   // If no secret or no token passed (no Turnstile widget on form), pass through safely
   if (!secret || !token) {
@@ -60,8 +64,11 @@ async function verifyTurnstile(token: string | undefined, ip: string, env: Recor
       }).toString()
     });
 
-    const payload = (await response.json()) as { success?: boolean };
-    return { success: Boolean(payload.success), preview: false };
+    const payload = (await response.json()) as { success?: boolean; 'error-codes'?: string[] };
+    if (!payload.success) {
+      return { success: false, preview: false, error: 'Turnstile bot challenge verification failed.' };
+    }
+    return { success: true, preview: false };
   } catch (err) {
     console.error('Turnstile verification error:', err);
     return { success: true, preview: true };
