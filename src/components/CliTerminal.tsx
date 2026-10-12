@@ -96,6 +96,89 @@ const buildAscii = `
   user: yug-shah       session: portfolio
 `;
 
+// Procedural soft-jitter mechanical typing sound (100% royalty-free & copyright-free)
+let cliAudioContext: AudioContext | null = null;
+
+function playCliKeystrokeSound() {
+  if (typeof window === 'undefined') return;
+  const soundPref = localStorage.getItem('portfolio-ui-sound');
+  if (soundPref === 'off') return;
+
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    if (!cliAudioContext) {
+      cliAudioContext = new AudioCtx();
+    }
+    if (cliAudioContext.state === 'suspended') {
+      void cliAudioContext.resume();
+    }
+    const ctx = cliAudioContext;
+    if (ctx.state !== 'running') return;
+    const now = ctx.currentTime;
+
+    // 1. Friction & micro-click noise burst (soft keycap jitter)
+    const duration = 0.016;
+    const bufferSize = Math.floor(ctx.sampleRate * duration);
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.32));
+    }
+
+    const noiseSource = ctx.createBufferSource();
+    noiseSource.buffer = noiseBuffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    const centerFreq = 2700 + (Math.random() * 500 - 250);
+    filter.frequency.setValueAtTime(centerFreq, now);
+    filter.Q.setValueAtTime(1.8, now);
+
+    const noiseGain = ctx.createGain();
+    const noiseVol = 0.015 + Math.random() * 0.005;
+    noiseGain.gain.setValueAtTime(0.0001, now);
+    noiseGain.gain.exponentialRampToValueAtTime(noiseVol, now + 0.002);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+    noiseSource.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+
+    noiseSource.start(now);
+    noiseSource.stop(now + duration + 0.002);
+
+    // 2. Subtle low tactile bottom-out thud
+    const osc = ctx.createOscillator();
+    const oscGain = ctx.createGain();
+    osc.type = 'triangle';
+    const startFreq = 220 + (Math.random() * 40 - 20);
+    osc.frequency.setValueAtTime(startFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(70, now + 0.016);
+
+    const thudVol = 0.011 + Math.random() * 0.003;
+    oscGain.gain.setValueAtTime(0.0001, now);
+    oscGain.gain.exponentialRampToValueAtTime(thudVol, now + 0.002);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
+
+    osc.connect(oscGain);
+    oscGain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.024);
+
+    window.setTimeout(() => {
+      noiseSource.disconnect();
+      filter.disconnect();
+      noiseGain.disconnect();
+      osc.disconnect();
+      oscGain.disconnect();
+    }, 60);
+  } catch {
+    // Graceful fallback if audio is not permitted
+  }
+}
+
 function normalizePath(input: string, cwd: string) {
   const value = input.trim().replace(/\\/g, '/');
   if (!value || value === '.') return cwd;
