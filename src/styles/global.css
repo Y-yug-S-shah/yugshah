@@ -265,34 +265,88 @@ body > .site-shell {
 
 .site-header {
   position: sticky;
-  top: 12px;
-  z-index: 50;
-  margin: 6px auto 0;
-  max-width: 1280px;
-  padding-inline: clamp(1.25rem, 3vw, 2.5rem);
+  top: 0;
+  z-index: 60;
+  margin: 0 auto;
+  width: 100%;
+  padding-top: 14px;
+  padding-bottom: 8px;
+  background: linear-gradient(to bottom, var(--bg) 0%, color-mix(in srgb, var(--bg) 96%, transparent) 82%, transparent 100%);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 .site-header > div:first-child {
-  border: 1px solid var(--border);
+  border: var(--border-thick) solid color-mix(in srgb, var(--accent) 30%, var(--border));
   border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--panel-solid) 75%, transparent);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  backdrop-filter: blur(20px) saturate(1.4);
-  box-shadow: 0 8px 32px -12px var(--shadow);
-  padding: 0.5rem 1rem;
+  background: color-mix(in srgb, var(--panel-solid) 85%, transparent);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow: 0 12px 40px -12px var(--shadow), 0 0 24px -8px var(--accent-glow);
+  padding: 0.55rem 1.15rem;
 }
 
 @media (max-width: 480px) {
-  .site-header { top: 8px; }
+  .site-header { padding-top: 10px; }
 }
 
 /* ═══════════════════════════════════════════════════════
-   CARDS — Universal Glass Style
+   FLASHY BRAND & HEADING STYLES
+   ═══════════════════════════════════════════════════════ */
+
+.site-brand-name {
+  background: linear-gradient(135deg, #ffffff 0%, #cbebff 35%, #7dd3fc 65%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-shadow: 0 0 20px rgba(56, 189, 248, 0.45);
+  transition: filter 250ms ease, text-shadow 250ms ease;
+}
+
+.site-brand-name:hover {
+  filter: brightness(1.2);
+  text-shadow: 0 0 28px rgba(56, 189, 248, 0.75);
+}
+
+.site-brand-avatar {
+  position: relative;
+  display: inline-flex;
+  height: 2.15rem;
+  width: 2.15rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: var(--border-thick) solid var(--accent);
+  background: radial-gradient(circle at 35% 35%, rgba(56, 189, 248, 0.35), var(--panel-solid));
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 0 16px -2px rgba(56, 189, 248, 0.55), inset 0 0 10px rgba(56, 189, 248, 0.25);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.site-brand-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 24px 0 rgba(56, 189, 248, 0.8), inset 0 0 14px rgba(56, 189, 248, 0.4);
+}
+
+.hero-main-title {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 25%, #7dd3fc 60%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 24px rgba(56, 189, 248, 0.25));
+  letter-spacing: -0.04em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARDS — Universal Glass Style (15% Fatter Borders)
    ═══════════════════════════════════════════════════════ */
 
 main article {
   border-radius: var(--radius-xl);
-  border: 1px solid var(--border);
+  border: var(--border-w) solid var(--border);
   background: var(--panel);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   backdrop-filter: blur(16px) saturate(1.2);
@@ -302,7 +356,7 @@ main article {
 
 main article:hover {
   border-color: var(--border-accent);
-  box-shadow: 0 12px 40px -16px var(--shadow), 0 0 0 1px var(--border-accent);
+  box-shadow: 0 12px 40px -16px var(--shadow), 0 0 0 var(--border-w) var(--border-accent);
   transform: translateY(-2px);
 }
 
