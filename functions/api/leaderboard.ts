@@ -225,9 +225,50 @@ async function handleD1RestCycle(env: LeaderboardEnvironment) {
   }
 }
 
+const SECURITY_HEADERS = {
+  'Content-Type': 'application/json',
+  'X-Content-Type-Options': 'nosniff',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+};
+
+const MAX_LEADERBOARD_BYTES = 8 * 1024; // 8 KB payload cap to prevent DoS
+
+function jsonLeaderboardResponse(data: unknown, init?: ResponseInit) {
+  return new Response(JSON.stringify(data), {
+    ...init,
+    headers: {
+      ...SECURITY_HEADERS,
+      ...(init?.headers || {})
+    }
+  });
+}
+
 export async function onRequest({ request, env }: { request: Request; env: LeaderboardEnvironment }) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: SECURITY_HEADERS });
+  }
+
   if (request.method !== 'GET' && request.method !== 'POST') {
-    return Response.json({ error: 'Method not allowed.' }, { status: 405, headers: { Allow: 'GET, POST' } });
+    return jsonLeaderboardResponse({ error: 'Method not allowed.' }, { status: 405, headers: { Allow: 'GET, POST, OPTIONS' } });
+  }
+
+  // OWASP A01: Broken Access Control & CSRF Defense — Block cross-origin POST submissions
+  const secFetchSite = request.headers.get('Sec-Fetch-Site');
+  if (request.method === 'POST' && secFetchSite === 'cross-site') {
+    return jsonLeaderboardResponse({ error: 'Cross-origin requests are forbidden.' }, { status: 403 });
+  }
+
+  // OWASP A04: Resource Exhaustion Defense — Verify content type & payload size on POST
+  if (request.method === 'POST') {
+    const contentType = request.headers.get('Content-Type');
+    if (!contentType || !contentType.toLowerCase().includes('application/json')) {
+      return jsonLeaderboardResponse({ error: 'Unsupported media type. JSON is required.' }, { status: 415 });
+    }
+
+    const contentLength = request.headers.get('Content-Length');
+    if (contentLength && parseInt(contentLength, 10) > MAX_LEADERBOARD_BYTES) {
+      return jsonLeaderboardResponse({ error: 'Payload size exceeds allowable limit.' }, { status: 413 });
+    }
   }
 
   // IP rate limiting on POST
@@ -237,7 +278,7 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
     const limits = getRateLimits();
     const current = limits.get(ip);
     if (current && current.resetAt > now && current.count >= MAX_SUBMISSIONS) {
-      return Response.json({ error: 'Please wait before submitting another score.' }, { status: 429 });
+      return jsonLeaderboardResponse({ error: 'Please wait before submitting another score.' }, { status: 429 });
     }
     limits.set(ip, current && current.resetAt > now
       ? { ...current, count: current.count + 1 }
@@ -250,7 +291,7 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
     if (env.DB) {
       try {
         const entries = await readTopScores(env.DB);
-        return Response.json({ entries, source: 'd1' }, { headers: { 'Cache-Control': 'public, max-age=15, s-maxage=15' } });
+        return jsonLeaderboardResponse({ entries, source: 'd1' }, { headers: { 'Cache-Control': 'public, max-age=15, s-maxage=15' } });
       } catch (err) {
         console.error('D1 read error:', err);
       }
