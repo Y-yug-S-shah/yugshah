@@ -252,13 +252,13 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="home-field-notes py-8" aria-labelledby="field-notes-title">
-    <div class="home-section-heading">
+  <section class="home-field-notes py-10" aria-labelledby="field-notes-title">
+    <div class="mb-6 flex items-end justify-between">
       <div>
-        <p class="section-kicker">From the research notebook</p>
-        <h2 id="field-notes-title">Field notes on AI security</h2>
+        <p class="section-kicker">Research Notebook</p>
+        <h2 id="field-notes-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Field notes on AI security</h2>
       </div>
-      <a href="/blog">All articles <span aria-hidden="true">↗</span></a>
+      <a href="/blog" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">All articles <span aria-hidden="true">↗</span></a>
     </div>
     <div class="field-note-grid">
       {fieldNotes.map((post, index) => (
