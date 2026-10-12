@@ -12,17 +12,20 @@ const jsonLd = {
 ---
 
 <BaseLayout title="404 | Yug Shah" description="The page you requested could not be found." image="/og/home.svg" jsonLd={jsonLd} canonicalPath="/404">
-  <section class="flex min-h-[50vh] flex-col items-center justify-center py-16 text-center">
-    <div class="rounded-[32px] border border-[var(--border)] bg-[var(--panel)] p-8 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
-      <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Error 404</p>
-      <h1 class="mt-4 text-5xl font-black tracking-tight text-[var(--text)]">Lost in the signal.</h1>
-      <p class="mt-4 max-w-xl text-base leading-8 text-[var(--muted)]">The route you asked for is not here yet. You have been redirected to a safe fallback zone.</p>
-      <div class="mt-8 flex flex-wrap justify-center gap-3">
-        <a href="/" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Return home</a>
-        <a href="/projects" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 py-3 text-sm font-semibold text-[var(--text)]">View projects</a>
+  <section class="flex min-h-[55vh] flex-col items-center justify-center py-16 text-center">
+    <div class="rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-8 sm:p-12 shadow-2xl backdrop-blur-md max-w-xl">
+      <div class="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-3.5 py-1 text-xs font-mono font-medium text-red-400">
+        <span class="h-2 w-2 rounded-full bg-red-400 animate-ping"></span>
+        <span>ERROR 404 // RUNTIME ROUTE UNRESOLVED</span>
       </div>
-      <div class="mt-8 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-soft)] p-4 text-sm text-[var(--muted)]">
-        <span class="font-semibold text-[var(--text)]">Quest status:</span> Signal lost. Reward: +15 XP for returning to base.
+      <h1 class="hero-main-title mt-5 text-4xl sm:text-5xl font-black tracking-tight">Lost in the signal.</h1>
+      <p class="mt-4 text-base text-[var(--text-secondary)] leading-relaxed">The route you requested could not be resolved. You have been redirected to the defensive containment perimeter.</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/" class="btn-cinematic-primary">Return home</a>
+        <a href="/projects" class="btn-cinematic-secondary">Browse projects</a>
+      </div>
+      <div class="mt-8 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-soft)] p-3.5 text-xs font-mono text-[var(--muted)]">
+        <span class="font-semibold text-[var(--accent-teal)]">DIAGNOSTIC:</span> Signal lost. Safe return initialized.
       </div>
     </div>
   </section>
