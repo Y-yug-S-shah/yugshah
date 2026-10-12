@@ -64,6 +64,8 @@ const jsonLd = {
     </div>
 
     <form id="contact-form" class="rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 backdrop-blur-md shadow-2xl space-y-5">
+      <!-- OWASP A04: Anti-bot honeypot field -->
+      <input name="company_website" type="text" tabindex="-1" autocomplete="off" class="sr-only opacity-0 pointer-events-none absolute -left-[9999px]" aria-hidden="true" />
       <div class="grid gap-5 sm:grid-cols-2">
         <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-1">
           Your Name
