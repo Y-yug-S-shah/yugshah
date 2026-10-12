@@ -60,47 +60,110 @@ const skillAreas = [
 <BaseLayout title="Yug Shah | Security Engineer" description={profile.bio} image="/og/home.svg" jsonLd={jsonLd}>
   <section class="home-hero grid gap-8 py-8 md:grid-cols-[1.15fr_0.85fr] md:items-center lg:py-14">
     <div class="space-y-6">
-      <p class="hero-discipline">
-        Security engineering / intelligent systems
-      </p>
+      <div class="inline-flex items-center gap-2.5 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
+        <span class="relative flex h-2 w-2" aria-hidden="true">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="tracking-wider">SECURITY RESEARCH // INTELLIGENT SYSTEMS</span>
+      </div>
+
       <div class="space-y-4">
         <h1 class="max-w-xl text-4xl font-black tracking-tight text-[var(--text)] sm:text-5xl lg:text-6xl">
-          {profile.name}
+          <span class="bg-gradient-to-b from-[var(--text)] via-[var(--text)] to-[var(--text-secondary)] bg-clip-text text-transparent">
+            {profile.name}
+          </span>
         </h1>
-        <p class="max-w-2xl text-lg text-[var(--muted)]">{profile.tagline}</p>
+        <p class="max-w-xl text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">
+          {profile.tagline}
+        </p>
       </div>
-      <div class="flex flex-wrap gap-3">
-        <a href="/resume" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-[var(--accent-soft)] transition-transform hover:-translate-y-0.5">View resume</a>
-        <a href="/projects" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-5 py-3 text-sm font-semibold text-[var(--text)] transition-transform hover:-translate-y-0.5">Browse projects</a>
-        <a href="/game" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-5 py-3 text-sm font-semibold text-[var(--text)] transition-transform hover:-translate-y-0.5">Play Milo’s security simulation</a>
+
+      <div class="flex flex-wrap items-center gap-3 pt-1">
+        <a href="/resume" class="btn-cinematic-primary">
+          <span>View resume</span>
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/projects" class="btn-cinematic-secondary">Browse projects</a>
+        <a href="/game" class="btn-cinematic-agent" title="Play Milo’s security simulation">
+          <span aria-hidden="true">🎮</span>
+          <span>Milo’s simulation</span>
+        </a>
       </div>
-      <div class="flex flex-wrap gap-6 pt-2 text-sm text-[var(--muted)]">
-        <a href={profile.socialLinks.linkedin} class="hover:text-[var(--text)]">LinkedIn</a>
-        <a href={profile.socialLinks.github} class="hover:text-[var(--text)]">GitHub</a>
-        <a href={profile.socialLinks.youtube} class="hover:text-[var(--text)]">YouTube</a>
-        <a href={`mailto:${profile.email}`} class="hover:text-[var(--text)]">Email</a>
+
+      <div class="flex flex-wrap items-center gap-5 pt-1 text-xs font-mono text-[var(--muted)]">
+        <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">LinkedIn ↗</a>
+        <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">GitHub ↗</a>
+        <a href={profile.socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">YouTube ↗</a>
+        <a href={`mailto:${profile.email}`} class="transition-colors hover:text-[var(--accent-strong)]">Email ↗</a>
       </div>
     </div>
 
-    <aside class="hero-console rounded-[32px] border border-[var(--border)] p-6">
-      <p class="hero-note-reference">FIELD NOTE / 01</p>
+    <aside class="hero-console rounded-[32px] border border-[var(--border)] p-6 sm:p-7">
+      <div class="hero-console-bar">
+        <div class="hero-console-dots" aria-hidden="true">
+          <span class="hero-console-dot hero-console-dot-red"></span>
+          <span class="hero-console-dot hero-console-dot-amber"></span>
+          <span class="hero-console-dot hero-console-dot-green"></span>
+        </div>
+        <span class="hero-note-reference">FIELD NOTE / 01</span>
+      </div>
+
       <h2>When an AI reads a webpage, whose instructions does it trust?</h2>
       <p>My field notes unpack indirect prompt injection and practical ways to limit what an agent can see and do.</p>
+
+      <div class="hero-telemetry-box" aria-hidden="true">
+        <div><span class="hero-telemetry-tag">[RUNTIME AUDIT]</span> EVALUATING UNTRUSTED WEBPAGE</div>
+        <div><span class="hero-telemetry-alert">! DETECTED</span> INDIRECT PROMPT INJECTION VECTOR</div>
+        <div><span class="hero-telemetry-ok">✓ CONTAIN</span> RUNTIME SANDBOX BOUNDARY APPLIED</div>
+      </div>
+
       <a class="hero-note-link" href="/blog/ai-security-prompt-injection">Read the investigation <span aria-hidden="true">↗</span></a>
       <div class="hero-note-rule" aria-hidden="true"></div>
       <div class="hero-note-meta">
         <span>Prompt injection</span>
         <span>Research and controls</span>
+        <span>Agent Trust</span>
       </div>
     </aside>
   </section>
 
-  <section class="py-8">
-    <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">About</h2>
+  <section class="py-10">
+    <div class="mb-6 flex items-end justify-between">
+      <div>
+        <p class="section-kicker">Architecture & Mission</p>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">About</h2>
+      </div>
     </div>
-    <div class="rounded-[28px] border border-[var(--border)] bg-[var(--panel)] p-6 text-base leading-8 text-[var(--muted)]">
-      {profile.bio}
+    <div class="about-bento-grid">
+      <div class="about-card-main">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)]">// CORE PHILOSOPHY</span>
+          <h3 class="mt-3 text-xl font-bold tracking-tight text-[var(--text)] sm:text-2xl">
+            Bridging technical validation with high-stakes defense.
+          </h3>
+          <p class="mt-4 text-base leading-relaxed text-[var(--text-secondary)]">
+            {profile.bio}
+          </p>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
+          <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[var(--accent-teal)]"></span> Zero Trust Runtimes</span>
+          <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[var(--accent)]"></span> Technical PoC Delivery</span>
+          <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[var(--accent-coral)]"></span> SIEM Analytics</span>
+        </div>
+      </div>
+      <div class="about-card-side">
+        <div class="about-stat-tile">
+          <span class="about-stat-badge">ENTERPRISE VALIDATION</span>
+          <h4 class="about-stat-title">Palo Alto Networks</h4>
+          <p class="about-stat-desc">Technical Solutions & customer PoC delivery across enterprise security infrastructure.</p>
+        </div>
+        <div class="about-stat-tile">
+          <span class="about-stat-badge">RESEARCH FOCUS</span>
+          <h4 class="about-stat-title">AI & Agentic Security</h4>
+          <p class="about-stat-desc">Detections for indirect prompt injection, tool authorization, and runtime model execution.</p>
+        </div>
+      </div>
     </div>
   </section>
 
