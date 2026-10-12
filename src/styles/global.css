@@ -1222,27 +1222,30 @@ main article:nth-of-type(even) {
    FIELD NOTES — Blog Cards on Home
    ═══════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════
+   FIELD NOTES — Blog Cards on Home (Separated Bento Box)
+   ═══════════════════════════════════════════════════════ */
+
 .home-field-notes {
   position: relative;
-  isolation: isolate;
-}
-
-.home-field-notes::before {
-  position: absolute;
-  z-index: -1;
-  inset: 1.2rem -1.1rem 0;
-  border: 1px solid color-mix(in srgb, var(--accent-teal) 12%, var(--border));
+  border: var(--border-thick) solid color-mix(in srgb, var(--accent-teal) 24%, var(--border));
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(ellipse at 8% 0%, color-mix(in srgb, var(--accent-teal) 6%, transparent), transparent 45%),
-    color-mix(in srgb, var(--panel) 20%, transparent);
-  content: '';
+    radial-gradient(ellipse at 8% 0%, color-mix(in srgb, var(--accent-teal) 8%, transparent), transparent 45%),
+    var(--panel);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  padding: clamp(1.4rem, 3.5vw, 2.5rem);
+  box-shadow: 0 16px 44px -20px var(--shadow);
+  margin-bottom: clamp(3rem, 6vw, 4.5rem);
 }
+
+.home-field-notes::before { display: none; }
 
 .field-note-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .field-note-card {
@@ -1250,9 +1253,9 @@ main article:nth-of-type(even) {
   min-width: 0;
   grid-template-columns: minmax(8rem, 0.8fr) minmax(0, 1.2fr);
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: var(--border-w) solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--panel);
+  background: var(--surface);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   box-shadow: 0 8px 32px -16px var(--shadow);
@@ -1260,7 +1263,7 @@ main article:nth-of-type(even) {
 }
 
 .field-note-card:hover {
-  border-color: color-mix(in srgb, var(--accent-teal) 35%, var(--border));
+  border-color: color-mix(in srgb, var(--accent-teal) 45%, var(--border));
   transform: translateY(-2px);
 }
 
@@ -1275,7 +1278,7 @@ main article:nth-of-type(even) {
 .field-note-cover::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(8, 9, 14, 0.8));
+  background: linear-gradient(180deg, transparent 55%, rgba(8, 9, 14, 0.85));
   content: '';
 }
 
@@ -1313,7 +1316,7 @@ main article:nth-of-type(even) {
 .field-note-read { margin-top: auto; font-size: 0.7rem; }
 
 /* ═══════════════════════════════════════════════════════
-   GAME PREVIEW SECTION
+   GAME PREVIEW SECTION (Distinct Separated Container)
    ═══════════════════════════════════════════════════════ */
 
 .game-preview {
@@ -1324,7 +1327,7 @@ main article:nth-of-type(even) {
   align-items: center;
   overflow: hidden;
   gap: 1.5rem;
-  border: 1px solid color-mix(in srgb, var(--accent-coral) 25%, var(--border));
+  border: var(--border-thick) solid color-mix(in srgb, var(--accent-coral) 30%, var(--border));
   border-radius: var(--radius-xl);
   padding: clamp(1.4rem, 4vw, 2.8rem);
   background:
@@ -1334,6 +1337,7 @@ main article:nth-of-type(even) {
   -webkit-backdrop-filter: blur(16px) saturate(1.1);
   backdrop-filter: blur(16px) saturate(1.1);
   box-shadow: 0 16px 48px -24px color-mix(in srgb, var(--accent-coral) 30%, transparent);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
 }
 
 .game-preview-copy { position: relative; z-index: 1; }
