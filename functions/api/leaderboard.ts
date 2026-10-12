@@ -302,7 +302,7 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
       try {
         await handleD1RestCycle(env);
         const results = await queryD1ViaRest(env, 'SELECT nickname, score FROM ai_mission_scores ORDER BY score DESC, created_at ASC, id ASC LIMIT 10');
-        if (results) return Response.json({ entries: results, source: 'd1-rest' });
+        if (results) return jsonLeaderboardResponse({ entries: results, source: 'd1-rest' });
       } catch (err) {
         console.error('D1 REST read error:', err);
       }
@@ -315,7 +315,7 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
       .slice(0, 10)
       .map(({ nickname, score }) => ({ nickname, score }));
 
-    return Response.json({ entries, source: 'memory' });
+    return jsonLeaderboardResponse({ entries, source: 'memory' });
   }
 
   // POST: Submit a score
@@ -323,12 +323,12 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
   try {
     body = await request.json();
   } catch {
-    return Response.json({ error: 'A valid score submission is required.' }, { status: 400 });
+    return jsonLeaderboardResponse({ error: 'A valid score submission is required.' }, { status: 400 });
   }
 
   const parsed = scoreSchema.safeParse(body);
   if (!parsed.success) {
-    return Response.json({ error: 'Enter a nickname (up to 20 letters, numbers, spaces, _ or -).' }, { status: 400 });
+    return jsonLeaderboardResponse({ error: 'Enter a nickname (up to 20 letters, numbers, spaces, _ or -).' }, { status: 400 });
   }
 
   const { nickname, score } = parsed.data;
@@ -337,7 +337,7 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
   if (env.DB) {
     try {
       const entries = await saveScoreToD1(env.DB, nickname, score);
-      return Response.json({ success: true, entries, source: 'd1' }, { status: 201 });
+      return jsonLeaderboardResponse({ success: true, entries, source: 'd1' }, { status: 201 });
     } catch (err) {
       console.error('D1 write error:', err);
     }
@@ -350,7 +350,7 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
       await queryD1ViaRest(env, 'INSERT INTO ai_mission_scores (nickname, score) VALUES (?, ?)', [nickname, score]);
       await queryD1ViaRest(env, 'DELETE FROM ai_mission_scores WHERE id NOT IN (SELECT id FROM (SELECT id FROM ai_mission_scores ORDER BY score DESC, created_at ASC, id ASC LIMIT 100))');
       const entries = await queryD1ViaRest(env, 'SELECT nickname, score FROM ai_mission_scores ORDER BY score DESC, created_at ASC, id ASC LIMIT 10');
-      if (entries) return Response.json({ success: true, entries, source: 'd1-rest' }, { status: 201 });
+      if (entries) return jsonLeaderboardResponse({ success: true, entries, source: 'd1-rest' }, { status: 201 });
     } catch (err) {
       console.error('D1 REST write error:', err);
     }
@@ -364,5 +364,5 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
     .slice(0, 10)
     .map(({ nickname, score }) => ({ nickname, score }));
 
-  return Response.json({ success: true, entries, source: 'memory' }, { status: 201 });
+  return jsonLeaderboardResponse({ success: true, entries, source: 'memory' }, { status: 201 });
 }
