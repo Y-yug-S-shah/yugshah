@@ -1076,15 +1076,23 @@ main article:nth-of-type(even) {
 .resume-identity { position: relative; z-index: 1; display: grid; grid-template-columns: 0.9fr 1.1fr; align-items: end; gap: 2rem; padding: 2rem 0 1.8rem; }
 .resume-identity h1 {
   margin: 0;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 30%, #7dd3fc 65%, #38bdf8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 45%, #cbd5e1 75%, #94a3b8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 4px 20px rgba(56, 189, 248, 0.25));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
   font-size: clamp(2.5rem, 6vw, 4.4rem);
   font-weight: 800;
   letter-spacing: -0.06em;
   line-height: 1;
+}
+
+:root[data-theme='light'] .resume-identity h1 {
+  background: linear-gradient(135deg, #090d16 0%, #1e293b 55%, #0284c7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: none;
 }
 .resume-role { margin: 0.65rem 0 0; color: var(--accent-strong); font-size: 1.05rem; font-weight: 600; }
 .resume-intro { max-width: 36rem; margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.75; }
