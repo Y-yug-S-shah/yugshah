@@ -483,6 +483,9 @@ export default function CliTerminal() {
                   autoComplete="off"
                   spellCheck={false}
                   onKeyDown={(event) => {
+                    if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(event.key)) {
+                      playCliKeystrokeSound();
+                    }
                     if (event.key === 'Enter') {
                       event.preventDefault();
                       executeCommand(event.currentTarget.value);
