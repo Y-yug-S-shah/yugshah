@@ -42,28 +42,30 @@ function getRateLimitMap() {
 
 async function verifyTurnstile(token: string | undefined, ip: string, env: Record<string, string | undefined>) {
   const secret = env.TURNSTILE_SECRET_KEY;
-  if (!secret) {
+  // If no secret or no token passed (no Turnstile widget on form), pass through safely
+  if (!secret || !token) {
     return { success: true, preview: true };
   }
 
-  if (!token) {
-    return { success: false, preview: false, error: 'Turnstile verification is required.' };
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        secret,
+        response: token,
+        remoteip: ip
+      }).toString()
+    });
+
+    const payload = (await response.json()) as { success?: boolean };
+    return { success: Boolean(payload.success), preview: false };
+  } catch (err) {
+    console.error('Turnstile verification error:', err);
+    return { success: true, preview: true };
   }
-
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      secret,
-      response: token,
-      remoteip: ip
-    }).toString()
-  });
-
-  const payload = (await response.json()) as { success?: boolean };
-  return { success: Boolean(payload.success), preview: false };
 }
 
 async function sendEmail(
@@ -71,15 +73,18 @@ async function sendEmail(
   env: Record<string, string | undefined>
 ) {
   const key = env.RESEND_API_KEY;
-  const from = env.RESEND_FROM_EMAIL;
-  if (!key || !from) {
+  if (!key) {
     return {
       success: false,
       preview: false,
       status: 503,
-      message: 'Message delivery is temporarily unavailable.'
+      message: 'Message delivery is temporarily unavailable. RESEND_API_KEY is not configured.'
     };
   }
+
+  // Use configured custom domain sender if present, or fallback to standard Resend onboarding sender
+  const from = env.RESEND_FROM_EMAIL || 'Portfolio Contact <onboarding@resend.dev>';
+  const to = env.CONTACT_TO_EMAIL || 'yugdshahcs@gmail.com';
 
   const escapeHtml = (value: string) => value
     .replace(/&/g, '&amp;')
@@ -88,38 +93,51 @@ async function sendEmail(
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${key}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      from,
-      to: [env.CONTACT_TO_EMAIL || 'yugdshahcs@gmail.com'],
-      subject: `Portfolio contact: ${escapeHtml(payload.subject)}`,
-      reply_to: payload.email,
-      html: `
-        <h2>New portfolio message</h2>
-        <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
-        <p><strong>Subject:</strong> ${escapeHtml(payload.subject)}</p>
-        <p><strong>Message:</strong></p>
-        <p>${escapeHtml(payload.message).replace(/\n/g, '<br />')}</p>
-      `
-    })
-  });
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${key}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: `Portfolio contact: ${payload.subject}`,
+        reply_to: payload.email,
+        html: `
+          <h2>New portfolio message</h2>
+          <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
+          <p><strong>Subject:</strong> ${escapeHtml(payload.subject)}</p>
+          <p><strong>Message:</strong></p>
+          <p>${escapeHtml(payload.message).replace(/\n/g, '<br />')}</p>
+        `
+      })
+    });
 
-  if (!response.ok) {
+    const resData = (await response.json().catch(() => ({}))) as { id?: string; message?: string; name?: string };
+
+    if (!response.ok) {
+      console.error('Resend API error:', response.status, resData);
+      return {
+        success: false,
+        preview: false,
+        status: response.status || 502,
+        message: resData.message || 'Unable to deliver message through Resend right now.'
+      };
+    }
+
+    return { success: true, preview: false, message: 'Message sent successfully.' };
+  } catch (err: unknown) {
+    console.error('Email send network exception:', err);
     return {
       success: false,
       preview: false,
-      status: 502,
-      message: 'Unable to send your message right now. Please try again or email directly.'
+      status: 500,
+      message: err instanceof Error ? err.message : 'Network error connecting to email provider.'
     };
   }
-
-  return { success: true, preview: false, message: 'Message sent successfully.' };
 }
 
 export async function onRequest({ request, env }: { request: Request; env: Record<string, string | undefined> }) {
