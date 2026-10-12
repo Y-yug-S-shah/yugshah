@@ -10,20 +10,49 @@ const { project } = Astro.props;
 ---
 
 <BaseLayout title={`${project.title} | Yug Shah`} description={project.summary}>
-  <article class="space-y-8 py-6">
-    <img src={project.image} alt={project.imageAlt} class="h-64 w-full rounded-[32px] border border-[var(--border)] object-cover shadow-[0_30px_60px_rgba(15,23,42,0.08)]" />
-    <div class="space-y-5">
-      <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Project</p>
-      <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">{project.title}</h1>
-      <p class="max-w-3xl text-base leading-8 text-[var(--muted)]">{project.description}</p>
+  <article class="mx-auto max-w-4xl space-y-8 py-8">
+    <div>
+      <a href="/projects" class="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-strong)] hover:underline">
+        <span aria-hidden="true">←</span> Return to projects
+      </a>
     </div>
-    <div class="flex flex-wrap gap-2">
-      {project.tech.map((tech) => (
-        <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">{tech}</span>
-      ))}
+
+    <div class="relative overflow-hidden rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--bg-soft)] shadow-2xl">
+      <img src={project.image} alt={project.imageAlt} class="h-72 w-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)] via-transparent to-transparent opacity-60"></div>
     </div>
-    <div class="flex flex-wrap gap-3">
-      {project.links.repo && <a href={project.links.repo} target="_blank" rel="noreferrer" class="inline-flex rounded-full border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-sm font-semibold text-[var(--text)]">View repository</a>}
+
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-medium text-[var(--accent-strong)]">DETECTION ARCHITECTURE</span>
+        <span class="text-xs font-mono text-[var(--muted)]">{project.year}</span>
+      </div>
+      <h1 class="hero-main-title text-4xl font-black tracking-tight sm:text-5xl">{project.title}</h1>
+      <p class="text-lg text-[var(--text-secondary)] leading-relaxed">{project.summary}</p>
+    </div>
+
+    <div class="rounded-[28px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 backdrop-blur-md shadow-xl">
+      <h2 class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)] mb-3">// TECHNICAL OVERVIEW</h2>
+      <p class="text-base leading-relaxed text-[var(--text-secondary)]">{project.description}</p>
+    </div>
+
+    <div class="space-y-3">
+      <h2 class="text-xs font-mono uppercase tracking-widest text-[var(--muted)]">Core Technologies</h2>
+      <div class="flex flex-wrap gap-2">
+        {project.tech.map((tech) => (
+          <span class="rounded-full border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-mono uppercase tracking-[0.08em] text-[var(--text-secondary)]">{tech}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-[var(--border)]">
+      {project.links?.repo && (
+        <a href={project.links.repo} target="_blank" rel="noreferrer" class="btn-cinematic-primary">
+          <span>View GitHub repository</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      )}
+      <a href="/projects" class="btn-cinematic-secondary">Browse all projects</a>
     </div>
   </article>
 </BaseLayout>
