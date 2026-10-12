@@ -167,9 +167,12 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="py-8">
-    <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">Areas I work in</h2>
+  <section class="py-10">
+    <div class="mb-6 flex items-end justify-between">
+      <div>
+        <p class="section-kicker">Core Domains</p>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Areas I work in</h2>
+      </div>
     </div>
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {skillAreas.map((skill) => (
@@ -187,13 +190,13 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="experience-section py-8" aria-labelledby="experience-title">
+  <section class="experience-section py-10" aria-labelledby="experience-title">
     <div class="mb-6 flex items-end justify-between gap-4">
       <div>
-        <p class="section-kicker">Selected work</p>
-        <h2 id="experience-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)]">Security engineering, in practice.</h2>
+        <p class="section-kicker">Track Record</p>
+        <h2 id="experience-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Security engineering, in practice.</h2>
       </div>
-      <a href="/resume" class="text-sm font-medium text-[var(--accent-strong)]">Full resume →</a>
+      <a href="/resume" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">Full resume →</a>
     </div>
     <div class="experience-list">
       {featuredExperience.map((job) => (
@@ -213,27 +216,36 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="py-8">
-    <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-2xl font-bold tracking-tight text-[var(--text)]">Featured projects</h2>
-      <a href="/projects" class="text-sm font-medium text-[var(--accent-strong)]">See all</a>
+  <section class="py-10">
+    <div class="mb-6 flex items-end justify-between">
+      <div>
+        <p class="section-kicker">Engineered Detections</p>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Featured projects</h2>
+      </div>
+      <a href="/projects" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">See all →</a>
     </div>
-    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <div class="grid gap-6 md:grid-cols-2">
       {featuredProjects.map((project) => (
-        <article class="overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--panel)]">
-          <img src={project.image} alt={project.imageAlt} class="h-48 w-full object-cover" />
-          <div class="space-y-4 p-5">
-            <div class="flex items-center justify-between gap-3">
-              <h3 class="text-xl font-bold text-[var(--text)]">{project.title}</h3>
-              <span class="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">{project.year}</span>
-            </div>
-            <p class="text-sm leading-7 text-[var(--muted)]">{project.summary}</p>
-            <div class="flex flex-wrap gap-2">
+        <article class="group relative overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--panel)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
+          <div class="relative h-48 w-full overflow-hidden bg-[var(--bg-soft)]">
+            <img src={project.image} alt={project.imageAlt} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)] via-transparent to-transparent opacity-70" />
+            <span class="absolute top-4 right-4 rounded-full border border-[var(--border)] bg-[var(--bg)]/80 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[var(--muted)] backdrop-blur-md">{project.year}</span>
+          </div>
+          <div class="space-y-4 p-6">
+            <h3 class="text-xl font-bold text-[var(--text)] group-hover:text-[var(--accent-strong)] transition-colors">{project.title}</h3>
+            <p class="text-sm leading-relaxed text-[var(--text-secondary)]">{project.summary}</p>
+            <div class="flex flex-wrap gap-2 pt-1">
               {project.tech.map((tech) => (
-                <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--muted)]">{tech}</span>
+                <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.08em] text-[var(--muted)]">{tech}</span>
               ))}
             </div>
-            <a href={`/projects/${project.slug}`} class="inline-flex text-sm font-semibold text-[var(--accent-strong)]">Explore project →</a>
+            <div class="pt-2">
+              <a href={`/projects/${project.slug}`} class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[var(--accent-strong)] group-hover:gap-2.5 transition-all">
+                <span>Explore project</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
         </article>
       ))}
