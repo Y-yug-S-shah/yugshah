@@ -14,31 +14,31 @@ const nav = [
 <header class="site-header sticky z-50">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="flex items-center justify-between gap-4 py-1.5">
-    <a href="/" class="flex items-center gap-2.5 text-xs font-semibold tracking-[0.22em] text-[var(--text)] uppercase transition-colors hover:text-[var(--accent-strong)]">
-      <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] text-xs font-bold text-[var(--accent-strong)] shadow-sm">Y</span>
-      <span class="site-brand-name">Yug Shah</span>
+    <a href="/" class="group flex items-center gap-3 text-xs font-semibold tracking-[0.22em] uppercase transition-all" aria-label="Yug Shah Home">
+      <span class="site-brand-avatar">Y</span>
+      <span class="site-brand-name">YUG SHAH</span>
     </a>
 
     <nav aria-label="Primary" class="hidden items-center gap-6 lg:flex">
       {nav.map((item) => (
-        <a href={item.href} class="text-sm text-[var(--muted)] transition-colors hover:text-[var(--text)]">{item.label}</a>
+        <a href={item.href} class="relative text-xs font-mono tracking-wider text-[var(--muted)] transition-colors hover:text-[var(--accent-strong)]">{item.label}</a>
       ))}
     </nav>
 
-    <div class="flex items-center gap-3">
-      <button id="cli-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-xs font-medium text-[var(--text)] shadow-sm transition-colors hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]" aria-label="Open CLI mode">
+    <div class="flex items-center gap-2.5 sm:gap-3">
+      <button id="cli-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Open CLI mode">
         <span aria-hidden="true">⌨️</span>
         <span class="hidden sm:inline">CLI</span>
       </button>
-      <button id="sound-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-xs font-medium text-[var(--text)] shadow-sm transition-colors hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]" aria-label="Turn ambient and click sounds on" aria-pressed="false">
+      <button id="sound-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Turn ambient and click sounds on" aria-pressed="false">
         <span aria-hidden="true">🔇</span>
         <span class="hidden sm:inline">Sound off</span>
       </button>
-      <button id="theme-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-xs font-medium text-[var(--text)] shadow-sm transition-colors hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]" aria-label="Toggle color theme">
+      <button id="theme-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Toggle color theme">
         <span aria-hidden="true">☀️</span>
         <span class="hidden sm:inline">Theme</span>
       </button>
-      <a href="/contact" aria-label="Contact Yug Shah" class="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 shadow-lg shadow-[var(--accent-soft)] transition-colors hover:brightness-110 sm:px-4">
+      <a href="/contact" aria-label="Contact Yug Shah" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 via-cyan-300 to-sky-400 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-slate-950 shadow-lg shadow-sky-500/25 transition-all hover:scale-105 hover:shadow-sky-500/40 hover:brightness-110 active:scale-95">
         <span class="sm:hidden" aria-hidden="true">✉</span>
         <span class="hidden sm:inline">Hire me</span>
       </a>
