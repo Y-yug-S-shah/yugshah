@@ -23,40 +23,71 @@ const jsonLd = {
 ---
 
 <BaseLayout title="Contact | Yug Shah" description="Contact Yug Shah about projects, opportunities, or technical discussions." image="/og/home.svg" jsonLd={jsonLd} canonicalPath="/contact">
-  <section class="grid gap-8 py-6 lg:grid-cols-[0.9fr_1.1fr]">
-    <div class="space-y-5">
-      <p class="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--muted)]">Contact</p>
-      <h1 class="text-4xl font-black tracking-tight text-[var(--text)]">Let’s build something useful.</h1>
-      <p class="text-base leading-8 text-[var(--muted)]">I work across security, technical validation, and customer-facing problem solving. If you want to talk through a security initiative, product question, or collaboration, send a note here.</p>
-      <ul class="space-y-3 text-sm text-[var(--muted)]">
-        <li>• Email: <a href={`mailto:${profile.email}`} class="text-[var(--accent-strong)]">{profile.email}</a></li>
-        <li>• LinkedIn: <a href={profile.socialLinks.linkedin} class="text-[var(--accent-strong)]">linkedin.com/in/yugshah369</a></li>
-        <li>• GitHub: <a href={profile.socialLinks.github} class="text-[var(--accent-strong)]">github.com/Y-yug-S-shah</a></li>
-      </ul>
+  <section class="grid gap-10 py-8 lg:grid-cols-[0.9fr_1.1fr] items-start">
+    <div class="space-y-6">
+      <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
+        <span class="relative flex h-2 w-2" aria-hidden="true">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="tracking-wider">DIRECT COMMUNICATION CHANNEL</span>
+      </div>
+
+      <div class="space-y-4">
+        <h1 class="hero-main-title text-4xl font-black tracking-tight sm:text-5xl">Let’s build something useful.</h1>
+        <p class="text-base text-[var(--text-secondary)] leading-relaxed">
+          I work across AI security, technical validation, and customer-facing problem solving. If you want to talk through a security initiative, architecture question, or collaboration, get in touch below.
+        </p>
+      </div>
+
+      <div class="rounded-[28px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 backdrop-blur-md space-y-4 shadow-xl">
+        <h2 class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)]">// VERIFIED CHANNELS</h2>
+        <div class="space-y-3 text-sm font-mono">
+          <a href={`mailto:${profile.email}`} class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+            <span class="text-[var(--text-secondary)]">Email</span>
+            <span class="text-[var(--accent-strong)]">{profile.email} ↗</span>
+          </a>
+          <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+            <span class="text-[var(--text-secondary)]">LinkedIn</span>
+            <span class="text-[var(--text)]">yugshah369 ↗</span>
+          </a>
+          <a href={profile.socialLinks.github} target="_blank" rel="noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+            <span class="text-[var(--text-secondary)]">GitHub</span>
+            <span class="text-[var(--text)]">Y-yug-S-shah ↗</span>
+          </a>
+          <a href={profile.socialLinks.youtube} target="_blank" rel="noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+            <span class="text-[var(--text-secondary)]">YouTube</span>
+            <span class="text-[var(--text)]">@DefenderDiarybyYug ↗</span>
+          </a>
+        </div>
+      </div>
     </div>
 
-    <form id="contact-form" class="rounded-[30px] border border-[var(--border)] bg-[var(--panel)] p-6 shadow-[0_30px_60px_rgba(15,23,42,0.08)]">
+    <form id="contact-form" class="rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 backdrop-blur-md shadow-2xl space-y-5">
       <div class="grid gap-5 sm:grid-cols-2">
-        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-1">
-          Name
-          <input name="name" type="text" required placeholder="Your name" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+        <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-1">
+          Your Name
+          <input name="name" type="text" required placeholder="Jane Doe" class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
         </label>
-        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-1">
-          Email
-          <input name="email" type="email" required placeholder="you@example.com" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+        <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-1">
+          Email Address
+          <input name="email" type="email" required placeholder="you@domain.com" class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
         </label>
-        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-2">
-          Subject
-          <input name="subject" type="text" required placeholder="Project idea / opportunity / question" class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]" />
+        <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-2">
+          Subject / Area of Interest
+          <input name="subject" type="text" required placeholder="AI Security / PoC Architecture / Role Opportunity" class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
         </label>
-        <label class="block text-sm font-medium text-[var(--text)] sm:col-span-2">
+        <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-2">
           Message
-          <textarea name="message" rows="6" required placeholder="Tell me a bit about the project or goal..." class="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-0 placeholder:text-[var(--muted)] focus:border-[var(--accent)]"></textarea>
+          <textarea name="message" rows="5" required placeholder="Tell me about your initiative, problem statement, or goal..." class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]"></textarea>
         </label>
       </div>
-      <div class="mt-6 flex items-center justify-between gap-3">
-        <p id="contact-status" aria-live="polite" class="text-xs text-[var(--muted)]"></p>
-        <button type="submit" class="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-slate-950">Send message</button>
+      <div class="flex items-center justify-between gap-4 pt-2">
+        <p id="contact-status" aria-live="polite" class="text-xs font-mono text-[var(--muted)]"></p>
+        <button type="submit" class="btn-cinematic-primary">
+          <span>Send transmission</span>
+          <span aria-hidden="true">→</span>
+        </button>
       </div>
     </form>
   </section>
