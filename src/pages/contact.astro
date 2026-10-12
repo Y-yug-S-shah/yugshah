@@ -100,10 +100,13 @@ const jsonLd = {
 
     form?.addEventListener('submit', async (event) => {
       event.preventDefault();
+      const submitBtn = form.querySelector('button[type="submit"]');
       const formData = new FormData(form);
       const payload = Object.fromEntries(formData.entries());
 
-      status.textContent = 'Sending...';
+      status.textContent = 'Transmitting signal...';
+      status.style.color = 'var(--text-secondary)';
+      if (submitBtn) submitBtn.disabled = true;
 
       try {
         const response = await fetch('/api/contact', {
@@ -114,15 +117,19 @@ const jsonLd = {
           body: JSON.stringify(payload)
         });
 
-        const result = await response.json();
+        const result = await response.json().catch(() => ({}));
         if (!response.ok) {
-          throw new Error(result.error || 'Unable to send message right now.');
+          throw new Error(result.error || result.message || 'Unable to send message right now.');
         }
 
-        status.textContent = result.message || 'Message sent successfully.';
+        status.textContent = '✓ ' + (result.message || 'Message sent successfully. I will get back to you shortly.');
+        status.style.color = '#34d399';
         form.reset();
       } catch (error) {
-        status.textContent = 'Unable to send your message right now. Please try again or email directly.';
+        status.textContent = '× ' + (error?.message || 'Unable to send your message right now. Please try again or email directly.');
+        status.style.color = '#f87171';
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
     });
   </script>
