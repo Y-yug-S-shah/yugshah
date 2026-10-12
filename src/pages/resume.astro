@@ -39,8 +39,8 @@ const jsonLd = {
       </div>
       <div class="resume-contact-row">
         <a href={`mailto:${basics.email}`}>{basics.email}</a>
-        <a href={basics.url} target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/Y-yug-S-shah" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+        <a href={basics.url} target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/Y-yug-S-shah" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </header>
 
@@ -75,7 +75,7 @@ const jsonLd = {
             <div class="resume-tag-list">
               {project.keywords.map((keyword) => <span>{keyword}</span>)}
             </div>
-            <a href={project.url} target="_blank" rel="noreferrer">View repository <span aria-hidden="true">↗</span></a>
+            <a href={project.url} target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a>
           </article>
         ))}
       </div>
