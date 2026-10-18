@@ -9,55 +9,71 @@ const nav = [
   { label: 'Blog', href: '/blog' },
   { label: 'Contact', href: '/contact' }
 ];
+
+const currentPath = Astro.url.pathname;
 ---
 
 <header class="site-header sticky z-50">
-  <div class="mx-auto max-w-6xl px-4 sm:px-6">
-    <div class="flex items-center justify-between gap-4 py-1.5">
-    <a href="/" class="group flex items-center gap-3 text-xs font-semibold tracking-[0.22em] uppercase transition-all" aria-label="Yug Shah Home">
-      <span class="site-brand-avatar">Y</span>
-      <span class="site-brand-name">YUG SHAH</span>
-    </a>
-
-    <nav aria-label="Primary" class="hidden items-center gap-6 lg:flex">
-      {nav.map((item) => (
-        <a href={item.href} class={`relative text-xs font-mono tracking-wider transition-colors ${item.href === '/blog' ? 'text-[var(--accent-strong)] font-semibold inline-flex items-center gap-1.5' : 'text-[var(--muted)] hover:text-[var(--accent-strong)]'}`}>
-          <span>{item.label}</span>
-          {item.href === '/blog' && (
-            <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
-          )}
-        </a>
-      ))}
-    </nav>
-
-    <div class="flex items-center gap-2.5 sm:gap-3">
-      <button id="cli-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Open CLI mode">
-        <span aria-hidden="true">⌨️</span>
-        <span class="hidden sm:inline">CLI</span>
-      </button>
-      <button id="sound-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Turn ambient and click sounds off" aria-pressed="true">
-        <span aria-hidden="true">♫</span>
-        <span class="hidden sm:inline">Sound on</span>
-      </button>
-      <button id="theme-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Toggle color theme">
-        <span aria-hidden="true">☀️</span>
-        <span class="hidden sm:inline">Theme</span>
-      </button>
-      <a href="/contact" aria-label="Contact Yug Shah" class="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 via-cyan-300 to-sky-400 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-slate-950 shadow-lg shadow-sky-500/25 transition-all hover:scale-105 hover:shadow-sky-500/40 hover:brightness-110 active:scale-95">
-        <span class="sm:hidden" aria-hidden="true">✉</span>
-        <span class="hidden sm:inline">Hire me</span>
+  <div class="mx-auto max-w-6xl px-3 sm:px-6">
+    <div class="site-header-row flex items-center justify-between gap-2 py-1.5">
+      <a href="/" class="site-header-brand group flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase transition-all shrink-0" aria-label="Yug Shah Home">
+        <span class="site-brand-avatar">Y</span>
+        <span class="site-brand-name font-mono text-[11px] sm:text-xs">YUG SHAH</span>
       </a>
-    </div>
-    </div>
-    <nav aria-label="Mobile primary" class="mx-auto flex max-w-6xl items-center gap-5 overflow-x-auto pb-2 text-xs lg:hidden">
-      {nav.map((item) => (
-        <a href={item.href} class={`shrink-0 transition-colors inline-flex items-center gap-1.5 ${item.href === '/blog' ? 'text-[var(--accent-strong)] font-semibold' : 'text-[var(--muted)] hover:text-[var(--text)]'}`}>
-          <span>{item.label}</span>
-          {item.href === '/blog' && (
-            <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
-          )}
+
+      <nav aria-label="Primary" class="hidden items-center gap-6 lg:flex">
+        {nav.map((item) => (
+          <a href={item.href} class={`relative text-xs font-mono tracking-wider transition-colors ${item.href === '/blog' ? 'text-[var(--accent-strong)] font-semibold inline-flex items-center gap-1.5' : 'text-[var(--muted)] hover:text-[var(--accent-strong)]'}`}>
+            <span>{item.label}</span>
+            {item.href === '/blog' && (
+              <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
+            )}
+          </a>
+        ))}
+      </nav>
+
+      <div class="site-header-actions">
+        <button id="cli-toggle" type="button" class="site-header-btn" aria-label="Open CLI mode" title="Open terminal">
+          <span aria-hidden="true">⌨️</span>
+          <span class="site-header-btn-label">CLI</span>
+        </button>
+        <button id="sound-toggle" type="button" class="site-header-btn" aria-label="Turn ambient and click sounds off" aria-pressed="true" title="Toggle audio">
+          <span aria-hidden="true">♫</span>
+          <span class="site-header-btn-label">Sound on</span>
+        </button>
+        <button id="theme-toggle" type="button" class="site-header-btn" aria-label="Toggle color theme" title="Toggle theme">
+          <span aria-hidden="true">☀️</span>
+          <span class="site-header-btn-label">Theme</span>
+        </button>
+        <a href="/contact" aria-label="Contact Yug Shah" class="site-header-cta" title="Contact Yug">
+          <span class="site-header-cta-icon" aria-hidden="true">✉</span>
+          <span class="site-header-btn-label">Hire me</span>
         </a>
-      ))}
+      </div>
+    </div>
+
+    <nav aria-label="Mobile primary" class="no-scrollbar flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5 text-xs lg:hidden">
+      {nav.map((item) => {
+        const isActive = item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href);
+        const isBlog = item.href === '/blog';
+        return (
+          <a
+            href={item.href}
+            class={`shrink-0 rounded-full px-3 py-1 text-[11px] font-mono tracking-wide transition-all border inline-flex items-center gap-1.5 ${
+              isActive
+                ? 'border-[var(--border-accent)] bg-[var(--accent-soft)] text-[var(--accent-strong)] font-semibold shadow-sm'
+                : isBlog
+                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-semibold'
+                  : 'border-[var(--border)] bg-[var(--panel)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--accent)]'
+            }`}
+          >
+            <span>{item.label}</span>
+            {isBlog && (
+              <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
+            )}
+          </a>
+        );
+      })}
     </nav>
   </div>
 </header>
