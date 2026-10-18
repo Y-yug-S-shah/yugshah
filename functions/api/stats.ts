@@ -20,7 +20,6 @@ export async function onRequest({ request, env }: { request: Request; env: Recor
   const fallback = {
     totalVisits: 7138,
     questsCompleted: 3,
-    petsFed: 28,
     unlockedSkins: 1,
     service: 'local-fallback'
   };

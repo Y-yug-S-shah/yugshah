@@ -33,4 +33,17 @@ const jsonLd = {
   <div class="pb-12">
     <AgentMission client:load />
   </div>
+
+  <script is:inline>
+    (() => {
+      const keys = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown', ' ']);
+      window.addEventListener('keydown', (e) => {
+        const target = e.target;
+        const isInput = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+        if (!isInput && keys.has(e.key)) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    })();
+  </script>
 </BaseLayout>

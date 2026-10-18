@@ -35,9 +35,9 @@ const nav = [
         <span aria-hidden="true">⌨️</span>
         <span class="hidden sm:inline">CLI</span>
       </button>
-      <button id="sound-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Turn ambient and click sounds on" aria-pressed="false">
-        <span aria-hidden="true">🔇</span>
-        <span class="hidden sm:inline">Sound off</span>
+      <button id="sound-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Turn ambient and click sounds off" aria-pressed="true">
+        <span aria-hidden="true">♫</span>
+        <span class="hidden sm:inline">Sound on</span>
       </button>
       <button id="theme-toggle" type="button" class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs font-mono text-[var(--text)] shadow-sm transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]" aria-label="Toggle color theme">
         <span aria-hidden="true">☀️</span>
@@ -64,199 +64,296 @@ const nav = [
 
 <script is:inline define:vars={{ SITE_URL }}>
   const root = document.documentElement;
-  const saved = localStorage.getItem('theme');
+  const savedTheme = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initial = saved || (prefersDark ? 'dark' : 'light');
-  root.setAttribute('data-theme', initial);
+  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+  root.setAttribute('data-theme', initialTheme);
 
-  const button = document.getElementById('theme-toggle');
-  if (button) {
-    const syncLabel = () => {
-      const theme = root.getAttribute('data-theme');
-      button.innerHTML = theme === 'dark' ? '<span aria-hidden="true">🌙</span><span class="hidden sm:inline">Dark</span>' : '<span aria-hidden="true">☀️</span><span class="hidden sm:inline">Light</span>';
+  const soundStorageKey = 'portfolio-ui-sound';
+
+  // Global persistent background audio manager
+  if (!window.__portfolioAmbience) {
+    const pianoChords = [
+      [261.63, 329.63, 392],      // C major
+      [220, 261.63, 329.63],      // A minor
+      [174.61, 220, 261.63],      // F major
+      [196, 246.94, 293.66]       // G major
+    ];
+
+    window.__portfolioAmbience = {
+      audioContext: null,
+      ambienceGain: null,
+      ambienceTimer: null,
+      clickBuffer: null,
+      chordStep: 0,
+      gameAudioActive: false,
+
+      isEnabled() {
+        return localStorage.getItem(soundStorageKey) !== 'off';
+      },
+
+      isGameRoute() {
+        return window.location.pathname.startsWith('/game') || !!this.gameAudioActive;
+      },
+
+      stopAmbience() {
+        if (this.ambienceTimer) {
+          window.clearInterval(this.ambienceTimer);
+          this.ambienceTimer = null;
+        }
+        if (!this.ambienceGain || !this.audioContext) return;
+        try {
+          const gain = this.ambienceGain;
+          gain.gain.cancelScheduledValues(this.audioContext.currentTime);
+          gain.gain.setTargetAtTime(0, this.audioContext.currentTime, 0.12);
+          window.setTimeout(() => {
+            try { gain.disconnect(); } catch (_) {}
+          }, 800);
+          this.ambienceGain = null;
+        } catch (_) {}
+      },
+
+      playPianoChord() {
+        if (!this.audioContext || !this.ambienceGain || this.audioContext.state !== 'running') return;
+        if (!this.isEnabled() || this.isGameRoute()) return;
+
+        const chord = pianoChords[this.chordStep % pianoChords.length];
+        this.chordStep = (this.chordStep + 1) % pianoChords.length;
+
+        chord.forEach((frequency, index) => {
+          const startAt = this.audioContext.currentTime + index * 0.089;
+          const noteGain = this.audioContext.createGain();
+          noteGain.gain.setValueAtTime(0.0001, startAt);
+          noteGain.gain.exponentialRampToValueAtTime(0.0495 / (index + 1), startAt + 0.015);
+          noteGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 1.808);
+          noteGain.connect(this.ambienceGain);
+
+          [1, 2, 3].forEach((harmonic, partial) => {
+            const oscillator = this.audioContext.createOscillator();
+            const partialGain = this.audioContext.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = frequency * harmonic;
+            partialGain.gain.value = [1, 0.11, 0.025][partial];
+            oscillator.connect(partialGain);
+            partialGain.connect(noteGain);
+            oscillator.start(startAt);
+            oscillator.stop(startAt + 1.842);
+            oscillator.addEventListener('ended', () => {
+              try {
+                oscillator.disconnect();
+                partialGain.disconnect();
+              } catch (_) {}
+            }, { once: true });
+          });
+
+          window.setTimeout(() => {
+            try { noteGain.disconnect(); } catch (_) {}
+          }, 1942);
+        });
+      },
+
+      async startAmbience() {
+        if (!this.isEnabled() || this.isGameRoute()) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+
+        this.audioContext ??= new AudioCtx();
+        if (this.audioContext.state === 'suspended') {
+          try {
+            await this.audioContext.resume();
+          } catch (_) {}
+        }
+        if (!this.isEnabled() || this.isGameRoute() || this.audioContext.state !== 'running') return;
+        if (this.ambienceGain) return;
+
+        this.ambienceGain = this.audioContext.createGain();
+        this.ambienceGain.gain.setValueAtTime(0.99, this.audioContext.currentTime);
+        this.ambienceGain.connect(this.audioContext.destination);
+        this.playPianoChord();
+        if (!this.ambienceTimer) {
+          this.ambienceTimer = window.setInterval(() => this.playPianoChord(), 3111);
+        }
+      },
+
+      playClick() {
+        if (!this.isEnabled() || this.isGameRoute() || !this.audioContext || this.audioContext.state !== 'running') return;
+        if (!this.clickBuffer) {
+          this.clickBuffer = this.audioContext.createBuffer(1, Math.ceil(this.audioContext.sampleRate * 0.02), this.audioContext.sampleRate);
+          const samples = this.clickBuffer.getChannelData(0);
+          for (let index = 0; index < samples.length; index += 1) {
+            samples[index] = (Math.random() * 2 - 1) * (1 - index / samples.length);
+          }
+        }
+        const now = this.audioContext.currentTime;
+        const noise = this.audioContext.createBufferSource();
+        const filter = this.audioContext.createBiquadFilter();
+        const noiseGain = this.audioContext.createGain();
+        noise.buffer = this.clickBuffer;
+        filter.type = 'bandpass';
+        filter.frequency.value = 1900;
+        filter.Q.value = 0.8;
+        noiseGain.gain.setValueAtTime(0.0001, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.018, now + 0.002);
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(this.audioContext.destination);
+        noise.start(now);
+        noise.stop(now + 0.026);
+
+        const oscillator = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(920, now);
+        oscillator.frequency.exponentialRampToValueAtTime(390, now + 0.035);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.0064, now + 0.002);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+        oscillator.connect(gain);
+        gain.connect(this.audioContext.destination);
+        oscillator.start(now);
+        oscillator.stop(now + 0.05);
+        oscillator.addEventListener('ended', () => {
+          try {
+            oscillator.disconnect();
+            gain.disconnect();
+          } catch (_) {}
+        }, { once: true });
+        noise.addEventListener('ended', () => {
+          try {
+            noise.disconnect();
+            filter.disconnect();
+            noiseGain.disconnect();
+          } catch (_) {}
+        }, { once: true });
+      }
     };
-    syncLabel();
-    button.addEventListener('click', () => {
-      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      syncLabel();
+
+    // Auto-start background music on the very first user interaction anywhere on the website
+    const onFirstUserGesture = () => {
+      if (window.__portfolioAmbience.isEnabled() && !window.__portfolioAmbience.isGameRoute()) {
+        void window.__portfolioAmbience.startAmbience();
+      }
+    };
+    window.addEventListener('pointerdown', onFirstUserGesture, { passive: true });
+    window.addEventListener('keydown', onFirstUserGesture, { passive: true });
+    window.addEventListener('touchstart', onFirstUserGesture, { passive: true });
+    window.addEventListener('click', onFirstUserGesture, { passive: true });
+
+    // Handle game audio event: silence ambient music while Milo agent mission is active
+    window.addEventListener('portfolio:game-audio-active', (event) => {
+      const active = !!(event && event.detail && event.detail.active);
+      window.__portfolioAmbience.gameAudioActive = active;
+      if (active) {
+        window.__portfolioAmbience.stopAmbience();
+      } else if (window.__portfolioAmbience.isEnabled() && !window.__portfolioAmbience.isGameRoute()) {
+        void window.__portfolioAmbience.startAmbience();
+      }
     });
+
+    // Attempt starting immediately if browser autoplay policy allows
+    void window.__portfolioAmbience.startAmbience();
   }
 
-  const cliButton = document.getElementById('cli-toggle');
-  const setCliMode = (open, replace = false) => {
-    const url = new URL(window.location.href);
-    if (open) {
-      url.searchParams.set('mode', 'cli');
-    } else {
-      url.searchParams.delete('mode');
+  // Setup header interactive controls on load and across page navigations
+  const setupHeader = () => {
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      const syncThemeLabel = () => {
+        const currentTheme = root.getAttribute('data-theme');
+        themeBtn.innerHTML = currentTheme === 'dark'
+          ? '<span aria-hidden="true">🌙</span><span class="hidden sm:inline">Dark</span>'
+          : '<span aria-hidden="true">☀️</span><span class="hidden sm:inline">Light</span>';
+      };
+      syncThemeLabel();
+      themeBtn.onclick = () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        syncThemeLabel();
+      };
     }
-    window.history[replace ? 'replaceState' : 'pushState']({}, '', url.toString());
-    window.dispatchEvent(new CustomEvent(open ? 'portfolio:open-cli' : 'portfolio:close-cli'));
+
+    // CLI toggle
+    const cliBtn = document.getElementById('cli-toggle');
+    const setCliMode = (open, replace = false) => {
+      const url = new URL(window.location.href);
+      if (open) {
+        url.searchParams.set('mode', 'cli');
+      } else {
+        url.searchParams.delete('mode');
+      }
+      window.history[replace ? 'replaceState' : 'pushState']({}, '', url.toString());
+      window.dispatchEvent(new CustomEvent(open ? 'portfolio:open-cli' : 'portfolio:close-cli'));
+    };
+    if (cliBtn) {
+      cliBtn.onclick = () => setCliMode(true);
+    }
+
+    // Sound toggle
+    const soundBtn = document.getElementById('sound-toggle');
+    if (soundBtn && window.__portfolioAmbience) {
+      const syncSoundBtn = () => {
+        const enabled = window.__portfolioAmbience.isEnabled();
+        soundBtn.setAttribute('aria-pressed', String(enabled));
+        soundBtn.setAttribute('aria-label', enabled ? 'Turn ambient and click sounds off' : 'Turn ambient and click sounds on');
+        soundBtn.innerHTML = enabled
+          ? '<span aria-hidden="true">♫</span><span class="hidden sm:inline">Sound on</span>'
+          : '<span aria-hidden="true">♩</span><span class="hidden sm:inline">Sound off</span>';
+      };
+      syncSoundBtn();
+      soundBtn.onclick = () => {
+        const current = window.__portfolioAmbience.isEnabled();
+        const next = !current;
+        localStorage.setItem(soundStorageKey, next ? 'on' : 'off');
+        syncSoundBtn();
+        if (next) {
+          void window.__portfolioAmbience.startAmbience().then(() => window.__portfolioAmbience.playClick());
+        } else {
+          window.__portfolioAmbience.stopAmbience();
+        }
+      };
+    }
+
+    // Route check: pause if on game page, resume if navigating back to standard pages
+    if (window.__portfolioAmbience) {
+      if (window.__portfolioAmbience.isGameRoute()) {
+        window.__portfolioAmbience.stopAmbience();
+      } else if (window.__portfolioAmbience.isEnabled() && !window.__portfolioAmbience.ambienceTimer) {
+        void window.__portfolioAmbience.startAmbience();
+      }
+    }
   };
-  cliButton?.addEventListener('click', () => setCliMode(true));
-  window.addEventListener('portfolio:request-close-cli', () => setCliMode(false, true));
+
+  document.addEventListener('astro:page-load', setupHeader);
+  setupHeader();
+
+  // Keyboard shortcut for CLI
   window.addEventListener('keydown', (event) => {
     const target = event.target;
     const isTyping = target instanceof HTMLElement &&
       (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
     if (event.key === '`' && !event.repeat && !isTyping) {
       event.preventDefault();
-      setCliMode(new URLSearchParams(window.location.search).get('mode') !== 'cli');
+      const open = new URLSearchParams(window.location.search).get('mode') !== 'cli';
+      const url = new URL(window.location.href);
+      if (open) url.searchParams.set('mode', 'cli');
+      else url.searchParams.delete('mode');
+      window.history.pushState({}, '', url.toString());
+      window.dispatchEvent(new CustomEvent(open ? 'portfolio:open-cli' : 'portfolio:close-cli'));
     } else if (event.key === 'Escape' && new URLSearchParams(window.location.search).get('mode') === 'cli') {
-      setCliMode(false, true);
+      const url = new URL(window.location.href);
+      url.searchParams.delete('mode');
+      window.history.replaceState({}, '', url.toString());
+      window.dispatchEvent(new CustomEvent('portfolio:close-cli'));
     }
   });
-  window.addEventListener('popstate', () => {
-    window.dispatchEvent(new CustomEvent(
-      new URLSearchParams(window.location.search).get('mode') === 'cli'
-        ? 'portfolio:open-cli'
-        : 'portfolio:close-cli'
-    ));
-  });
 
-  const soundButton = document.getElementById('sound-toggle');
-  const soundStorageKey = 'portfolio-ui-sound';
-  let soundEnabled = localStorage.getItem(soundStorageKey) === 'on';
-  let audioContext;
-  let ambienceGain;
-  let ambienceTimer;
-  let clickBuffer;
-  let chordStep = 0;
-  const pianoChords = [
-    [261.63, 329.63, 392],
-    [220, 261.63, 329.63],
-    [174.61, 220, 261.63],
-    [196, 246.94, 293.66]
-  ];
-  const stopAmbience = () => {
-    if (ambienceTimer) window.clearInterval(ambienceTimer);
-    ambienceTimer = undefined;
-    if (!ambienceGain || !audioContext) return;
-    const gain = ambienceGain;
-    ambienceGain = undefined;
-    gain.gain.cancelScheduledValues(audioContext.currentTime);
-    gain.gain.setTargetAtTime(0, audioContext.currentTime, 0.12);
-    window.setTimeout(() => gain.disconnect(), 800);
-  };
-  const playPianoChord = () => {
-    if (!audioContext || !ambienceGain || audioContext.state !== 'running') return;
-    const chord = pianoChords[chordStep % pianoChords.length];
-    chordStep += 1;
-    chord.forEach((frequency, index) => {
-      const startAt = audioContext.currentTime + index * 0.089;
-      const noteGain = audioContext.createGain();
-      noteGain.gain.setValueAtTime(0.0001, startAt);
-      noteGain.gain.exponentialRampToValueAtTime(0.0495 / (index + 1), startAt + 0.015);
-      noteGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 1.808);
-      noteGain.connect(ambienceGain);
-      [1, 2, 3].forEach((harmonic, partial) => {
-        const oscillator = audioContext.createOscillator();
-        const partialGain = audioContext.createGain();
-        oscillator.type = 'sine';
-        oscillator.frequency.value = frequency * harmonic;
-        partialGain.gain.value = [1, 0.11, 0.025][partial];
-        oscillator.connect(partialGain);
-        partialGain.connect(noteGain);
-        oscillator.start(startAt);
-        oscillator.stop(startAt + 1.842);
-        oscillator.addEventListener('ended', () => {
-          oscillator.disconnect();
-          partialGain.disconnect();
-        }, { once: true });
-      });
-      window.setTimeout(() => noteGain.disconnect(), 1942);
-    });
-  };
-  const startAmbience = async () => {
-    if (!soundEnabled) return;
-    const AudioContextConstructor = window.AudioContext;
-    if (!AudioContextConstructor) return;
-    audioContext ??= new AudioContextConstructor();
-    if (audioContext.state === 'suspended') await audioContext.resume();
-    if (!soundEnabled || ambienceGain) return;
-
-    ambienceGain = audioContext.createGain();
-    ambienceGain.gain.setValueAtTime(0.99, audioContext.currentTime);
-    ambienceGain.connect(audioContext.destination);
-    playPianoChord();
-    ambienceTimer = window.setInterval(playPianoChord, 3111);
-  };
-  const playClick = () => {
-    if (!soundEnabled || !audioContext || audioContext.state !== 'running') return;
-    if (!clickBuffer) {
-      clickBuffer = audioContext.createBuffer(1, Math.ceil(audioContext.sampleRate * 0.02), audioContext.sampleRate);
-      const samples = clickBuffer.getChannelData(0);
-      for (let index = 0; index < samples.length; index += 1) {
-        samples[index] = (Math.random() * 2 - 1) * (1 - index / samples.length);
-      }
+  document.addEventListener('pointerdown', (e) => {
+    const a = e.target && e.target.closest && e.target.closest('a, button');
+    if (a && window.__portfolioAmbience) {
+      window.__portfolioAmbience.playClick();
     }
-    const now = audioContext.currentTime;
-    const noise = audioContext.createBufferSource();
-    const filter = audioContext.createBiquadFilter();
-    const noiseGain = audioContext.createGain();
-    noise.buffer = clickBuffer;
-    filter.type = 'bandpass';
-    filter.frequency.value = 1900;
-    filter.Q.value = 0.8;
-    noiseGain.gain.setValueAtTime(0.0001, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.018, now + 0.002);
-    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
-    noise.connect(filter);
-    filter.connect(noiseGain);
-    noiseGain.connect(audioContext.destination);
-    noise.start(now);
-    noise.stop(now + 0.026);
-
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    oscillator.type = 'triangle';
-    oscillator.frequency.setValueAtTime(920, now);
-    oscillator.frequency.exponentialRampToValueAtTime(390, now + 0.035);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.0064, now + 0.002);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
-    oscillator.start(now);
-    oscillator.stop(now + 0.05);
-    oscillator.addEventListener('ended', () => {
-      oscillator.disconnect();
-      gain.disconnect();
-    }, { once: true });
-    noise.addEventListener('ended', () => {
-      noise.disconnect();
-      filter.disconnect();
-      noiseGain.disconnect();
-    }, { once: true });
-  };
-  const syncSoundButton = () => {
-    soundButton?.setAttribute('aria-pressed', String(soundEnabled));
-    soundButton?.setAttribute('aria-label', soundEnabled ? 'Turn ambient and click sounds off' : 'Turn ambient and click sounds on');
-    if (soundButton) {
-      soundButton.innerHTML = soundEnabled
-        ? '<span aria-hidden="true">♫</span><span class="hidden sm:inline">Sound on</span>'
-        : '<span aria-hidden="true">♩</span><span class="hidden sm:inline">Sound off</span>';
-    }
-  };
-  syncSoundButton();
-  soundButton?.addEventListener('click', () => {
-    soundEnabled = !soundEnabled;
-    localStorage.setItem(soundStorageKey, soundEnabled ? 'on' : 'off');
-    syncSoundButton();
-    if (soundEnabled) {
-      void startAmbience().then(playClick);
-    } else {
-      stopAmbience();
-    }
-  });
-  document.addEventListener('pointerdown', () => {
-    if (soundEnabled && !audioContext) {
-      void startAmbience().then(playClick);
-      return;
-    }
-    playClick();
-  }, { capture: true });
-  window.addEventListener('pagehide', stopAmbience);
+  }, { passive: true, capture: true });
 </script>

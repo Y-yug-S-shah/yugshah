@@ -1,5 +1,3 @@
-export type PetName = 'dog' | 'cow' | 'duck';
-
 export type Quest = {
   id: string;
   title: string;
@@ -20,8 +18,6 @@ export type GameState = {
   xp: number;
   achievements: string[];
   questIds: string[];
-  pets: Record<PetName, number>;
-  petsFedGlobal: number;
   unlocks: string[];
   lastUpdated: number;
 };
@@ -38,7 +34,6 @@ export const questCatalog: Quest[] = [
 export const achievementCatalog: Achievement[] = [
   { id: 'first-steps', title: 'First steps', description: 'Earn 25 XP', requiredXp: 25 },
   { id: 'night-owl', title: 'Night owl', description: 'Reach 60 XP', requiredXp: 60 },
-  { id: 'animal-whisperer', title: 'Animal whisperer', description: 'Feed the pets 5 times', requiredXp: 60 },
   { id: 'security-ranger', title: 'Security ranger', description: 'Reach 120 XP', requiredXp: 120 }
 ];
 
@@ -47,8 +42,6 @@ export const defaultState: GameState = {
   xp: 0,
   achievements: [],
   questIds: [],
-  pets: { dog: 0, cow: 0, duck: 0 },
-  petsFedGlobal: 0,
   unlocks: [],
   lastUpdated: Date.now()
 };
@@ -66,10 +59,6 @@ const readFromStorage = (): GameState => {
       ...defaultState,
       ...parsed,
       version: 1,
-      pets: {
-        ...defaultState.pets,
-        ...(parsed.pets ?? {})
-      },
       questIds: Array.isArray(parsed.questIds) ? parsed.questIds : [],
       achievements: Array.isArray(parsed.achievements) ? parsed.achievements : [],
       unlocks: Array.isArray(parsed.unlocks) ? parsed.unlocks : []
@@ -88,11 +77,10 @@ const persist = (next: GameState) => {
   }
 };
 
-const computeAchievements = (xp: number, petsFedGlobal: number) => {
+const computeAchievements = (xp: number) => {
   const unlocked = new Set<string>();
   if (xp >= 25) unlocked.add('first-steps');
   if (xp >= 60) unlocked.add('night-owl');
-  if (petsFedGlobal >= 5) unlocked.add('animal-whisperer');
   if (xp >= 120) unlocked.add('security-ranger');
   return [...unlocked];
 };
@@ -109,16 +97,12 @@ export function subscribe(listener: (next: GameState) => void) {
 }
 
 export function updateGameState(mutator: (draft: GameState) => GameState) {
-  const next = mutator({ ...state, pets: { ...state.pets } });
+  const next = mutator({ ...state });
   const normalized: GameState = {
     ...defaultState,
     ...next,
     version: 1,
-    achievements: computeAchievements(next.xp, next.petsFedGlobal),
-    pets: {
-      ...defaultState.pets,
-      ...(next.pets ?? {})
-    },
+    achievements: computeAchievements(next.xp),
     questIds: Array.from(new Set(next.questIds ?? [])),
     unlocks: Array.from(new Set(next.unlocks ?? [])),
     lastUpdated: Date.now()
@@ -140,39 +124,16 @@ export function completeQuest(questId: string) {
     }
 
     const nextXP = draft.xp + target.reward;
-    const nextUnlocks = draft.unlocks.includes('field-logs')
+    const nextUnlocks = draft.unlocks.includes('blog-archives')
       ? draft.unlocks
       : nextXP >= 25
-        ? [...draft.unlocks, 'field-logs']
+        ? [...draft.unlocks, 'blog-archives']
         : draft.unlocks;
 
     return {
       ...draft,
       xp: nextXP,
       questIds: [...draft.questIds, questId],
-      unlocks: nextUnlocks
-    };
-  });
-}
-
-export function feedPet(pet: PetName) {
-  return updateGameState((draft) => {
-    const nextCount = (draft.pets[pet] ?? 0) + 1;
-    const gain = 15 + (nextCount > 2 ? 10 : 0);
-    const nextUnlocks = draft.unlocks.includes('pet-skin')
-      ? draft.unlocks
-      : draft.petsFedGlobal + 1 >= 5
-        ? [...draft.unlocks, 'pet-skin']
-        : draft.unlocks;
-
-    return {
-      ...draft,
-      xp: draft.xp + gain,
-      pets: {
-        ...draft.pets,
-        [pet]: nextCount
-      },
-      petsFedGlobal: draft.petsFedGlobal + 1,
       unlocks: nextUnlocks
     };
   });

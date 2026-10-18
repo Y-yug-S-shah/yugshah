@@ -47,5 +47,4 @@ INSERT OR IGNORE INTO leaderboard_meta (key, value) VALUES
 
 INSERT OR IGNORE INTO site_stats (key, value) VALUES
   ('total_visits', '0'),
-  ('pets_fed', '0'),
   ('quests_completed', '0');

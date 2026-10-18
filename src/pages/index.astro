@@ -8,7 +8,7 @@ import { SITE_URL } from '../config/site';
 
 const featuredProjects = projects.filter((project) => project.featured);
 const featuredExperience = resume.work;
-const fieldNotes = (await getCollection('blog'))
+const latestBlogs = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
   .slice(0, 2);
@@ -253,7 +253,7 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="home-field-notes py-12 sm:py-16" aria-labelledby="blog-section-title">
+  <section class="home-blogs py-12 sm:py-16" aria-labelledby="blog-section-title">
     <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-medium text-[var(--accent-strong)]">
@@ -268,14 +268,14 @@ const skillAreas = [
       </div>
       <a href="/blog" class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-4 py-2 text-xs font-mono font-semibold text-[var(--accent-strong)] transition-all hover:bg-[var(--accent)] hover:text-white shrink-0">Explore all blog posts <span aria-hidden="true">→</span></a>
     </div>
-    <div class="field-note-grid">
-      {fieldNotes.map((post, index) => (
-        <article class={`field-note-card field-note-card-${index + 1}`}>
-          <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="field-note-cover">
+    <div class="blog-grid">
+      {latestBlogs.map((post, index) => (
+        <article class={`blog-card blog-card-${index + 1}`}>
+          <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="blog-cover">
             <img src={post.data.cover || '/placeholder-project.svg'} alt={post.data.title} loading="lazy" />
             <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
           </a>
-          <div class="field-note-copy">
+          <div class="blog-copy">
             <div class="mb-2 flex flex-wrap gap-1.5">
               {post.data.tags?.slice(0, 2).map((tag: string) => (
                 <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-0.5 text-[10px] font-mono uppercase text-[var(--muted)]">{tag}</span>
@@ -283,7 +283,7 @@ const skillAreas = [
             </div>
             <h3><a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>{post.data.title}</a></h3>
             <p>{post.data.description}</p>
-            <a class="field-note-read" href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>Read article <span aria-hidden="true">→</span></a>
+            <a class="blog-read" href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>Read article <span aria-hidden="true">→</span></a>
           </div>
         </article>
       ))}

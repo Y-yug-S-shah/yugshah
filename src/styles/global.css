@@ -538,6 +538,7 @@ main article:nth-of-type(even) {
 
 .hero-note-link,
 .home-section-heading > a,
+.blog-read,
 .field-note-read {
   display: inline-flex;
   align-items: center;
@@ -551,6 +552,7 @@ main article:nth-of-type(even) {
 
 .hero-note-link:hover,
 .home-section-heading > a:hover,
+.blog-read:hover,
 .field-note-read:hover {
   color: var(--accent);
   gap: 0.6rem;
@@ -1283,6 +1285,7 @@ main article:nth-of-type(even) {
    SECURITY BLOG — Featured Articles on Home (Separated Bento Box)
    ═══════════════════════════════════════════════════════ */
 
+.home-blogs,
 .home-field-notes {
   position: relative;
   border: 1px solid color-mix(in srgb, var(--accent-teal) 22%, var(--border));
@@ -1297,8 +1300,10 @@ main article:nth-of-type(even) {
   margin-bottom: clamp(3.5rem, 7vw, 5rem);
 }
 
+.home-blogs::before,
 .home-field-notes::before { display: none; }
 
+.blog-grid,
 .field-note-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1306,11 +1311,13 @@ main article:nth-of-type(even) {
 }
 
 @media (max-width: 768px) {
+  .blog-grid,
   .field-note-grid {
     grid-template-columns: 1fr;
   }
 }
 
+.blog-card,
 .field-note-card {
   display: grid;
   min-width: 0;
@@ -1326,17 +1333,20 @@ main article:nth-of-type(even) {
 }
 
 @media (max-width: 640px) {
+  .blog-card,
   .field-note-card {
     grid-template-columns: 1fr;
   }
 }
 
+.blog-card:hover,
 .field-note-card:hover {
   border-color: color-mix(in srgb, var(--accent-teal) 45%, var(--border));
   box-shadow: 0 16px 36px -12px var(--shadow), 0 0 20px -8px var(--accent-glow);
   transform: translateY(-2px);
 }
 
+.blog-cover,
 .field-note-cover {
   position: relative;
   display: block;
@@ -1345,6 +1355,7 @@ main article:nth-of-type(even) {
   background: var(--bg-soft);
 }
 
+.blog-cover::after,
 .field-note-cover::after {
   position: absolute;
   inset: 0;
@@ -1352,6 +1363,7 @@ main article:nth-of-type(even) {
   content: '';
 }
 
+.blog-cover img,
 .field-note-cover img {
   width: 100%;
   height: 100%;
@@ -1359,8 +1371,10 @@ main article:nth-of-type(even) {
   transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.blog-card:hover .blog-cover img,
 .field-note-card:hover .field-note-cover img { transform: scale(1.04); }
 
+.blog-cover > span,
 .field-note-cover > span {
   position: absolute;
   z-index: 1;
@@ -1372,6 +1386,7 @@ main article:nth-of-type(even) {
   font-weight: 600;
 }
 
+.blog-copy,
 .field-note-copy {
   display: flex;
   min-width: 0;
@@ -1380,9 +1395,13 @@ main article:nth-of-type(even) {
   padding: 1.25rem 1.4rem;
 }
 
+.blog-copy h3,
 .field-note-copy h3 { margin: 0; font-size: 1.02rem; line-height: 1.35; }
+.blog-copy h3 a,
 .field-note-copy h3 a { color: var(--text); text-decoration: none; }
+.blog-copy p,
 .field-note-copy p { margin: 0.6rem 0 1rem; color: var(--text-secondary); font-size: 0.74rem; line-height: 1.7; }
+.blog-read,
 .field-note-read { margin-top: auto; font-size: 0.7rem; }
 
 /* ═══════════════════════════════════════════════════════
@@ -2159,16 +2178,19 @@ html.cli-active .ambient-scene { display: none; }
   background: linear-gradient(112deg, rgba(14, 165, 233, 0.06), #ffffff 65%);
 }
 
+:root[data-theme='light'] .blog-card,
 :root[data-theme='light'] .field-note-card {
   background: #ffffff;
   border-color: rgba(15, 23, 42, 0.12);
   box-shadow: 0 4px 16px -8px rgba(15, 23, 42, 0.06);
 }
 
+:root[data-theme='light'] .blog-copy h3 a,
 :root[data-theme='light'] .field-note-copy h3 a {
   color: #090d16;
 }
 
+:root[data-theme='light'] .home-blogs,
 :root[data-theme='light'] .home-field-notes {
   background: #ffffff;
   border-color: rgba(13, 148, 136, 0.28);
@@ -2288,6 +2310,7 @@ html.cli-active .ambient-scene { display: none; }
 .btn-cinematic-primary span:last-child,
 .btn-cinematic-secondary span:last-child,
 .hero-note-link span,
+.blog-read span,
 .field-note-read span,
 .game-preview-link span {
   display: inline-block;
@@ -2298,6 +2321,7 @@ html.cli-active .ambient-scene { display: none; }
 .btn-cinematic-primary:hover span:last-child,
 .btn-cinematic-secondary:hover span:last-child,
 .hero-note-link:hover span,
+.blog-read:hover span,
 .field-note-read:hover span {
   transform: translate3d(3px, 0, 0);
 }
@@ -2319,6 +2343,7 @@ html.cli-active .ambient-scene { display: none; }
 .about-stat-tile,
 .skill-card,
 .experience-card,
+.blog-card,
 .field-note-card {
   will-change: transform;
   transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -2480,10 +2505,15 @@ html.cli-active .ambient-scene { display: none; }
   .viewport-frame-left,
   .viewport-frame-right { width: 4px; }
   .viewport-frame-border { inset: 4px; border-radius: var(--radius-md); }
+  .blog-card,
   .field-note-card { grid-template-columns: 1fr; }
+  .blog-cover,
   .field-note-cover { min-height: 0; height: 11.5rem; }
+  .blog-copy,
   .field-note-copy { padding: 1.1rem 1.25rem; }
+  .blog-copy h3,
   .field-note-copy h3 { font-size: 1.05rem; }
+  .blog-copy p,
   .field-note-copy p { font-size: 0.78rem; line-height: 1.6; }
   .home-section-heading { align-items: start; }
 }
