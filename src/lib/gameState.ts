@@ -29,7 +29,7 @@ export type GameState = {
 export const STORAGE_KEY = 'portfolio-game-state-v1';
 
 export const questCatalog: Quest[] = [
-  { id: 'read-post', title: 'Read one field note', href: '/blog', reward: 25, done: false },
+  { id: 'read-post', title: 'Read a blog post', href: '/blog', reward: 25, done: false },
   { id: 'view-resume', title: 'Review the resume', href: '/resume', reward: 35, done: false },
   { id: 'send-message', title: 'Send a message', href: '/contact', reward: 40, done: false },
   { id: 'explore-projects', title: 'Explore the project map', href: '/projects', reward: 30, done: false }

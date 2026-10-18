@@ -1,4 +1,17 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type SyntheticEvent } from 'react';
+import {
+  initGameAudio,
+  isAudioMuted,
+  toggleAudioMute,
+  playPickupSound,
+  playHitSound,
+  playDecoySound,
+  playInjectionAlertSound,
+  playQuarantineSound,
+  playHazardSound,
+  playWinSound,
+  playLoseSound
+} from '../lib/gameAudio';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 type Difficulty = 'easy' | 'standard' | 'hard';
@@ -584,6 +597,11 @@ export default function AgentMission() {
   const [leaderboardDismissed, setLeaderboardDismissed] = useState(false);
   const [submittingScore, setSubmittingScore] = useState(false);
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const [soundMuted, setSoundMuted] = useState(false);
+
+  useEffect(() => {
+    setSoundMuted(isAudioMuted());
+  }, []);
 
   const openInjection = (reason: string) => {
     const mission = snapshotRef.current;
@@ -596,6 +614,7 @@ export default function AgentMission() {
     mission.status = 'injection';
     mission.message = reason;
     heldDirections.current.clear();
+    playInjectionAlertSound();
     setInjectionCard(INJECTION_CARDS[cardIndex] ?? INJECTION_CARDS[0]);
     setInjectionPosition(INJECTION_POSITIONS[Math.floor(Math.random() * INJECTION_POSITIONS.length)] ?? 'top-right');
     snapshotRef.current = { ...mission };
@@ -654,6 +673,7 @@ export default function AgentMission() {
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
+      initGameAudio();
       const target = event.target;
       if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
       const mission = snapshotRef.current;
@@ -713,6 +733,7 @@ export default function AgentMission() {
       mission.shields -= 1;
       mission.score = Math.max(0, mission.score - penalty);
       immunityRef.current = elapsedRef.current + 1.5;
+      playHitSound();
       const wrap = canvas.parentElement;
       if (wrap) {
         wrap.classList.add('mission-shake');
@@ -726,6 +747,7 @@ export default function AgentMission() {
       if (mission.shields <= 0) {
         mission.shields = 0;
         mission.status = 'lost';
+        playLoseSound();
         heldDirections.current.clear();
       }
       return true;
@@ -761,11 +783,13 @@ export default function AgentMission() {
           canvas.style.filter = pickup.decoy ? 'brightness(1.15) hue-rotate(-15deg)' : 'brightness(1.35)';
           window.setTimeout(() => { canvas.style.filter = ''; }, 130);
           if (pickup.decoy) {
+            playDecoySound();
             mission.score = Math.max(0, mission.score - 40);
             mission.message = `${pickup.label} was untrusted context (-40).`;
             openInjectionRef.current('An indirect prompt injection hid inside retrieved content.');
             return;
           }
+          playPickupSound();
           mission.policies += 1;
           const policyScore = Math.round(150 * MODES[mission.difficulty].multiplier);
           mission.score += policyScore;
@@ -828,6 +852,7 @@ export default function AgentMission() {
           const timeBonus = Math.max(0, Math.floor((120 - elapsedRef.current) * 8 * MODES[mission.difficulty].multiplier));
           mission.score += 500 + timeBonus;
           mission.message = `Milo reached the gateway! Gateway: +500, Speed bonus: +${timeBonus}.`;
+          playWinSound();
           directions.clear();
           changed = true;
         }
@@ -868,6 +893,7 @@ export default function AgentMission() {
   }, []);
 
   const restartMission = (difficulty: Difficulty = snapshotRef.current.difficulty) => {
+    initGameAudio();
     const nextSnapshot: MissionSnapshot = {
       status: 'running',
       difficulty,
@@ -895,7 +921,12 @@ export default function AgentMission() {
 
   const onDirectionPointerDown = (direction: Direction) => (event: ReactPointerEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
+    initGameAudio();
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Ignore if pointer capture fails
+    }
     if (snapshotRef.current.status === 'running') heldDirections.current.add(direction);
   };
   const onDirectionPointerUp = (direction: Direction) => () => heldDirections.current.delete(direction);
@@ -906,15 +937,20 @@ export default function AgentMission() {
     injectionsResolvedRef.current += 1;
     nextInjectionAtRef.current = elapsedRef.current + nextInjectionDelay(mission.difficulty, injectionsResolvedRef.current);
     if (quarantine) {
+      playQuarantineSound();
       const bonus = Math.round(150 * MODES[mission.difficulty].multiplier);
       mission.score += bonus;
       mission.message = `Untrusted instruction quarantined (+${bonus}). Milo kept the original policy.`;
       mission.status = 'running';
     } else {
+      playHazardSound();
       mission.score = Math.max(0, mission.score - 75);
       mission.shields -= 1;
       mission.message = 'The unsafe action was contained inside the simulation (-75, shield lost).';
       mission.status = mission.shields > 0 ? 'running' : 'lost';
+      if (mission.shields <= 0) {
+        playLoseSound();
+      }
     }
     heldDirections.current.clear();
     setSnapshot({ ...mission });
@@ -996,9 +1032,24 @@ export default function AgentMission() {
         <div className="mission-hud-card"><span>POLICY KEYS</span><strong>{snapshot.policies}<small> / 3</small></strong></div>
         <div className="mission-hud-card mission-shields"><span>SHIELDS</span><strong aria-label={`${snapshot.shields} shields`}>{snapshot.shields ? '◆'.repeat(snapshot.shields) : '—'}</strong></div>
         <div className="mission-hud-card mission-score"><span>SCORE</span><strong>{snapshot.score.toLocaleString()}</strong></div>
-        <button className="mission-pause" type="button" disabled={terminalState || snapshot.status === 'injection'} onClick={togglePause}>
-          {paused ? 'Resume' : 'Pause'}
-        </button>
+        <div className="mission-hud-actions">
+          <button
+            className="mission-sound-toggle"
+            type="button"
+            onClick={() => {
+              const muted = toggleAudioMute();
+              setSoundMuted(muted);
+            }}
+            aria-label={soundMuted ? 'Turn game sound on' : 'Turn game sound off'}
+            title={soundMuted ? 'Game sound: OFF' : 'Game sound: ON'}
+          >
+            <span aria-hidden="true">{soundMuted ? '🔇' : '🔊'}</span>
+            <span className="sr-only">{soundMuted ? 'Sound off' : 'Sound on'}</span>
+          </button>
+          <button className="mission-pause" type="button" disabled={terminalState || snapshot.status === 'injection'} onClick={togglePause}>
+            {paused ? 'Resume' : 'Pause'}
+          </button>
+        </div>
       </div>
 
       <div className={`mission-canvas-wrap${terminalState ? ' is-terminal' : ''}`}>
@@ -1084,11 +1135,11 @@ export default function AgentMission() {
       </div>
 
       <div className="mission-touch-controls" aria-label="Touch controls">
-        <button aria-label="Move Milo up" className="touch-up" onPointerCancel={onDirectionPointerUp('up')} onPointerDown={onDirectionPointerDown('up')} onPointerUp={onDirectionPointerUp('up')} type="button">↑</button>
-        <button aria-label="Move Milo left" className="touch-left" onPointerCancel={onDirectionPointerUp('left')} onPointerDown={onDirectionPointerDown('left')} onPointerUp={onDirectionPointerUp('left')} type="button">←</button>
-        <button aria-label="Move Milo down" className="touch-down" onPointerCancel={onDirectionPointerUp('down')} onPointerDown={onDirectionPointerDown('down')} onPointerUp={onDirectionPointerUp('down')} type="button">↓</button>
-        <button aria-label="Move Milo right" className="touch-right" onPointerCancel={onDirectionPointerUp('right')} onPointerDown={onDirectionPointerDown('right')} onPointerUp={onDirectionPointerUp('right')} type="button">→</button>
-        <span>HOLD TO MOVE</span>
+        <button aria-label="Move Milo up" className="touch-btn touch-up" onPointerCancel={onDirectionPointerUp('up')} onPointerDown={onDirectionPointerDown('up')} onPointerUp={onDirectionPointerUp('up')} type="button">▲</button>
+        <button aria-label="Move Milo left" className="touch-btn touch-left" onPointerCancel={onDirectionPointerUp('left')} onPointerDown={onDirectionPointerDown('left')} onPointerUp={onDirectionPointerUp('left')} type="button">◀</button>
+        <button aria-label="Move Milo down" className="touch-btn touch-down" onPointerCancel={onDirectionPointerUp('down')} onPointerDown={onDirectionPointerDown('down')} onPointerUp={onDirectionPointerUp('down')} type="button">▼</button>
+        <button aria-label="Move Milo right" className="touch-btn touch-right" onPointerCancel={onDirectionPointerUp('right')} onPointerDown={onDirectionPointerDown('right')} onPointerUp={onDirectionPointerUp('right')} type="button">▶</button>
+        <span className="touch-hint">TOUCH & HOLD TO MOVE</span>
       </div>
       <p className="mission-footnote">The public board stores only the nickname you choose and your score. No email, account, or profile is requested.</p>
 

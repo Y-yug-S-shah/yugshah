@@ -21,7 +21,12 @@ const nav = [
 
     <nav aria-label="Primary" class="hidden items-center gap-6 lg:flex">
       {nav.map((item) => (
-        <a href={item.href} class="relative text-xs font-mono tracking-wider text-[var(--muted)] transition-colors hover:text-[var(--accent-strong)]">{item.label}</a>
+        <a href={item.href} class={`relative text-xs font-mono tracking-wider transition-colors ${item.href === '/blog' ? 'text-[var(--accent-strong)] font-semibold inline-flex items-center gap-1.5' : 'text-[var(--muted)] hover:text-[var(--accent-strong)]'}`}>
+          <span>{item.label}</span>
+          {item.href === '/blog' && (
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
+          )}
+        </a>
       ))}
     </nav>
 
@@ -46,7 +51,12 @@ const nav = [
     </div>
     <nav aria-label="Mobile primary" class="mx-auto flex max-w-6xl items-center gap-5 overflow-x-auto pb-2 text-xs lg:hidden">
       {nav.map((item) => (
-        <a href={item.href} class="shrink-0 text-[var(--muted)] transition-colors hover:text-[var(--text)]">{item.label}</a>
+        <a href={item.href} class={`shrink-0 transition-colors inline-flex items-center gap-1.5 ${item.href === '/blog' ? 'text-[var(--accent-strong)] font-semibold' : 'text-[var(--muted)] hover:text-[var(--text)]'}`}>
+          <span>{item.label}</span>
+          {item.href === '/blog' && (
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
+          )}
+        </a>
       ))}
     </nav>
   </div>

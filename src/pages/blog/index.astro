@@ -3,74 +3,322 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE_URL } from '../../config/site';
 
-const posts = (await getCollection('blog'))
+const allPosts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+const featuredPost = allPosts[0];
+const secondaryPosts = allPosts.slice(1);
+
+// Unique tags with counts
+const tagCounts = new Map<string, number>();
+allPosts.forEach((post) => {
+  post.data.tags?.forEach((tag: string) => {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  });
+});
+const popularTags = Array.from(tagCounts.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 6);
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Blog',
-  name: 'Yug Shah Blog',
+  name: 'Yug Shah Security Blog',
   url: `${SITE_URL}/blog`,
-  description: 'Notes, security observations, and engineering thinking from Yug Shah.',
-  blogPost: posts.slice(0, 5).map((post) => ({
+  description: 'In-depth security research, prompt injection defenses, and defensive AI systems engineering by Yug Shah.',
+  blogPost: allPosts.map((post) => ({
     '@type': 'BlogPosting',
     headline: post.data.title,
-    url: `${SITE_URL}/blog/${post.id.replace(/\.mdx?$/, '')}`
+    url: `${SITE_URL}/blog/${post.id.replace(/\.mdx?$/, '')}`,
+    datePublished: post.data.pubDate,
+    author: {
+      '@type': 'Person',
+      name: 'Yug Shah'
+    }
   }))
 };
 ---
 
-<BaseLayout title="Blog | Yug Shah" description="Notes, security observations, and engineering thinking from Yug Shah." image="/og/home.svg" jsonLd={jsonLd} canonicalPath="/blog">
-  <section class="space-y-12 py-12 sm:py-16">
-    <div class="space-y-4">
-      <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
-        <span class="relative flex h-2 w-2" aria-hidden="true">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span class="tracking-wider">RESEARCH NOTEBOOK & ADVISORIES</span>
-      </div>
-      <h1 class="hero-main-title text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">Notes from the field</h1>
-      <p class="max-w-2xl text-base text-[var(--text-secondary)] leading-relaxed">
-        Deep investigations into indirect prompt injection, AI agent runtime sandboxing, and practical defensive security engineering.
-      </p>
-    </div>
+<BaseLayout
+  title="Security Blog & Research | Yug Shah"
+  description="In-depth technical writing on indirect prompt injection, AI agent runtime sandboxing, adversarial testing, and practical defensive engineering."
+  image="/og/home.svg"
+  jsonLd={jsonLd}
+  canonicalPath="/blog"
+>
+  <div class="space-y-12 sm:space-y-16 py-10 sm:py-14">
+    <!-- Publication Header -->
+    <header class="space-y-5 border-b border-[var(--border)] pb-10 sm:pb-12">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="tracking-wider">SECURITY RESEARCH & WRITING</span>
+        </div>
 
-    <div class="grid gap-7 md:grid-cols-2">
-      {posts.map((post) => (
-        <article class="group relative overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)] flex flex-col justify-between">
-          <div>
-            <div class="relative h-48 w-full overflow-hidden rounded-2xl bg-[var(--bg-soft)] mb-5">
-              <img src={post.data.cover || '/placeholder-project.svg'} alt={post.data.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)] via-transparent to-transparent opacity-65" />
-            </div>
-            <div class="mb-3 flex flex-wrap gap-2">
-              {post.data.tags.map((tag) => (
-                <a href={`/blog/tags/${tag}`} class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.08em] text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--text)] transition-colors">{tag}</a>
-              ))}
-            </div>
-            <h2 class="text-xl font-bold text-[var(--text)] group-hover:text-[var(--accent-strong)] transition-colors leading-snug">
-              <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>{post.data.title}</a>
-            </h2>
-            <p class="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">{post.data.description}</p>
-          </div>
-          <div class="mt-6 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
-            <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-            <div class="flex items-center gap-4">
-              <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="font-semibold text-[var(--accent-strong)] hover:underline inline-flex items-center gap-1">
-                <span>Read note</span>
-                <span aria-hidden="true">→</span>
-              </a>
-              {post.data.mediumUrl && (
-                <a href={post.data.mediumUrl} target="_blank" rel="noopener noreferrer" class="hover:text-[var(--text)] transition-colors">
-                  Medium ↗
-                </a>
-              )}
+        <div class="flex items-center gap-3 text-xs font-mono text-[var(--muted)]">
+          <a
+            href="/rss.xml"
+            class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+            title="Subscribe via RSS Feed"
+          >
+            <span aria-hidden="true">📡</span>
+            <span>RSS Feed</span>
+          </a>
+          <a
+            href="https://medium.com/@DefenderDiarybyYug"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+          >
+            <span>Medium ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <h1 class="hero-main-title text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+          Security Blog
+        </h1>
+        <p class="max-w-3xl text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">
+          Technical deep-dives into indirect prompt injection, agentic identity security, AI runtime sandboxing, and adversarial defense architecture.
+        </p>
+      </div>
+
+      <!-- Tag Filters Navigation Bar -->
+      <nav aria-label="Filter blog posts by tag" class="flex flex-wrap items-center gap-2 pt-2">
+        <span class="text-xs font-mono text-[var(--muted)] mr-1">// TOPICS:</span>
+        <a
+          href="/blog"
+          class="rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-medium text-[var(--accent-strong)] shadow-sm"
+        >
+          All ({allPosts.length})
+        </a>
+        {popularTags.map(([tag, count]) => (
+          <a
+            href={`/blog/tags/${tag}`}
+            class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1 text-xs font-mono uppercase text-[var(--muted)] transition-all hover:border-[var(--accent)] hover:text-[var(--text)]"
+          >
+            {tag} <span class="opacity-60 text-[10px]">({count})</span>
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    <!-- Featured Post Spotlight -->
+    {featuredPost && (
+      <section aria-labelledby="featured-post-title" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)] font-semibold">
+            // FEATURED PUBLICATION
+          </span>
+          <span class="text-xs font-mono text-[var(--muted)]">
+            Latest Research
+          </span>
+        </div>
+
+        <article class="group relative overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--panel)] transition-all duration-300 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
+          <div class="grid lg:grid-cols-[1.1fr_0.9fr] items-stretch">
+            <a
+              href={`/blog/${featuredPost.id.replace(/\.mdx?$/, '')}`}
+              class="relative aspect-[16/10] lg:aspect-auto overflow-hidden bg-[var(--bg-soft)] block"
+              aria-label={`Read article: ${featuredPost.data.title}`}
+            >
+              <img
+                src={featuredPost.data.cover || '/placeholder-project.svg'}
+                alt={featuredPost.data.title}
+                class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="eager"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)]/90 via-transparent to-transparent lg:hidden" />
+            </a>
+
+            <div class="flex flex-col justify-between p-6 sm:p-8 lg:p-10 space-y-6">
+              <div class="space-y-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  {featuredPost.data.tags?.map((tag: string) => (
+                    <a
+                      href={`/blog/tags/${tag}`}
+                      class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--text)] transition-colors"
+                    >
+                      {tag}
+                    </a>
+                  ))}
+                  <span class="text-xs font-mono text-[var(--muted)]">·</span>
+                  <time datetime={featuredPost.data.pubDate.toISOString()} class="text-xs font-mono text-[var(--muted)]">
+                    {new Date(featuredPost.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </time>
+                </div>
+
+                <h2 id="featured-post-title" class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text)] group-hover:text-[var(--accent-strong)] transition-colors leading-snug">
+                  <a href={`/blog/${featuredPost.id.replace(/\.mdx?$/, '')}`}>
+                    {featuredPost.data.title}
+                  </a>
+                </h2>
+
+                <p class="text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+                  {featuredPost.data.description}
+                </p>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[var(--border)]">
+                <div class="flex items-center gap-3">
+                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-indigo-500 text-xs font-bold text-slate-950 font-mono shadow-sm">
+                    Y
+                  </span>
+                  <div>
+                    <p class="text-xs font-medium text-[var(--text)]">Yug Shah</p>
+                    <p class="text-[10px] font-mono text-[var(--muted)]">Security Engineer & Researcher</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <a
+                    href={`/blog/${featuredPost.id.replace(/\.mdx?$/, '')}`}
+                    class="btn-cinematic-primary text-xs"
+                  >
+                    <span>Read full article</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
+                  {featuredPost.data.mediumUrl && (
+                    <a
+                      href={featuredPost.data.mediumUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-xs font-mono text-[var(--muted)] hover:text-[var(--text)] transition-colors p-2"
+                      title="Read on Medium"
+                    >
+                      Medium ↗
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </article>
-      ))}
-    </div>
-  </section>
+      </section>
+    )}
+
+    <!-- Recent Articles Grid -->
+    {secondaryPosts.length > 0 && (
+      <section aria-labelledby="articles-grid-title" class="space-y-6 pt-4">
+        <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+          <h2 id="articles-grid-title" class="text-sm font-mono uppercase tracking-widest text-[var(--accent-strong)] font-semibold">
+            // ALL ARTICLES & INVESTIGATIONS
+          </h2>
+          <span class="text-xs font-mono text-[var(--muted)]">
+            {secondaryPosts.length} post{secondaryPosts.length === 1 ? '' : 's'}
+          </span>
+        </div>
+
+        <div class="grid gap-7 md:grid-cols-2">
+          {secondaryPosts.map((post) => (
+            <article class="group relative flex flex-col justify-between overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
+              <div class="space-y-4">
+                <a
+                  href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}
+                  class="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-[var(--bg-soft)] block"
+                  aria-label={`Read article: ${post.data.title}`}
+                >
+                  <img
+                    src={post.data.cover || '/placeholder-project.svg'}
+                    alt={post.data.title}
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)]/70 via-transparent to-transparent" />
+                </a>
+
+                <div class="flex flex-wrap items-center gap-2">
+                  {post.data.tags?.map((tag: string) => (
+                    <a
+                      href={`/blog/tags/${tag}`}
+                      class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.08em] text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--text)] transition-colors"
+                    >
+                      {tag}
+                    </a>
+                  ))}
+                </div>
+
+                <h3 class="text-xl font-bold text-[var(--text)] group-hover:text-[var(--accent-strong)] transition-colors leading-snug">
+                  <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>
+                    {post.data.title}
+                  </a>
+                </h3>
+
+                <p class="text-sm leading-relaxed text-[var(--text-secondary)]">
+                  {post.data.description}
+                </p>
+              </div>
+
+              <div class="mt-6 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </time>
+
+                <div class="flex items-center gap-3">
+                  <a
+                    href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}
+                    class="font-semibold text-[var(--accent-strong)] hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>Read article</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
+                  {post.data.mediumUrl && (
+                    <a
+                      href={post.data.mediumUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="hover:text-[var(--text)] transition-colors"
+                      title="Read on Medium"
+                    >
+                      Medium ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Research Subscription & Feed Callout -->
+    <aside class="rounded-[22px] border border-[var(--border)] bg-gradient-to-r from-[var(--panel)] via-[var(--panel-solid)] to-[var(--panel)] p-7 sm:p-9 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+        <div class="space-y-2 max-w-xl">
+          <span class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)] font-semibold">
+            // CONTINUOUS DISCLOSURE & FEED
+          </span>
+          <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]">
+            Stay ahead of emerging AI threats and defenses.
+          </h3>
+          <p class="text-sm text-[var(--text-secondary)] leading-relaxed">
+            All investigations, threat models, and proof-of-concept defenses are published here first and syndicated to Medium.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <a
+            href="/rss.xml"
+            class="btn-cinematic-primary text-xs"
+          >
+            <span>Subscribe via RSS</span>
+            <span aria-hidden="true">📡</span>
+          </a>
+          <a
+            href="https://medium.com/@DefenderDiarybyYug"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-cinematic-secondary text-xs"
+          >
+            Follow on Medium ↗
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
 </BaseLayout>

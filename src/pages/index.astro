@@ -82,7 +82,10 @@ const skillAreas = [
           <span>View resume</span>
           <span aria-hidden="true">→</span>
         </a>
-        <a href="/blog" class="btn-cinematic-secondary">Read blog</a>
+        <a href="/blog" class="btn-cinematic-secondary group inline-flex items-center gap-2">
+          <span>Read blog</span>
+          <span class="inline-flex items-center rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-mono font-bold text-emerald-400">NEW</span>
+        </a>
         <a href="/game" class="btn-cinematic-agent" title="Play Milo’s security simulation">
           <span aria-hidden="true">🎮</span>
           <span>Milo’s simulation</span>
@@ -104,11 +107,11 @@ const skillAreas = [
           <span class="hero-console-dot hero-console-dot-amber"></span>
           <span class="hero-console-dot hero-console-dot-green"></span>
         </div>
-        <span class="hero-note-reference">FIELD NOTE / 01</span>
+        <span class="hero-note-reference">FEATURED ARTICLE // 01</span>
       </div>
 
       <h2>When an AI reads a webpage, whose instructions does it trust?</h2>
-      <p>My field notes unpack indirect prompt injection and practical ways to limit what an agent can see and do.</p>
+      <p>My blog covers indirect prompt injection and practical defenses to constrain what an AI agent can see and do.</p>
 
       <div class="hero-telemetry-box" aria-hidden="true">
         <div><span class="hero-telemetry-tag">[RUNTIME AUDIT]</span> EVALUATING UNTRUSTED WEBPAGE</div>
@@ -116,7 +119,7 @@ const skillAreas = [
         <div><span class="hero-telemetry-ok">✓ CONTAIN</span> RUNTIME SANDBOX BOUNDARY APPLIED</div>
       </div>
 
-      <a class="hero-note-link" href="/blog/ai-security-prompt-injection">Read the investigation <span aria-hidden="true">↗</span></a>
+      <a class="hero-note-link" href="/blog/ai-security-prompt-injection">Read article <span aria-hidden="true">↗</span></a>
       <div class="hero-note-rule" aria-hidden="true"></div>
       <div class="hero-note-meta">
         <span>Prompt injection</span>
@@ -250,25 +253,37 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="home-field-notes py-12 sm:py-16" aria-labelledby="field-notes-title">
-    <div class="mb-8 flex items-end justify-between">
+  <section class="home-field-notes py-12 sm:py-16" aria-labelledby="blog-section-title">
+    <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <p class="section-kicker">Research Notebook</p>
-        <h2 id="field-notes-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Field notes on AI security</h2>
+        <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-medium text-[var(--accent-strong)]">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>SECURITY RESEARCH & WRITING</span>
+        </div>
+        <h2 id="blog-section-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Latest from the blog</h2>
+        <p class="mt-1 text-sm text-[var(--text-secondary)]">Technical investigations into adversarial AI, agent sandboxing, and defense systems.</p>
       </div>
-      <a href="/blog" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">All articles <span aria-hidden="true">↗</span></a>
+      <a href="/blog" class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-4 py-2 text-xs font-mono font-semibold text-[var(--accent-strong)] transition-all hover:bg-[var(--accent)] hover:text-white shrink-0">Explore all blog posts <span aria-hidden="true">→</span></a>
     </div>
     <div class="field-note-grid">
       {fieldNotes.map((post, index) => (
         <article class={`field-note-card field-note-card-${index + 1}`}>
           <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="field-note-cover">
-            <img src={post.data.cover || '/placeholder-project.svg'} alt="" loading="lazy" />
+            <img src={post.data.cover || '/placeholder-project.svg'} alt={post.data.title} loading="lazy" />
             <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
           </a>
           <div class="field-note-copy">
+            <div class="mb-2 flex flex-wrap gap-1.5">
+              {post.data.tags?.slice(0, 2).map((tag: string) => (
+                <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-0.5 text-[10px] font-mono uppercase text-[var(--muted)]">{tag}</span>
+              ))}
+            </div>
             <h3><a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>{post.data.title}</a></h3>
             <p>{post.data.description}</p>
-            <a class="field-note-read" href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>Read the field note <span aria-hidden="true">→</span></a>
+            <a class="field-note-read" href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>Read article <span aria-hidden="true">→</span></a>
           </div>
         </article>
       ))}

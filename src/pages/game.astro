@@ -19,9 +19,18 @@ const jsonLd = {
   jsonLd={jsonLd}
   canonicalPath="/game"
 >
-  <section class="game-page-intro">
-    <h1>Protect Milo from a poisoned source.</h1>
-    <p>Collect policy keys, quarantine hidden instructions, dodge exfil beams and context overflow zones, and avoid roaming payloads. Higher difficulties add sweeping beams, expanding danger zones, and ambush injections that strike without warning. Finishing a run posts your nickname and score to the public board.</p>
+  <section class="space-y-4 py-8 sm:py-12">
+    <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
+      <span class="relative flex h-2 w-2" aria-hidden="true">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      <span class="tracking-wider">INTERACTIVE SIMULATION // AI RUNTIME DEFENSE</span>
+    </div>
+    <h1 class="hero-main-title text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">Protect Milo from a poisoned source.</h1>
+    <p class="max-w-3xl text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">Collect policy keys, quarantine hidden instructions, dodge exfil beams and context overflow zones, and avoid roaming payloads. Higher difficulties add sweeping beams, expanding danger zones, and ambush injections that strike without warning.</p>
   </section>
-  <AgentMission client:load />
+  <div class="pb-12">
+    <AgentMission client:load />
+  </div>
 </BaseLayout>
