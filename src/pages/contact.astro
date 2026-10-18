@@ -23,7 +23,7 @@ const jsonLd = {
 ---
 
 <BaseLayout title="Contact | Yug Shah" description="Contact Yug Shah about projects, opportunities, or technical discussions." image="/og/home.svg" jsonLd={jsonLd} canonicalPath="/contact">
-  <section class="grid gap-10 py-8 lg:grid-cols-[0.9fr_1.1fr] items-start">
+  <section class="grid gap-12 py-12 sm:py-16 lg:grid-cols-[0.9fr_1.1fr] items-start">
     <div class="space-y-6">
       <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
         <span class="relative flex h-2 w-2" aria-hidden="true">
@@ -40,22 +40,22 @@ const jsonLd = {
         </p>
       </div>
 
-      <div class="rounded-[28px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 backdrop-blur-md space-y-4 shadow-xl">
+      <div class="rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 backdrop-blur-md space-y-4 shadow-xl">
         <h2 class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)]">// VERIFIED CHANNELS</h2>
         <div class="space-y-3 text-sm font-mono">
-          <a href={`mailto:${profile.email}`} class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+          <a href={`mailto:${profile.email}`} class="flex items-center justify-between p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
             <span class="text-[var(--text-secondary)]">Email</span>
             <span class="text-[var(--accent-strong)]">{profile.email} ↗</span>
           </a>
-          <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+          <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
             <span class="text-[var(--text-secondary)]">LinkedIn</span>
             <span class="text-[var(--text)]">yugshah369 ↗</span>
           </a>
-          <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+          <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
             <span class="text-[var(--text-secondary)]">GitHub</span>
             <span class="text-[var(--text)]">Y-yug-S-shah ↗</span>
           </a>
-          <a href={profile.socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
+          <a href={profile.socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]">
             <span class="text-[var(--text-secondary)]">YouTube</span>
             <span class="text-[var(--text)]">@DefenderDiarybyYug ↗</span>
           </a>
@@ -63,25 +63,25 @@ const jsonLd = {
       </div>
     </div>
 
-    <form id="contact-form" class="rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 backdrop-blur-md shadow-2xl space-y-5">
+    <form id="contact-form" class="rounded-[24px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 backdrop-blur-md shadow-2xl space-y-5">
       <!-- OWASP A04: Anti-bot honeypot field -->
       <input name="company_website" type="text" tabindex="-1" autocomplete="off" class="sr-only opacity-0 pointer-events-none absolute -left-[9999px]" aria-hidden="true" />
       <div class="grid gap-5 sm:grid-cols-2">
         <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-1">
           Your Name
-          <input name="name" type="text" required placeholder="Jane Doe" class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
+          <input name="name" type="text" required placeholder="Jane Doe" class="mt-2 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
         </label>
         <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-1">
           Email Address
-          <input name="email" type="email" required placeholder="you@domain.com" class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
+          <input name="email" type="email" required placeholder="you@domain.com" class="mt-2 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
         </label>
         <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-2">
           Subject / Area of Interest
-          <input name="subject" type="text" required placeholder="AI Security / PoC Architecture / Role Opportunity" class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
+          <input name="subject" type="text" required placeholder="AI Security / PoC Architecture / Role Opportunity" class="mt-2 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]" />
         </label>
         <label class="block text-xs font-mono uppercase tracking-wider text-[var(--muted)] sm:col-span-2">
           Message
-          <textarea name="message" rows="5" required placeholder="Tell me about your initiative, problem statement, or goal..." class="mt-2 w-full rounded-xl border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]"></textarea>
+          <textarea name="message" rows="5" required placeholder="Tell me about your initiative, problem statement, or goal..." class="mt-2 w-full rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--accent)] focus:bg-[var(--panel-solid)]"></textarea>
         </label>
       </div>
       <div class="flex items-center justify-between gap-4 pt-2">

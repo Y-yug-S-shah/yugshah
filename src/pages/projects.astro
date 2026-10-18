@@ -18,7 +18,7 @@ const jsonLd = {
 ---
 
 <BaseLayout title="Projects | Yug Shah" description="Explore selected portfolio projects from Yug Shah." image="/og/projects.svg" jsonLd={jsonLd} canonicalPath="/projects">
-  <section class="space-y-10 py-8">
+  <section class="space-y-12 py-12 sm:py-16">
     <div class="space-y-4">
       <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
         <span class="relative flex h-2 w-2" aria-hidden="true">
@@ -33,15 +33,15 @@ const jsonLd = {
       </p>
     </div>
 
-    <div class="grid gap-6 md:grid-cols-2">
+    <div class="grid gap-7 md:grid-cols-2">
       {projects.map((project) => (
-        <article class="group relative overflow-hidden rounded-[28px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
+        <article class="group relative overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--panel)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
           <div class="relative h-52 w-full overflow-hidden bg-[var(--bg-soft)]">
             <img src={project.image} alt={project.imageAlt} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)] via-transparent to-transparent opacity-75" />
             <span class="absolute top-4 right-4 rounded-full border border-[var(--border)] bg-[var(--bg)]/80 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[var(--muted)] backdrop-blur-md">{project.year}</span>
           </div>
-          <div class="space-y-4 p-6">
+          <div class="space-y-4 p-6 sm:p-7">
             <div class="flex items-center justify-between gap-3">
               <h2 class="text-xl font-bold text-[var(--text)] group-hover:text-[var(--accent-strong)] transition-colors">{project.title}</h2>
               <span class="text-xs font-mono uppercase tracking-widest text-[var(--muted)]">0{projects.indexOf(project) + 1}</span>

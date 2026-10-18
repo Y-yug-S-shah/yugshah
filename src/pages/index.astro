@@ -58,7 +58,7 @@ const skillAreas = [
 ---
 
 <BaseLayout title="Yug Shah | Security Engineer" description={profile.bio} image="/og/home.svg" jsonLd={jsonLd}>
-  <section class="home-hero grid gap-8 py-8 md:grid-cols-[1.15fr_0.85fr] md:items-center lg:py-14">
+  <section class="home-hero grid gap-10 py-10 md:grid-cols-[1.15fr_0.85fr] md:items-center lg:py-16">
     <div class="space-y-6">
       <div class="inline-flex items-center gap-2.5 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
         <span class="relative flex h-2 w-2" aria-hidden="true">
@@ -97,7 +97,7 @@ const skillAreas = [
       </div>
     </div>
 
-    <aside class="hero-console rounded-[32px] border border-[var(--border)] p-6 sm:p-7">
+    <aside class="hero-console rounded-[24px] border border-[var(--border)] p-7 sm:p-8">
       <div class="hero-console-bar">
         <div class="hero-console-dots" aria-hidden="true">
           <span class="hero-console-dot hero-console-dot-red"></span>
@@ -126,8 +126,8 @@ const skillAreas = [
     </aside>
   </section>
 
-  <section class="py-10">
-    <div class="mb-6 flex items-end justify-between">
+  <section class="py-14 sm:py-20">
+    <div class="mb-8 flex items-end justify-between">
       <div>
         <p class="section-kicker">Architecture & Mission</p>
         <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">About</h2>
@@ -165,14 +165,14 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="py-10">
-    <div class="mb-6 flex items-end justify-between">
+  <section class="py-14 sm:py-20">
+    <div class="mb-8 flex items-end justify-between">
       <div>
         <p class="section-kicker">Core Domains</p>
         <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Areas I work in</h2>
       </div>
     </div>
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
       {skillAreas.map((skill) => (
         <article class={`skill-card skill-${skill.tone}`}>
           <div class="skill-card-heading">
@@ -188,8 +188,8 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="experience-section py-10" aria-labelledby="experience-title">
-    <div class="mb-6 flex items-end justify-between gap-4">
+  <section class="experience-section py-14 sm:py-20" aria-labelledby="experience-title">
+    <div class="mb-8 flex items-end justify-between gap-4">
       <div>
         <p class="section-kicker">Track Record</p>
         <h2 id="experience-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Security engineering, in practice.</h2>
@@ -214,23 +214,23 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="py-10">
-    <div class="mb-6 flex items-end justify-between">
+  <section class="py-14 sm:py-20">
+    <div class="mb-8 flex items-end justify-between">
       <div>
         <p class="section-kicker">Engineered Detections</p>
         <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Featured projects</h2>
       </div>
       <a href="/projects" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">See all →</a>
     </div>
-    <div class="grid gap-6 md:grid-cols-2">
+    <div class="grid gap-7 md:grid-cols-2">
       {featuredProjects.map((project) => (
-        <article class="group relative overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--panel)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
+        <article class="group relative overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--panel)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
           <div class="relative h-48 w-full overflow-hidden bg-[var(--bg-soft)]">
             <img src={project.image} alt={project.imageAlt} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)] via-transparent to-transparent opacity-70" />
             <span class="absolute top-4 right-4 rounded-full border border-[var(--border)] bg-[var(--bg)]/80 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[var(--muted)] backdrop-blur-md">{project.year}</span>
           </div>
-          <div class="space-y-4 p-6">
+          <div class="space-y-4 p-6 sm:p-7">
             <h3 class="text-xl font-bold text-[var(--text)] group-hover:text-[var(--accent-strong)] transition-colors">{project.title}</h3>
             <p class="text-sm leading-relaxed text-[var(--text-secondary)]">{project.summary}</p>
             <div class="flex flex-wrap gap-2 pt-1">
@@ -250,8 +250,8 @@ const skillAreas = [
     </div>
   </section>
 
-  <section class="home-field-notes py-10" aria-labelledby="field-notes-title">
-    <div class="mb-6 flex items-end justify-between">
+  <section class="home-field-notes py-12 sm:py-16" aria-labelledby="field-notes-title">
+    <div class="mb-8 flex items-end justify-between">
       <div>
         <p class="section-kicker">Research Notebook</p>
         <h2 id="field-notes-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Field notes on AI security</h2>

@@ -17,7 +17,7 @@ const posts = (await getCollection('blog'))
 ---
 
 <BaseLayout title={`${normalizedTag} | Blog | Yug Shah`} description={`Browse blog posts tagged with ${normalizedTag}.`}>
-  <section class="space-y-8 py-8">
+  <section class="space-y-10 py-12 sm:py-16">
     <div>
       <a href="/blog" class="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-strong)] hover:underline mb-2">
         <span aria-hidden="true">←</span> All field notes
@@ -34,7 +34,7 @@ const posts = (await getCollection('blog'))
 
     <div class="space-y-4">
       {posts.map((post) => (
-        <article class="group rounded-[28px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
+        <article class="group rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-accent)] hover:shadow-2xl hover:shadow-[var(--shadow)]">
           <div class="flex flex-wrap items-baseline justify-between gap-2">
             <h2 class="text-xl font-bold text-[var(--text)] group-hover:text-[var(--accent-strong)] transition-colors">
               <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>{post.data.title}</a>

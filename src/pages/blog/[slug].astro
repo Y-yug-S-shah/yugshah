@@ -33,7 +33,7 @@ const jsonLd = {
 ---
 
 <BaseLayout title={`${post.data.title} | Blog | Yug Shah`} description={post.data.description} image={`/og/blog-${slug}.svg`} jsonLd={jsonLd} canonicalPath={`/blog/${slug}`} type="article">
-  <article class="mx-auto max-w-4xl space-y-8 py-8">
+  <article class="mx-auto max-w-4xl space-y-10 py-12 sm:py-16">
     <div>
       <a href="/blog" class="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-strong)] hover:underline">
         <span aria-hidden="true">←</span> Return to field notes
@@ -52,12 +52,12 @@ const jsonLd = {
       
       <div class="flex flex-wrap gap-2 pt-1">
         {post.data.tags.map((tag) => (
-          <a href={`/blog/tags/${tag}`} class="rounded-full border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1 text-xs font-mono uppercase tracking-[0.08em] text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--text)] transition-colors">{tag}</a>
+          <a href={`/blog/tags/${tag}`} class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1 text-xs font-mono uppercase tracking-[0.08em] text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--text)] transition-colors">{tag}</a>
         ))}
       </div>
     </div>
 
-    <div class="rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 sm:p-10 backdrop-blur-md shadow-2xl text-base leading-relaxed text-[var(--text)]">
+    <div class="rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-10 backdrop-blur-md shadow-2xl text-base leading-relaxed text-[var(--text)]">
       {post.data.contentHtml
         ? <div class="medium-article" set:html={post.data.contentHtml} />
         : <div class="prose prose-invert max-w-none"><Content /></div>}

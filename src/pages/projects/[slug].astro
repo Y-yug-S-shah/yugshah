@@ -10,14 +10,14 @@ const { project } = Astro.props;
 ---
 
 <BaseLayout title={`${project.title} | Yug Shah`} description={project.summary}>
-  <article class="mx-auto max-w-4xl space-y-8 py-8">
+  <article class="mx-auto max-w-4xl space-y-10 py-12 sm:py-16">
     <div>
       <a href="/projects" class="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-strong)] hover:underline">
         <span aria-hidden="true">←</span> Return to projects
       </a>
     </div>
 
-    <div class="relative overflow-hidden rounded-[32px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--bg-soft)] shadow-2xl">
+    <div class="relative overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--bg-soft)] shadow-2xl">
       <img src={project.image} alt={project.imageAlt} class="h-72 w-full object-cover" />
       <div class="absolute inset-0 bg-gradient-to-t from-[var(--panel-solid)] via-transparent to-transparent opacity-60"></div>
     </div>
@@ -31,7 +31,7 @@ const { project } = Astro.props;
       <p class="text-lg text-[var(--text-secondary)] leading-relaxed">{project.summary}</p>
     </div>
 
-    <div class="rounded-[28px] border border-[var(--border-thick)] border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 backdrop-blur-md shadow-xl">
+    <div class="rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8 backdrop-blur-md shadow-xl">
       <h2 class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)] mb-3">// TECHNICAL OVERVIEW</h2>
       <p class="text-base leading-relaxed text-[var(--text-secondary)]">{project.description}</p>
     </div>
@@ -40,7 +40,7 @@ const { project } = Astro.props;
       <h2 class="text-xs font-mono uppercase tracking-widest text-[var(--muted)]">Core Technologies</h2>
       <div class="flex flex-wrap gap-2">
         {project.tech.map((tech) => (
-          <span class="rounded-full border border-[var(--border-w)] border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-mono uppercase tracking-[0.08em] text-[var(--text-secondary)]">{tech}</span>
+          <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-mono uppercase tracking-[0.08em] text-[var(--text-secondary)]">{tech}</span>
         ))}
       </div>
     </div>
