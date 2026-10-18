@@ -713,8 +713,9 @@ export default function AgentMission() {
       const target = event.target;
       if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
 
-      // Prevent browser from scrolling up/down on arrow keys and page up/down
-      if (SCROLL_KEYS.has(event.code) || SCROLL_KEYS.has(event.key)) {
+      // Only prevent browser scrolling when on the game page
+      const isGamePage = typeof window !== 'undefined' && window.location.pathname.startsWith('/game');
+      if (isGamePage && (SCROLL_KEYS.has(event.code) || SCROLL_KEYS.has(event.key))) {
         event.preventDefault();
       }
 
@@ -749,7 +750,8 @@ export default function AgentMission() {
       heldDirections.current.add(direction);
     };
     const onKeyUp = (event: KeyboardEvent) => {
-      if (SCROLL_KEYS.has(event.code) || SCROLL_KEYS.has(event.key)) {
+      const isGamePage = typeof window !== 'undefined' && window.location.pathname.startsWith('/game');
+      if (isGamePage && (SCROLL_KEYS.has(event.code) || SCROLL_KEYS.has(event.key))) {
         event.preventDefault();
       }
       const keyDirections: Record<string, Direction> = {

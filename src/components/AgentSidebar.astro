@@ -51,53 +51,130 @@
 
 <script is:inline>
   (() => {
-    const sidebar = document.querySelector('.agent-sidebar');
-    const track = sidebar?.querySelector('.agent-sidebar-track');
-    if (!sidebar || !(track instanceof HTMLElement)) return;
+    let currentCleanup = null;
 
-    let frame = 0;
-    const updatePosition = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
-        const maximumScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const ratio = Math.min(1, Math.max(0, window.scrollY / maximumScroll));
+    function initAgentScrollbar() {
+      if (typeof currentCleanup === 'function') {
+        currentCleanup();
+        currentCleanup = null;
+      }
+
+      const sidebar = document.querySelector('.agent-sidebar');
+      const track = sidebar?.querySelector('.agent-sidebar-track');
+      if (!sidebar || !(track instanceof HTMLElement)) return;
+
+      let isDragging = false;
+      let activePointerId = null;
+      let rafId = 0;
+
+      const getMaxScroll = () => {
+        return Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      };
+
+      const updatePosition = () => {
+        if (rafId) return;
+        rafId = window.requestAnimationFrame(() => {
+          rafId = 0;
+          const maxScroll = getMaxScroll();
+          const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+          const progress = ratio * 0.84;
+          sidebar.style.setProperty('--agent-progress', `${(progress * 100).toFixed(1)}%`);
+          track.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
+        });
+      };
+
+      const scrollToPointer = (clientY) => {
+        const bounds = track.getBoundingClientRect();
+        if (bounds.height <= 0) return;
+        const ratio = Math.min(1, Math.max(0, (clientY - bounds.top) / bounds.height));
+        const maxScroll = getMaxScroll();
+        const targetTop = ratio * maxScroll;
+        window.scrollTo(0, targetTop);
         const progress = ratio * 0.84;
         sidebar.style.setProperty('--agent-progress', `${(progress * 100).toFixed(1)}%`);
         track.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
-      });
-    };
+      };
 
-    const scrollToPointer = (event) => {
-      const bounds = track.getBoundingClientRect();
-      const ratio = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
-      window.scrollTo({ top: ratio * (document.documentElement.scrollHeight - window.innerHeight), behavior: 'instant' });
-    };
+      const onPointerDown = (event) => {
+        if (event.button !== 0) return;
+        isDragging = true;
+        activePointerId = event.pointerId;
+        sidebar.classList.add('is-dragging');
+        try {
+          track.setPointerCapture(event.pointerId);
+        } catch {}
+        scrollToPointer(event.clientY);
+      };
 
-    track.addEventListener('pointerdown', (event) => {
-      if (event.button !== 0) return;
-      track.setPointerCapture(event.pointerId);
-      scrollToPointer(event);
-    });
-    track.addEventListener('pointermove', (event) => {
-      if (track.hasPointerCapture(event.pointerId)) scrollToPointer(event);
-    });
-    track.addEventListener('keydown', (event) => {
-      const step = Math.max(120, window.innerHeight * 0.12);
-      if (event.key === 'ArrowDown' || event.key === 'PageDown') {
-        event.preventDefault();
-        window.scrollBy({ top: step, behavior: 'smooth' });
-      } else if (event.key === 'ArrowUp' || event.key === 'PageUp') {
-        event.preventDefault();
-        window.scrollBy({ top: -step, behavior: 'smooth' });
-      } else if (event.key === 'Home' || event.key === 'End') {
-        event.preventDefault();
-        window.scrollTo({ top: event.key === 'Home' ? 0 : document.documentElement.scrollHeight, behavior: 'smooth' });
-      }
-    });
+      const onPointerMove = (event) => {
+        if (!isDragging) return;
+        if (activePointerId !== null && event.pointerId !== activePointerId) return;
+        scrollToPointer(event.clientY);
+      };
 
-    updatePosition();
-    window.addEventListener('scroll', updatePosition, { passive: true });
-    window.addEventListener('resize', updatePosition);
+      const stopDragging = (event) => {
+        if (!isDragging) return;
+        if (activePointerId !== null && event.pointerId !== undefined && event.pointerId !== activePointerId) return;
+        isDragging = false;
+        sidebar.classList.remove('is-dragging');
+        if (activePointerId !== null) {
+          try {
+            if (track.hasPointerCapture(activePointerId)) {
+              track.releasePointerCapture(activePointerId);
+            }
+          } catch {}
+          activePointerId = null;
+        }
+      };
+
+      const onKeyDown = (event) => {
+        const step = Math.max(120, window.innerHeight * 0.12);
+        if (event.key === 'ArrowDown' || event.key === 'PageDown') {
+          event.preventDefault();
+          window.scrollBy(0, step);
+        } else if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+          event.preventDefault();
+          window.scrollBy(0, -step);
+        } else if (event.key === 'Home') {
+          event.preventDefault();
+          window.scrollTo(0, 0);
+        } else if (event.key === 'End') {
+          event.preventDefault();
+          window.scrollTo(0, document.documentElement.scrollHeight);
+        }
+      };
+
+      track.addEventListener('pointerdown', onPointerDown);
+      track.addEventListener('pointermove', onPointerMove);
+      track.addEventListener('pointerup', stopDragging);
+      track.addEventListener('pointercancel', stopDragging);
+      track.addEventListener('lostpointercapture', stopDragging);
+      track.addEventListener('keydown', onKeyDown);
+
+      window.addEventListener('scroll', updatePosition, { passive: true });
+      window.addEventListener('resize', updatePosition, { passive: true });
+
+      updatePosition();
+
+      currentCleanup = () => {
+        if (rafId) window.cancelAnimationFrame(rafId);
+        track.removeEventListener('pointerdown', onPointerDown);
+        track.removeEventListener('pointermove', onPointerMove);
+        track.removeEventListener('pointerup', stopDragging);
+        track.removeEventListener('pointercancel', stopDragging);
+        track.removeEventListener('lostpointercapture', stopDragging);
+        track.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('scroll', updatePosition);
+        window.removeEventListener('resize', updatePosition);
+      };
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAgentScrollbar);
+    } else {
+      initAgentScrollbar();
+    }
+
+    document.addEventListener('astro:page-load', initAgentScrollbar);
   })();
 </script>

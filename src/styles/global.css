@@ -94,7 +94,6 @@ html {
   background-color: var(--bg);
   color: var(--text);
   overflow-x: clip;
-  scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: rgba(148,163,184,0.25) transparent;
 }
@@ -1574,6 +1573,8 @@ main article:nth-of-type(even) {
   -webkit-backdrop-filter: blur(20px) saturate(1.2);
   backdrop-filter: blur(20px) saturate(1.2);
   box-shadow: 0 12px 40px -24px var(--shadow);
+  transform: translateX(35%);
+  user-select: none;
 }
 
 .agent-sidebar-label,
@@ -1602,9 +1603,15 @@ main article:nth-of-type(even) {
   border-radius: 999px;
   cursor: grab;
   touch-action: none;
+  user-select: none;
 }
 
-.agent-sidebar-track:active { cursor: grabbing; }
+.agent-sidebar-track:active,
+.agent-runner:active,
+.agent-sidebar.is-dragging,
+.agent-sidebar.is-dragging * {
+  cursor: grabbing !important;
+}
 .agent-sidebar-track:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .agent-sidebar-track::before {
@@ -1639,6 +1646,9 @@ main article:nth-of-type(even) {
   z-index: 2;
   width: 3.6rem;
   transform: translate(-50%, -45%);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
 
 .agent-avatar {
@@ -1648,6 +1658,7 @@ main article:nth-of-type(even) {
   width: 100%;
   overflow: visible;
   filter: drop-shadow(0 6px 7px rgba(0, 0, 0, 0.2));
+  pointer-events: none;
 }
 
 .agent-bob {
@@ -2370,12 +2381,13 @@ html.cli-active .ambient-scene { display: none; }
   .agent-sidebar {
     position: fixed;
     top: 5.5rem;
-    right: 10px;
+    right: 4px;
     width: 28px;
     height: min(22rem, calc(100vh - 7rem));
     min-height: 12rem;
     padding: 0.35rem 0.1rem;
     border-radius: 20px;
+    transform: none;
   }
 
   .agent-sidebar-label,
