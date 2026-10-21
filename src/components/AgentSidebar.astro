@@ -66,20 +66,31 @@
       let isDragging = false;
       let activePointerId = null;
       let rafId = 0;
+      let cachedMaxScroll = 1;
+      let lastProgressPct = -1;
+      let lastAriaVal = -1;
 
-      const getMaxScroll = () => {
-        return Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const refreshMaxScroll = () => {
+        cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       };
+      refreshMaxScroll();
 
       const updatePosition = () => {
         if (rafId) return;
         rafId = window.requestAnimationFrame(() => {
           rafId = 0;
-          const maxScroll = getMaxScroll();
-          const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+          const ratio = Math.min(1, Math.max(0, window.scrollY / cachedMaxScroll));
           const progress = ratio * 0.84;
-          sidebar.style.setProperty('--agent-progress', `${(progress * 100).toFixed(1)}%`);
-          track.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
+          const pct = Math.round(progress * 1000) / 10;
+          if (pct !== lastProgressPct) {
+            lastProgressPct = pct;
+            sidebar.style.setProperty('--agent-progress', `${pct}%`);
+          }
+          const ariaVal = Math.round(ratio * 100);
+          if (ariaVal !== lastAriaVal) {
+            lastAriaVal = ariaVal;
+            track.setAttribute('aria-valuenow', String(ariaVal));
+          }
         });
       };
 
@@ -87,11 +98,12 @@
         const bounds = track.getBoundingClientRect();
         if (bounds.height <= 0) return;
         const ratio = Math.min(1, Math.max(0, (clientY - bounds.top) / bounds.height));
-        const maxScroll = getMaxScroll();
-        const targetTop = ratio * maxScroll;
+        refreshMaxScroll();
+        const targetTop = ratio * cachedMaxScroll;
         window.scrollTo(0, targetTop);
         const progress = ratio * 0.84;
-        sidebar.style.setProperty('--agent-progress', `${(progress * 100).toFixed(1)}%`);
+        const pct = Math.round(progress * 1000) / 10;
+        sidebar.style.setProperty('--agent-progress', `${pct}%`);
         track.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
       };
 
@@ -151,8 +163,13 @@
       track.addEventListener('lostpointercapture', stopDragging);
       track.addEventListener('keydown', onKeyDown);
 
+      const onResize = () => {
+        refreshMaxScroll();
+        updatePosition();
+      };
+
       window.addEventListener('scroll', updatePosition, { passive: true });
-      window.addEventListener('resize', updatePosition, { passive: true });
+      window.addEventListener('resize', onResize, { passive: true });
 
       updatePosition();
 
@@ -165,7 +182,7 @@
         track.removeEventListener('lostpointercapture', stopDragging);
         track.removeEventListener('keydown', onKeyDown);
         window.removeEventListener('scroll', updatePosition);
-        window.removeEventListener('resize', updatePosition);
+        window.removeEventListener('resize', onResize);
       };
     }
 
