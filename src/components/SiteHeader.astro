@@ -94,11 +94,10 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <script is:inline define:vars={{ SITE_URL }}>
-  const root = document.documentElement;
-  const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-  root.setAttribute('data-theme', initialTheme);
+  const getStoredTheme = () => {
+    return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  };
+  document.documentElement.setAttribute('data-theme', getStoredTheme());
 
   const soundStorageKey = 'portfolio-ui-sound';
 
@@ -292,15 +291,18 @@ const currentPath = Astro.url.pathname;
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) {
       const syncThemeLabel = () => {
-        const currentTheme = root.getAttribute('data-theme');
+        const currentTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'dark';
+        themeBtn.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
         themeBtn.innerHTML = currentTheme === 'dark'
           ? '<span aria-hidden="true">🌙</span><span class="hidden sm:inline">Dark</span>'
           : '<span aria-hidden="true">☀️</span><span class="hidden sm:inline">Light</span>';
       };
       syncThemeLabel();
+      document.addEventListener('astro:after-swap', syncThemeLabel);
       themeBtn.onclick = () => {
-        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
+        const currentTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'dark';
+        const next = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem('theme', next);
         syncThemeLabel();
       };

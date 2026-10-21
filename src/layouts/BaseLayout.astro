@@ -50,11 +50,23 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
     <link rel="me" href={profile.socialLinks.github} />
     <link rel="me" href={profile.socialLinks.youtube} />
     <script is:inline>
-      (() => {
+      const getPreferredTheme = () => {
         const saved = localStorage.getItem('theme');
-        const preferredTheme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', preferredTheme);
-      })();
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      };
+      const applyTheme = (doc = document) => {
+        const theme = getPreferredTheme();
+        doc.documentElement.setAttribute('data-theme', theme);
+      };
+      applyTheme();
+      document.addEventListener('astro:before-swap', (e) => {
+        if (e && e.newDocument) {
+          applyTheme(e.newDocument);
+        }
+      });
+      document.addEventListener('astro:after-swap', () => applyTheme(document));
+      document.addEventListener('astro:page-load', () => applyTheme(document));
     </script>
     {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />}
     <ClientRouter />
