@@ -13,25 +13,39 @@ const nav = [
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="site-header sticky z-50">
+<header class="site-header sticky top-0 z-50">
   <div class="mx-auto max-w-6xl px-3 sm:px-6">
-    <div class="site-header-row flex items-center justify-between gap-2 py-1.5">
+    <div class="site-header-row relative flex items-center justify-between gap-2 py-2">
+      <!-- Left: Navigation (Desktop) -->
+      <nav aria-label="Primary" class="hidden items-center gap-5 lg:flex">
+        {nav.map((item) => {
+          const isActive = item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href);
+          const isBlog = item.href === '/blog';
+          const isGame = item.href === '/game';
+          return (
+            <a
+              href={item.href}
+              class={`relative text-xs font-mono tracking-wider transition-colors inline-flex items-center gap-1.5 py-1 ${
+                isActive
+                  ? 'text-[var(--accent-strong)] font-semibold'
+                  : 'text-[var(--muted)] hover:text-[var(--text)]'
+              }`}
+            >
+              <span>{item.label}</span>
+              {isBlog && <span class="nav-badge-blog">RESEARCH</span>}
+              {isGame && <span class="nav-badge-lab">SIM</span>}
+            </a>
+          );
+        })}
+      </nav>
+
+      <!-- Center: Brand (Y) YUG SHAH -->
       <a href="/" class="site-header-brand group flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase transition-all shrink-0" aria-label="Yug Shah Home">
         <span class="site-brand-avatar">Y</span>
         <span class="site-brand-name font-mono text-[11px] sm:text-xs">YUG SHAH</span>
       </a>
 
-      <nav aria-label="Primary" class="hidden items-center gap-6 lg:flex">
-        {nav.map((item) => (
-          <a href={item.href} class={`relative text-xs font-mono tracking-wider transition-colors ${item.href === '/blog' ? 'text-[var(--accent-strong)] font-semibold inline-flex items-center gap-1.5' : 'text-[var(--muted)] hover:text-[var(--accent-strong)]'}`}>
-            <span>{item.label}</span>
-            {item.href === '/blog' && (
-              <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
-            )}
-          </a>
-        ))}
-      </nav>
-
+      <!-- Right: Action Controls -->
       <div class="site-header-actions">
         <button id="cli-toggle" type="button" class="site-header-btn" aria-label="Open CLI mode" title="Open terminal">
           <span aria-hidden="true">⌨️</span>
@@ -52,25 +66,26 @@ const currentPath = Astro.url.pathname;
       </div>
     </div>
 
-    <nav aria-label="Mobile primary" class="no-scrollbar flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5 text-xs lg:hidden">
+    <!-- Mobile Navigation -->
+    <nav aria-label="Mobile primary" class="no-scrollbar flex items-center justify-center gap-1.5 overflow-x-auto pt-1 pb-1.5 text-xs lg:hidden">
       {nav.map((item) => {
         const isActive = item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href);
         const isBlog = item.href === '/blog';
+        const isGame = item.href === '/game';
         return (
           <a
             href={item.href}
-            class={`shrink-0 rounded-full px-3 py-1 text-[11px] font-mono tracking-wide transition-all border inline-flex items-center gap-1.5 ${
+            class={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-mono tracking-wide transition-all border inline-flex items-center gap-1.5 ${
               isActive
                 ? 'border-[var(--border-accent)] bg-[var(--accent-soft)] text-[var(--accent-strong)] font-semibold shadow-sm'
                 : isBlog
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-semibold'
+                  ? 'border-[var(--border-accent)] bg-[var(--accent-soft)] text-[var(--accent-strong)] font-semibold'
                   : 'border-[var(--border)] bg-[var(--panel)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--accent)]'
             }`}
           >
             <span>{item.label}</span>
-            {isBlog && (
-              <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" aria-hidden="true"></span>
-            )}
+            {isBlog && <span class="nav-badge-blog">RESEARCH</span>}
+            {isGame && <span class="nav-badge-lab">SIM</span>}
           </a>
         );
       })}

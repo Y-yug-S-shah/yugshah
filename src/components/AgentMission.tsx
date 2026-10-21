@@ -1093,7 +1093,7 @@ export default function AgentMission() {
         </div>
       </div>
 
-      <div className={`mission-canvas-wrap${terminalState ? ' is-terminal' : ''}`}>
+      <div className={`mission-canvas-wrap${terminalState ? ' is-terminal' : ''}${snapshot.status === 'injection' ? ' is-injection' : ''}`}>
         <canvas
           aria-label="Control Milo with WASD or arrow keys, collect three policy keys, contain indirect prompt injections, avoid roaming payloads, and reach the secure gateway. Press P to pause, Q to quarantine an injection."
           className="mission-canvas"

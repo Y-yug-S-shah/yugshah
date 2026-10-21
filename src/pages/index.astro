@@ -10,8 +10,8 @@ const featuredProjects = projects.filter((project) => project.featured);
 const featuredExperience = resume.work;
 const latestBlogs = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
-  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
-  .slice(0, 2);
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -25,81 +25,77 @@ const jsonLd = {
     email: profile.email
   }
 };
+
 const skillAreas = [
   {
-    name: 'AI security',
-    label: 'AI',
+    name: 'Technical Validation & PoCs',
+    label: 'PoC',
     tone: 'violet',
-    detail: 'Protecting intelligent systems from prompt injection, unsafe tools, and untrusted data.',
-    topics: ['Agent safety', 'Runtime trust']
+    detail: 'End-to-end technical architecture design, security assessments, product demonstrations, and customer-aligned Proof of Concept delivery.',
+    topics: ['Architecture design', 'Security assessment', 'Product demonstration', 'PoC delivery']
   },
   {
-    name: 'Endpoint security',
-    label: 'EDR',
+    name: 'Technical Stack & AI Security',
+    label: 'TECH',
     tone: 'blue',
-    detail: 'Building visibility into endpoint activity and investigating suspicious behavior.',
-    topics: ['Threat detection', 'Response']
+    detail: 'Hands-on validation across Python, web security, networking, LLM/AI prompt engineering, Splunk SIEM, and Prisma AIRS.',
+    topics: ['Python & Web security', 'Prompt engineering', 'Splunk SIEM', 'PANW EDR/XDR/XSIAM']
   },
   {
-    name: 'Cloud security',
-    label: 'CLD',
+    name: 'Customer Solutions & Collaboration',
+    label: 'SOL',
     tone: 'mint',
-    detail: 'Reducing cloud risk through identity controls, secure configuration, and monitoring.',
-    topics: ['Cloud posture', 'Identity']
+    detail: 'Diagnosing customer challenges, explaining complex technical security concepts to diverse audiences, and cross-functional execution.',
+    topics: ['Problem diagnosis', 'Stakeholder alignment', 'Technical explanation', 'Documentation']
   },
   {
-    name: 'Network security',
-    label: 'NET',
+    name: 'Credentials & Track Record',
+    label: 'CERT',
     tone: 'amber',
-    detail: 'Understanding traffic, strengthening boundaries, and spotting threats in motion.',
-    topics: ['Traffic analysis', 'Defense']
+    detail: 'Palo Alto Networks multi-certified, CompTIA Security+, SOC Level 1, and ranked in the top 1% globally on TryHackMe.',
+    topics: ['PANW Professional', 'CompTIA Security+', 'SOC Level 1', 'TryHackMe Top 1%']
   }
 ];
 ---
 
-<BaseLayout title="Yug Shah | Security Engineer" description={profile.bio} image="/og/home.svg" jsonLd={jsonLd}>
+<BaseLayout title="Yug Shah | Security Professional" description={profile.bio} image="/og/home.svg" jsonLd={jsonLd}>
+  <!-- Hero Section -->
   <section class="home-hero grid gap-10 py-10 md:grid-cols-[1.15fr_0.85fr] md:items-center lg:py-16">
     <div class="space-y-6">
-      <div class="inline-flex items-center gap-2.5 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3.5 py-1.5 text-xs font-mono font-medium text-[var(--accent-strong)] backdrop-blur-md">
-        <span class="relative flex h-2 w-2" aria-hidden="true">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span class="tracking-wider">SECURITY RESEARCH // INTELLIGENT SYSTEMS</span>
-      </div>
-
       <div class="space-y-4">
         <h1 class="hero-main-title max-w-xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
           {profile.name}
         </h1>
         <p class="max-w-xl text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">
-          {profile.tagline}
+          {profile.summary || profile.bio}
         </p>
       </div>
 
       <div class="flex flex-wrap items-center gap-3 pt-1">
-        <a href="/resume" class="btn-cinematic-primary">
-          <span>View resume</span>
-          <span aria-hidden="true">→</span>
+        <a href="/blog" class="btn-cinematic-primary group inline-flex items-center gap-2">
+          <span>Read Security Research</span>
+          <span class="inline-flex items-center rounded-md bg-[var(--bg)]/30 px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider uppercase text-[var(--accent-strong)]">Articles &rarr;</span>
         </a>
-        <a href="/blog" class="btn-cinematic-secondary group inline-flex items-center gap-2">
-          <span>Read blog</span>
-          <span class="inline-flex items-center rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-mono font-bold text-emerald-400">NEW</span>
-        </a>
-        <a href="/game" class="btn-cinematic-agent" title="Play Milo’s security simulation">
+        <a href="/game" class="btn-cinematic-secondary group inline-flex items-center gap-2" title="Play Milo’s security simulation">
           <span aria-hidden="true">🎮</span>
-          <span>Milo’s simulation</span>
+          <span>Milo’s Simulation</span>
+          <span class="inline-flex items-center rounded-md bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-mono font-bold text-amber-400">Interactive</span>
+        </a>
+        <a href="/resume" class="btn-cinematic-agent inline-flex items-center gap-1.5">
+          <span>View Resume</span>
+          <span aria-hidden="true">&rarr;</span>
         </a>
       </div>
 
       <div class="flex flex-wrap items-center gap-5 pt-1 text-xs font-mono text-[var(--muted)]">
-        <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">LinkedIn ↗</a>
-        <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">GitHub ↗</a>
-        <a href={profile.socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">YouTube ↗</a>
-        <a href={`mailto:${profile.email}`} class="transition-colors hover:text-[var(--accent-strong)]">Email ↗</a>
+        <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">LinkedIn &nearr;</a>
+        <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">GitHub &nearr;</a>
+        <a href={profile.socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">YouTube &nearr;</a>
+        <a href={`mailto:${profile.email}`} class="transition-colors hover:text-[var(--accent-strong)]">Email &nearr;</a>
       </div>
     </div>
 
+    <!-- Featured Research Highlight -->
     <aside class="hero-console rounded-[24px] border border-[var(--border)] p-7 sm:p-8">
       <div class="hero-console-bar">
         <div class="hero-console-dots" aria-hidden="true">
@@ -107,72 +103,77 @@ const skillAreas = [
           <span class="hero-console-dot hero-console-dot-amber"></span>
           <span class="hero-console-dot hero-console-dot-green"></span>
         </div>
-        <span class="hero-note-reference">FEATURED ARTICLE // 01</span>
+        <span class="hero-note-reference">FEATURED RESEARCH &bull; DEEP DIVE</span>
       </div>
 
-      <h2>When an AI reads a webpage, whose instructions does it trust?</h2>
-      <p>My blog covers indirect prompt injection and practical defenses to constrain what an AI agent can see and do.</p>
+      <h2 class="text-xl sm:text-2xl font-bold text-[var(--text)] mt-3">When an AI reads a webpage, whose instructions does it trust?</h2>
+      <p class="mt-2 text-sm text-[var(--text-secondary)] leading-relaxed">A technical analysis of indirect prompt injection vectors and containment architectures for untrusted agent runtime data.</p>
 
-      <div class="hero-telemetry-box" aria-hidden="true">
+      <div class="hero-telemetry-box mt-4" aria-hidden="true">
         <div><span class="hero-telemetry-tag">[RUNTIME AUDIT]</span> EVALUATING UNTRUSTED WEBPAGE</div>
         <div><span class="hero-telemetry-alert">! DETECTED</span> INDIRECT PROMPT INJECTION VECTOR</div>
-        <div><span class="hero-telemetry-ok">✓ CONTAIN</span> RUNTIME SANDBOX BOUNDARY APPLIED</div>
+        <div><span class="hero-telemetry-ok">&check; CONTAIN</span> RUNTIME SANDBOX BOUNDARY APPLIED</div>
       </div>
 
-      <a class="hero-note-link" href="/blog/ai-security-prompt-injection">Read article <span aria-hidden="true">↗</span></a>
+      <div class="mt-5 flex items-center justify-between">
+        <a class="hero-note-link font-semibold" href="/blog/ai-security-prompt-injection">Read article &nearr;</a>
+        <a class="text-xs font-mono text-[var(--muted)] hover:text-[var(--accent-strong)]" href="/game">Test in Milo's Lab &rarr;</a>
+      </div>
       <div class="hero-note-rule" aria-hidden="true"></div>
       <div class="hero-note-meta">
         <span>Prompt injection</span>
-        <span>Research and controls</span>
-        <span>Agent Trust</span>
+        <span>Runtime controls</span>
+        <span>Agent trust</span>
       </div>
     </aside>
   </section>
 
+  <!-- About Section -->
   <section class="py-14 sm:py-20">
     <div class="mb-8 flex items-end justify-between">
       <div>
-        <p class="section-kicker">Architecture & Mission</p>
-        <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">About</h2>
+        <p class="section-kicker">Professional Background</p>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Technical Solutions &amp; Security Validation</h2>
       </div>
     </div>
     <div class="about-bento-grid">
       <div class="about-card-main">
         <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-[var(--accent-strong)]">// CORE PHILOSOPHY</span>
-          <h3 class="mt-3 text-xl font-bold tracking-tight text-[var(--text)] sm:text-2xl">
-            Bridging technical validation with high-stakes defense.
+          <h3 class="text-xl font-bold tracking-tight text-[var(--text)] sm:text-2xl">
+            Technical implementation bridged with customer-focused solutions.
           </h3>
           <p class="mt-4 text-base leading-relaxed text-[var(--text-secondary)]">
             {profile.bio}
           </p>
         </div>
-        <div class="mt-6 flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
-          <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[var(--accent-teal)]"></span> Zero Trust Runtimes</span>
-          <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[var(--accent)]"></span> Technical PoC Delivery</span>
-          <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[var(--accent-coral)]"></span> SIEM Analytics</span>
+        <div class="mt-6 flex flex-wrap items-center gap-2 pt-4 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
+          <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1">Technical Architecture</span>
+          <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1">PoC Delivery</span>
+          <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1">AI &amp; LLM Security</span>
+          <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1">Splunk &amp; SIEM</span>
         </div>
       </div>
       <div class="about-card-side">
         <div class="about-stat-tile">
-          <span class="about-stat-badge">ENTERPRISE VALIDATION</span>
+          <span class="about-stat-badge">ENTERPRISE EXPERIENCE</span>
           <h4 class="about-stat-title">Palo Alto Networks</h4>
-          <p class="about-stat-desc">Technical Solutions & customer PoC delivery across enterprise security infrastructure.</p>
+          <p class="about-stat-desc">Technical Solutions Intern (03/2026 &ndash; 10/2026): Customer demonstrations, PoCs, and technical troubleshooting across enterprise security.</p>
         </div>
         <div class="about-stat-tile">
-          <span class="about-stat-badge">RESEARCH FOCUS</span>
-          <h4 class="about-stat-title">AI & Agentic Security</h4>
-          <p class="about-stat-desc">Detections for indirect prompt injection, tool authorization, and runtime model execution.</p>
+          <span class="about-stat-badge">RECOGNITION</span>
+          <h4 class="about-stat-title">Top 1% Globally on TryHackMe</h4>
+          <p class="about-stat-desc">Ranked #700 globally and #74 in India. CompTIA Security+ and SOC Level 1 certified.</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Skills Section -->
   <section class="py-14 sm:py-20">
     <div class="mb-8 flex items-end justify-between">
       <div>
-        <p class="section-kicker">Core Domains</p>
-        <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Areas I work in</h2>
+        <p class="section-kicker">Core Capabilities</p>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Areas of expertise</h2>
       </div>
     </div>
     <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
@@ -191,13 +192,14 @@ const skillAreas = [
     </div>
   </section>
 
+  <!-- Experience Section -->
   <section class="experience-section py-14 sm:py-20" aria-labelledby="experience-title">
     <div class="mb-8 flex items-end justify-between gap-4">
       <div>
         <p class="section-kicker">Track Record</p>
-        <h2 id="experience-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Security engineering, in practice.</h2>
+        <h2 id="experience-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Professional experience</h2>
       </div>
-      <a href="/resume" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">Full resume →</a>
+      <a href="/resume" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">Full resume &rarr;</a>
     </div>
     <div class="experience-list">
       {featuredExperience.map((job) => (
@@ -205,25 +207,26 @@ const skillAreas = [
           <div class="experience-mark" aria-hidden="true">{job.company === 'Palo Alto Networks' ? 'PAN' : job.company.slice(0, 3).toUpperCase()}</div>
           <div class="min-w-0 flex-1">
             <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-              <h3>{job.position}</h3>
-              <span class="experience-date">{job.startDate} — {job.endDate}</span>
+              <h3 class="text-lg font-bold">{job.position}</h3>
+              <span class="experience-date">{job.startDate} &mdash; {job.endDate}</span>
             </div>
-            <p class="experience-company">{job.company}</p>
-            <p class="experience-summary">{job.summary}</p>
+            <p class="experience-company font-semibold text-[var(--accent-strong)]">{job.company}</p>
+            <p class="experience-summary mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{job.summary}</p>
           </div>
-          {job.company === 'Palo Alto Networks' && <span class="experience-badge">CUSTOMER SECURITY</span>}
+          {job.company === 'Palo Alto Networks' && <span class="experience-badge">CUSTOMER SOLUTIONS</span>}
         </article>
       ))}
     </div>
   </section>
 
+  <!-- Featured Projects -->
   <section class="py-14 sm:py-20">
     <div class="mb-8 flex items-end justify-between">
       <div>
-        <p class="section-kicker">Engineered Detections</p>
+        <p class="section-kicker">Engineered Detections &amp; Tools</p>
         <h2 class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Featured projects</h2>
       </div>
-      <a href="/projects" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">See all →</a>
+      <a href="/projects" class="text-xs font-mono font-medium text-[var(--accent-strong)] hover:underline">See all &rarr;</a>
     </div>
     <div class="grid gap-7 md:grid-cols-2">
       {featuredProjects.map((project) => (
@@ -244,7 +247,7 @@ const skillAreas = [
             <div class="pt-2">
               <a href={`/projects/${project.slug}`} class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[var(--accent-strong)] group-hover:gap-2.5 transition-all">
                 <span>Explore project</span>
-                <span aria-hidden="true">→</span>
+                <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </div>
@@ -253,49 +256,48 @@ const skillAreas = [
     </div>
   </section>
 
+  <!-- Blog / Security Research Section -->
   <section class="home-blogs py-12 sm:py-16" aria-labelledby="blog-section-title">
     <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <div class="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-medium text-[var(--accent-strong)]">
-          <span class="relative flex h-2 w-2" aria-hidden="true">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span>SECURITY RESEARCH & WRITING</span>
-        </div>
+        <p class="section-kicker">Security Research &amp; Articles</p>
         <h2 id="blog-section-title" class="mt-2 text-2xl font-bold tracking-tight text-[var(--text)] sm:text-3xl">Latest from the blog</h2>
-        <p class="mt-1 text-sm text-[var(--text-secondary)]">Technical investigations into adversarial AI, agent sandboxing, and defense systems.</p>
+        <p class="mt-1 text-sm text-[var(--text-secondary)]">Technical investigations into adversarial AI, prompt injection defense, agent sandboxing, and runtime identity.</p>
       </div>
-      <a href="/blog" class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-4 py-2 text-xs font-mono font-semibold text-[var(--accent-strong)] transition-all hover:bg-[var(--accent)] hover:text-white shrink-0">Explore all blog posts <span aria-hidden="true">→</span></a>
+      <a href="/blog" class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-4 py-2 text-xs font-mono font-semibold text-[var(--accent-strong)] transition-all hover:bg-[var(--accent)] hover:text-white shrink-0">Explore all articles &rarr;</a>
     </div>
     <div class="blog-grid">
       {latestBlogs.map((post, index) => (
         <article class={`blog-card blog-card-${index + 1}`}>
           <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} class="blog-cover">
-            <img src={post.data.cover || '/placeholder-project.svg'} alt={post.data.title} loading="lazy" />
+            <img src={post.data.cover || '/media/ai-security-prompt-injection.svg'} alt={post.data.title} loading="lazy" />
             <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
           </a>
           <div class="blog-copy">
             <div class="mb-2 flex flex-wrap gap-1.5">
-              {post.data.tags?.slice(0, 2).map((tag: string) => (
+              {post.data.tags?.slice(0, 3).map((tag: string) => (
                 <span class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-0.5 text-[10px] font-mono uppercase text-[var(--muted)]">{tag}</span>
               ))}
             </div>
             <h3><a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>{post.data.title}</a></h3>
             <p>{post.data.description}</p>
-            <a class="blog-read" href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>Read article <span aria-hidden="true">→</span></a>
+            <a class="blog-read" href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>Read article <span aria-hidden="true">&rarr;</span></a>
           </div>
         </article>
       ))}
     </div>
   </section>
 
-  <section class="game-preview mt-16 sm:mt-20 py-8">
+  <!-- Interactive Milo Security Simulation Promo -->
+  <section class="game-preview mt-12 sm:mt-16 py-8">
     <div class="game-preview-copy">
-      <p class="section-kicker">Interactive threat exercise</p>
+      <p class="section-kicker">Interactive Threat Exercise</p>
       <h2>Can you spot the instruction hidden in the data?</h2>
       <p>Guide Milo through a compromised runtime. Collect controls, contain an indirect prompt injection, and keep a roaming threat away from the agent.</p>
-      <a href="/game" class="game-preview-link">Enter Milo’s simulation <span aria-hidden="true">↗</span></a>
+      <div class="pt-2 flex flex-wrap items-center gap-3">
+        <a href="/game" class="game-preview-link">Enter Milo’s simulation <span aria-hidden="true">&nearr;</span></a>
+        <a href="/blog/ai-security-prompt-injection" class="text-xs font-mono text-[var(--accent-strong)] hover:underline">Read the prompt injection research &rarr;</a>
+      </div>
     </div>
     <div class="game-preview-art" aria-hidden="true">
       <span class="preview-orbit preview-orbit-one"></span>

@@ -84,16 +84,11 @@ export function mountAgentSecurityBackdrop(canvas: HTMLCanvasElement): void {
       context.fill();
       context.strokeStyle = `${color}58`;
       context.lineWidth = 1;
-      context.stroke();
-      context.beginPath();
-      context.arc(point.x - cardWidth / 2 + 12, point.y, 3.2, 0, Math.PI * 2);
-      context.fillStyle = color;
-      context.fill();
       context.font = `600 ${compact ? 8 : 9}px "Segoe UI", sans-serif`;
-      context.textAlign = 'left';
+      context.textAlign = 'center';
       context.textBaseline = 'middle';
       context.fillStyle = 'rgba(226, 229, 236, .73)';
-      context.fillText(nodes[index].label, point.x - cardWidth / 2 + 23, point.y);
+      context.fillText(nodes[index].label, point.x, point.y);
 
       const travel = (elapsed * 0.13 + index * 0.27) % 1;
       const t = travel < 0.5 ? travel * 2 : (1 - travel) * 2;

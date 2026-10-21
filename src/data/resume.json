@@ -4,15 +4,14 @@
     "label": "Security professional",
     "email": "yugdshahcs@gmail.com",
     "url": "https://www.linkedin.com/in/yugshah369/",
-    "summary": "Security professional with hands-on experience in technical validation, PoC delivery, and solution architecture across security and networking. Able to bridge technical implementation with business value through cross-functional collaboration, clear communication, and real-world execution."
+    "summary": "Security professional with hands-on experience in technical validation, PoC delivery, and solution architecture across security and networking. Able to bridge technical implementation with business value through cross-functional collaboration, clear communication, and customer-focused problem-solving. Familiar with AI technologies and how to secure them."
   },
   "education": [
     {
       "institution": "Mukesh Patel School of Technology and Management Engineering, NMIMS",
       "area": "Computer Science",
       "studyType": "Bachelor of Technology",
-      "endDate": "2026",
-      "gpa": "TODO: add GPA if needed"
+      "endDate": "2026"
     }
   ],
   "work": [
@@ -94,7 +93,7 @@
   "awards": [
     {
       "title": "Top 1% globally on TryHackMe",
-      "date": "TODO: add period",
+      "date": "Global Rank #700",
       "awarder": "TryHackMe",
       "summary": "Ranked in Top 1% on TryHackMe (#700 globally and #74 in India)."
     }

@@ -266,33 +266,78 @@ body > .site-shell {
   position: sticky;
   top: 0;
   z-index: 60;
-  margin: 0 auto;
+  margin: 0;
   width: 100%;
   max-width: 100%;
-  padding-top: 10px;
-  padding-bottom: 6px;
-  background: linear-gradient(to bottom, var(--bg) 0%, color-mix(in srgb, var(--bg) 96%, transparent) 82%, transparent 100%);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  padding: 0;
+  background: color-mix(in srgb, var(--panel-solid) 92%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+  box-shadow: 0 4px 20px -8px var(--shadow), 0 0 16px -8px var(--accent-glow);
 }
 
 .site-header > div:first-child {
-  border: var(--border-thick) solid color-mix(in srgb, var(--accent) 30%, var(--border));
-  border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--panel-solid) 85%, transparent);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  backdrop-filter: blur(24px) saturate(1.4);
-  box-shadow: 0 12px 40px -12px var(--shadow), 0 0 24px -8px var(--accent-glow);
-  padding: 0.4rem 0.65rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0.4rem 1rem;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
 }
 
 .site-header-row {
+  position: relative;
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-header-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 5;
+}
+
+.nav-badge-blog {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.45rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent-strong);
+  font-family: 'Inter Variable', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.nav-badge-lab {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.45rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--accent-coral) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-coral) 40%, transparent);
+  color: var(--accent-coral);
+  font-family: 'Inter Variable', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
 }
 
 .site-header nav[aria-label="Mobile primary"] {
@@ -1995,10 +2040,10 @@ html.cli-active .ambient-scene { display: none; }
 .mission-canvas-wrap { position: relative; overflow: hidden; border: 1px solid rgba(164, 175, 197, 0.28); border-radius: 20px; background: #151c29; box-shadow: inset 0 1px rgba(255, 255, 255, 0.06); }
 .mission-canvas { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; outline: 0; touch-action: none; }
 .mission-canvas:focus-visible { outline: 2px solid #b7a6df; outline-offset: -3px; }
-.mission-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; padding: 1.5rem; background: rgba(14, 17, 26, 0.77); color: var(--mission-ink); text-align: center; -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); }
+.mission-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; padding: 1.5rem; background: rgba(14, 17, 26, 0.82); color: var(--mission-ink); text-align: center; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 .mission-overlay strong { font-family: 'Space Grotesk Variable', system-ui, sans-serif; font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; }
 .mission-overlay > span { max-width: 30rem; color: #d1d0d8; font-size: 0.8rem; line-height: 1.6; }
-.mission-overlay button,.injection-overlay button,.score-entry button { margin-top: 0.3rem; border: 1px solid rgba(188, 167, 226, 0.55); border-radius: 999px; padding: 0.65rem 1.05rem; background: rgba(167, 145, 207, 0.18); color: #e2d8f0; font: inherit; font-size: 0.73rem; font-weight: 700; cursor: pointer; }
+.mission-overlay button,.injection-overlay button,.score-entry button { margin-top: 0.3rem; border: 1px solid rgba(188, 167, 226, 0.55); border-radius: 999px; padding: 0.65rem 1.05rem; background: rgba(167, 145, 207, 0.18); color: #e2d8f0; font: inherit; font-size: 0.73rem; font-weight: 700; cursor: pointer; transition: all 150ms ease; }
 .injection-dim { position: absolute; inset: 0; background: rgba(14, 17, 26, 0.32); pointer-events: none; }
 .injection-overlay { position: absolute; z-index: 2; display: flex; width: min(22.5rem, calc(100% - 1.5rem)); flex-direction: column; gap: 0.45rem; padding: 1rem 1.05rem 0.95rem; border: 1px solid rgba(226, 153, 137, 0.45); border-radius: 18px; background: radial-gradient(ellipse at 12% 0%, rgba(237, 139, 104, 0.16), transparent 42%), rgba(26, 29, 40, 0.94); box-shadow: 0 22px 48px -28px rgba(9, 12, 20, 0.8), inset 0 1px rgba(255, 255, 255, 0.08); color: var(--mission-ink); text-align: left; animation: injection-pop 0.42s cubic-bezier(0.22, 1, 0.36, 1); }
 .injection-top-left { top: 0.85rem; left: 0.85rem; }
@@ -2014,11 +2059,12 @@ html.cli-active .ambient-scene { display: none; }
 .injection-danger { border-color: rgba(237, 139, 104, 0.45) !important; background: rgba(237, 139, 104, 0.12) !important; color: #f3c4b4 !important; }
 .injection-keys { color: #9596a1 !important; font-size: 0.55rem !important; letter-spacing: 0.06em; }
 .mission-result-score { color: #cbb5f1 !important; font-size: 0.92rem !important; font-weight: 700; }
-.score-entry { display: grid; width: min(22rem, 100%); gap: 0.45rem; margin-top: 0.35rem; text-align: left; }
-.score-entry label { color: #c5c2cc; font-size: 0.68rem; }
+.score-entry { display: grid; width: min(22rem, 100%); gap: 0.5rem; margin-top: 0.35rem; text-align: left; }
+.score-entry label { color: #c5c2cc; font-size: 0.72rem; }
 .score-entry input { width: 100%; border: 1px solid rgba(179, 173, 204, 0.28); border-radius: 14px; padding: 0.72rem 0.85rem; background: rgba(32, 36, 48, 0.86); color: #eeeae2; font: inherit; font-size: 0.86rem; outline: none; }
 .score-entry input:focus { border-color: rgba(188, 167, 226, 0.7); }
-.score-entry-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.score-entry-actions { display: flex; gap: 0.5rem; width: 100%; }
+.score-entry-actions button { flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; margin-top: 0; }
 .score-skip { background: rgba(36, 39, 51, 0.78) !important; color: #d1d0d8 !important; }
 .leaderboard-feedback { color: #8fcbb0 !important; font-size: 0.7rem !important; }
 .mission-leaderboard { margin-top: 1.15rem; padding: 1rem 1.05rem 0.85rem; border: 1px solid rgba(179, 173, 204, 0.16); border-radius: 18px; background: rgba(32, 36, 48, 0.55); }
@@ -2099,25 +2145,104 @@ html.cli-active .ambient-scene { display: none; }
 }
 
 @media (max-width: 640px) {
-  .injection-overlay {
-    top: 50% !important;
-    left: 50% !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: translate(-50%, -50%) !important;
-    width: calc(100% - 1.25rem) !important;
-    max-height: calc(100% - 1rem);
-    overflow-y: auto;
-    padding: 0.85rem;
-    gap: 0.35rem;
-    border-radius: 14px;
-    z-index: 10;
+  .mission-canvas-wrap.is-terminal,
+  .mission-canvas-wrap.is-injection {
+    min-height: 350px;
   }
-  .injection-overlay strong { font-size: 0.95rem; }
-  .injection-quote { font-size: 0.68rem; padding: 0.4rem 0.5rem; }
-  .injection-actions { flex-direction: column; width: 100%; gap: 0.35rem; }
-  .injection-actions button { width: 100%; padding: 0.6rem; font-size: 0.72rem; }
-  .injection-keys { display: none; }
+  .mission-overlay {
+    justify-content: flex-start;
+    padding: 1.1rem 0.85rem 1.6rem;
+    gap: 0.45rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mission-result strong {
+    font-size: 1.18rem;
+    margin-top: 0.2rem;
+  }
+  .mission-result > span {
+    font-size: 0.74rem;
+    line-height: 1.45;
+    max-width: 100%;
+  }
+  .mission-result-score {
+    font-size: 0.88rem !important;
+  }
+  .score-entry {
+    width: 100%;
+    margin-top: 0.2rem;
+    gap: 0.4rem;
+  }
+  .score-entry label {
+    font-size: 0.68rem;
+  }
+  .score-entry input {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.82rem;
+  }
+  .score-entry-actions {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 0.45rem;
+  }
+  .score-entry-actions button {
+    flex: 1;
+    min-height: 42px;
+    padding: 0.55rem 0.5rem;
+    font-size: 0.74rem;
+    margin-top: 0;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .injection-overlay {
+    position: absolute !important;
+    inset: 0.45rem !important;
+    transform: none !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: calc(100% - 0.9rem) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 0.8rem 0.85rem !important;
+    gap: 0.35rem !important;
+    border-radius: 15px !important;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .injection-overlay strong {
+    font-size: 0.96rem;
+    line-height: 1.25;
+  }
+  .injection-quote {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.55rem;
+    margin: 0.1rem 0;
+    line-height: 1.4;
+  }
+  .injection-actions {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 0.45rem;
+    margin-top: 0.25rem;
+  }
+  .injection-actions button {
+    flex: 1;
+    min-height: 42px;
+    padding: 0.55rem 0.5rem;
+    font-size: 0.72rem;
+    margin-top: 0;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .injection-keys {
+    display: none;
+  }
 }
 .mission-footnote { margin: 0.8rem 0 0; color: #9596a1; font-size: 0.57rem; text-align: center; }
 
