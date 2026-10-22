@@ -63,15 +63,15 @@ const skillAreas = [
   <section class="home-hero grid gap-10 py-10 md:grid-cols-[1.15fr_0.85fr] md:items-center lg:py-16">
     <div class="space-y-6">
       <div class="space-y-4">
-        <h1 class="hero-main-title max-w-xl text-4xl font-black sm:text-5xl lg:text-6xl leading-[1.25]">
+        <h1 class="hero-main-title hero-animate-title max-w-xl text-4xl font-black sm:text-5xl lg:text-6xl leading-[1.25]">
           {profile.name}
         </h1>
-        <p class="max-w-xl text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">
+        <p class="hero-animate-sub max-w-xl text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">
           {profile.summary || profile.bio}
         </p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-3 pt-1">
+      <div class="hero-animate-cta flex flex-wrap items-center gap-3 pt-1">
         <a href="/blog" class="btn-cinematic-primary group inline-flex items-center gap-2">
           <span>Read Security Research</span>
           <span class="inline-flex items-center rounded-md bg-[var(--bg)]/30 px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider uppercase text-[var(--accent-strong)]">Articles &rarr;</span>
@@ -87,7 +87,7 @@ const skillAreas = [
         </a>
       </div>
 
-      <div class="flex flex-wrap items-center gap-5 pt-1 text-xs font-mono text-[var(--muted)]">
+      <div class="hero-animate-social flex flex-wrap items-center gap-5 pt-1 text-xs font-mono text-[var(--muted)]">
         <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">LinkedIn &nearr;</a>
         <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">GitHub &nearr;</a>
         <a href={profile.socialLinks.youtube} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-[var(--accent-strong)]">YouTube &nearr;</a>
@@ -96,7 +96,7 @@ const skillAreas = [
     </div>
 
     <!-- Featured Research Highlight -->
-    <aside class="hero-console rounded-[24px] border border-[var(--border)] p-7 sm:p-8">
+    <aside class="hero-console hero-animate-console rounded-[24px] border border-[var(--border)] p-7 sm:p-8">
       <div class="hero-console-bar">
         <div class="hero-console-dots" aria-hidden="true">
           <span class="hero-console-dot hero-console-dot-red"></span>
@@ -109,10 +109,10 @@ const skillAreas = [
       <h2 class="text-xl sm:text-2xl font-bold text-[var(--text)] mt-3">When an AI reads a webpage, whose instructions does it trust?</h2>
       <p class="mt-2 text-sm text-[var(--text-secondary)] leading-relaxed">A technical analysis of indirect prompt injection vectors and containment architectures for untrusted agent runtime data.</p>
 
-      <div class="hero-telemetry-box mt-4" aria-hidden="true">
-        <div><span class="hero-telemetry-tag">[RUNTIME AUDIT]</span> EVALUATING UNTRUSTED WEBPAGE</div>
-        <div><span class="hero-telemetry-alert">! DETECTED</span> INDIRECT PROMPT INJECTION VECTOR</div>
-        <div><span class="hero-telemetry-ok">&check; CONTAIN</span> RUNTIME SANDBOX BOUNDARY APPLIED</div>
+      <div id="hero-telemetry-feed" class="hero-telemetry-box mt-4" aria-live="polite">
+        <div class="telemetry-line-1 transition-opacity duration-500"><span class="hero-telemetry-tag">[RUNTIME AUDIT]</span> EVALUATING UNTRUSTED WEBPAGE</div>
+        <div class="telemetry-line-2 transition-opacity duration-500"><span class="hero-telemetry-alert">! DETECTED</span> INDIRECT PROMPT INJECTION VECTOR</div>
+        <div class="telemetry-line-3 transition-opacity duration-500"><span class="hero-telemetry-ok">&check; CONTAIN</span> RUNTIME SANDBOX BOUNDARY APPLIED</div>
       </div>
 
       <div class="mt-5 flex items-center justify-between">
@@ -308,4 +308,40 @@ const skillAreas = [
       <span class="preview-agent-core">M</span>
     </div>
   </section>
+
+  <script is:inline>
+    (() => {
+      function runLandingTelemetryAnimation() {
+        const feed = document.getElementById('hero-telemetry-feed');
+        if (!feed) return;
+        const line1 = feed.querySelector('.telemetry-line-1');
+        const line2 = feed.querySelector('.telemetry-line-2');
+        const line3 = feed.querySelector('.telemetry-line-3');
+        if (!line1 || !line2 || !line3) return;
+
+        line1.style.opacity = '0';
+        line2.style.opacity = '0';
+        line3.style.opacity = '0';
+
+        setTimeout(() => {
+          line1.style.opacity = '1';
+        }, 350);
+
+        setTimeout(() => {
+          line2.style.opacity = '1';
+        }, 950);
+
+        setTimeout(() => {
+          line3.style.opacity = '1';
+        }, 1550);
+      }
+
+      document.addEventListener('astro:page-load', runLandingTelemetryAnimation);
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        runLandingTelemetryAnimation();
+      } else {
+        document.addEventListener('DOMContentLoaded', runLandingTelemetryAnimation);
+      }
+    })();
+  </script>
 </BaseLayout>

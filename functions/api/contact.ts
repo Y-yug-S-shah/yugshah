@@ -222,7 +222,22 @@ export async function onRequest({ request, env }: { request: Request; env: Recor
     return jsonResponse({ success: false, error: turnstile.error || 'Turnstile verification failed.' }, { status: 400 });
   }
 
-  const emailResult = await sendEmail(parsed.data, env);
+  function sanitizeField(input: string): string {
+    return input
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '')
+      .trim();
+  }
+
+  const cleanPayload = {
+    name: sanitizeField(parsed.data.name),
+    email: parsed.data.email.trim().toLowerCase(),
+    subject: sanitizeField(parsed.data.subject),
+    message: sanitizeField(parsed.data.message)
+  };
+
+  const emailResult = await sendEmail(cleanPayload, env);
   if (!emailResult.success) {
     return jsonResponse({ success: false, error: emailResult.message }, { status: emailResult.status });
   }

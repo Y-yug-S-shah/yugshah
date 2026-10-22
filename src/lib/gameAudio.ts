@@ -5,6 +5,10 @@
 
 let audioCtx: AudioContext | null = null;
 let isMuted = false;
+let bgmGain: GainNode | null = null;
+let bgmTimer: number | null = null;
+let bgmStep = 0;
+let isBgmPlaying = false;
 
 // Check if user has previously muted game audio or global sound is disabled
 export function initGameAudio(): AudioContext | null {
@@ -40,7 +44,134 @@ export function toggleAudioMute(): boolean {
   if (typeof window !== 'undefined') {
     localStorage.setItem('milo-game-sound', isMuted ? 'muted' : 'enabled');
   }
+  if (isMuted) {
+    stopCyberBgm();
+  } else {
+    startCyberBgm();
+  }
   return isMuted;
+}
+
+/**
+ * Procedural Cyberpunk Background Music (BGM)
+ * Generates rhythmic synth bass & ambient arpeggiated pulses in real-time.
+ */
+export function startCyberBgm() {
+  if (typeof window === 'undefined' || isMuted || isBgmPlaying) return;
+  const ctx = getContext();
+  if (!ctx) return;
+
+  try {
+    if (!bgmGain) {
+      bgmGain = ctx.createGain();
+      bgmGain.gain.setValueAtTime(0.001, ctx.currentTime);
+      bgmGain.gain.exponentialRampToValueAtTime(0.035, ctx.currentTime + 1.2);
+      bgmGain.connect(ctx.destination);
+    }
+
+    // Atmospheric cyber progression: Cm -> Ab -> Fm -> G
+    const bassline = [65.41, 65.41, 77.78, 65.41, 87.31, 87.31, 98.00, 77.78];
+    const synthNotes = [261.63, 311.13, 392.00, 466.16];
+
+    isBgmPlaying = true;
+    bgmStep = 0;
+
+    const tickBgm = () => {
+      if (!isBgmPlaying || !bgmGain || !ctx || ctx.state !== 'running' || isMuted) return;
+      const now = ctx.currentTime;
+      const bassFreq = bassline[bgmStep % bassline.length];
+
+      // Bass synth pulse
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const noteGain = ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(bassFreq, now);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(280, now);
+      filter.frequency.exponentialRampToValueAtTime(110, now + 0.38);
+
+      noteGain.gain.setValueAtTime(0.14, now);
+      noteGain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+
+      osc.connect(filter);
+      filter.connect(noteGain);
+      noteGain.connect(bgmGain);
+
+      osc.start(now);
+      osc.stop(now + 0.4);
+
+      // Light harmonic arpeggio every alternating pulse
+      if (bgmStep % 2 === 0) {
+        const arpFreq = synthNotes[(bgmStep / 2) % synthNotes.length];
+        const arpOsc = ctx.createOscillator();
+        const arpGain = ctx.createGain();
+
+        arpOsc.type = 'sine';
+        arpOsc.frequency.setValueAtTime(arpFreq, now + 0.04);
+
+        arpGain.gain.setValueAtTime(0.032, now + 0.04);
+        arpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+
+        arpOsc.connect(arpGain);
+        arpGain.connect(bgmGain);
+
+        arpOsc.start(now + 0.04);
+        arpOsc.stop(now + 0.3);
+      }
+
+      bgmStep++;
+    };
+
+    if (bgmTimer) window.clearInterval(bgmTimer);
+    bgmTimer = window.setInterval(tickBgm, 440);
+    tickBgm();
+  } catch {
+    // Graceful fallback if Web Audio is restricted
+  }
+}
+
+export function stopCyberBgm() {
+  isBgmPlaying = false;
+  if (bgmTimer) {
+    window.clearInterval(bgmTimer);
+    bgmTimer = null;
+  }
+  if (bgmGain && audioCtx) {
+    try {
+      bgmGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      bgmGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.45);
+      const toDisconnect = bgmGain;
+      window.setTimeout(() => {
+        try { toDisconnect.disconnect(); } catch (_) {}
+      }, 550);
+      bgmGain = null;
+    } catch {
+      bgmGain = null;
+    }
+  }
+}
+
+export function pauseCyberBgm() {
+  if (bgmGain && audioCtx) {
+    try {
+      bgmGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      bgmGain.gain.setValueAtTime(0.005, audioCtx.currentTime);
+    } catch (_) {}
+  }
+}
+
+export function resumeCyberBgm() {
+  if (!isBgmPlaying) {
+    startCyberBgm();
+  } else if (bgmGain && audioCtx) {
+    try {
+      bgmGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      bgmGain.gain.setValueAtTime(0.035, audioCtx.currentTime);
+    } catch (_) {}
+  }
 }
 
 function getContext(): AudioContext | null {

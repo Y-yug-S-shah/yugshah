@@ -10,7 +10,11 @@ import {
   playQuarantineSound,
   playHazardSound,
   playWinSound,
-  playLoseSound
+  playLoseSound,
+  startCyberBgm,
+  stopCyberBgm,
+  pauseCyberBgm,
+  resumeCyberBgm
 } from '../lib/gameAudio';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
@@ -328,7 +332,8 @@ function drawMission(
   pickups: Pickup[],
   snapshot: MissionSnapshot,
   elapsed: number,
-  immunity: number
+  immunity: number,
+  empActiveUntil = 0
 ) {
   const rect = canvas.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
@@ -584,6 +589,38 @@ function drawMission(
     context.fill();
   }
 
+  // EMP Active Shockwave Effect
+  if (elapsed < empActiveUntil) {
+    const shockPulse = (elapsed * 5) % 1;
+    context.beginPath();
+    context.arc(player.x, player.y, player.radius + 6 + shockPulse * 38, 0, Math.PI * 2);
+    context.strokeStyle = `rgba(56, 189, 248, ${0.9 - shockPulse * 0.8})`;
+    context.lineWidth = 2.5;
+    context.stroke();
+  }
+
+  // Milo Live Speech / Status Bubble
+  let statusText = 'Milo: Active';
+  if (elapsed < empActiveUntil) statusText = '⚡ EMP DISCHARGE';
+  else if (snapshot.status === 'won') statusText = '✓ Runtime Secured';
+  else if (snapshot.status === 'lost') statusText = 'Signal Lost';
+  else if (snapshot.policies === 3) statusText = 'Gateway Open! 🚀';
+  else if (snapshot.policies > 0) statusText = `Policy ${snapshot.policies}/3`;
+
+  context.save();
+  context.fillStyle = 'rgba(15, 23, 42, 0.85)';
+  context.strokeStyle = elapsed < empActiveUntil ? '#38bdf8' : 'rgba(148, 163, 184, 0.35)';
+  context.lineWidth = 1;
+  const badgeW = 76;
+  roundedRect(context, player.x - badgeW / 2, player.y - player.radius - 22, badgeW, 14, 4);
+  context.fill();
+  context.stroke();
+  context.fillStyle = elapsed < empActiveUntil ? '#38bdf8' : '#e2e8f0';
+  context.font = '700 8px "Inter Variable", monospace';
+  context.textAlign = 'center';
+  context.fillText(statusText, player.x, player.y - player.radius - 13);
+  context.restore();
+
   for (let index = 0; index < snapshot.shields; index += 1) {
     context.beginPath();
     context.arc(player.x - 9 + index * 9, player.y + 28, 2.4, 0, Math.PI * 2);
@@ -633,9 +670,32 @@ export default function AgentMission() {
   const [submittingScore, setSubmittingScore] = useState(false);
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const [soundMuted, setSoundMuted] = useState(false);
+  const [empCharges, setEmpCharges] = useState(1);
+  const empActiveUntilRef = useRef(0);
+
+  const sanitizeNickname = (input: string): string => {
+    return input
+      .replace(/<[^>]*>/g, '')
+      .replace(/[^\p{L}\p{N}_\s-]/gu, '')
+      .slice(0, 20);
+  };
+
+  const triggerEmp = () => {
+    const mission = snapshotRef.current;
+    if (empCharges <= 0 || mission.status !== 'running') return;
+    setEmpCharges((c) => Math.max(0, c - 1));
+    empActiveUntilRef.current = elapsedRef.current + 4;
+    playQuarantineSound();
+    mission.message = '⚡ EMP SHOCKWAVE DISCHARGED! Threats and hazards frozen for 4 seconds!';
+    setSnapshot({ ...mission });
+  };
 
   useEffect(() => {
     setSoundMuted(isAudioMuted());
+    startCyberBgm();
+    return () => {
+      stopCyberBgm();
+    };
   }, []);
 
   const openInjection = (reason: string, nodeLabel?: string) => {
@@ -648,6 +708,7 @@ export default function AgentMission() {
     mission.status = 'injection';
     mission.message = reason;
     heldDirections.current.clear();
+    pauseCyberBgm();
     playInjectionAlertSound();
     setInjectionCard(card);
     setInjectionPosition('top-right');
@@ -694,7 +755,7 @@ export default function AgentMission() {
 
     const draw = () => drawMission(
       context, canvas, playerRef.current, pickupsRef.current, snapshotRef.current,
-      elapsedRef.current, immunityRef.current
+      elapsedRef.current, immunityRef.current, empActiveUntilRef.current
     );
 
     const resize = () => {
@@ -720,10 +781,20 @@ export default function AgentMission() {
       }
 
       const mission = snapshotRef.current;
+      if (event.code === 'Space' && mission.status === 'running') {
+        event.preventDefault();
+        triggerEmp();
+        return;
+      }
       if ((event.code === 'KeyP' || event.code === 'Escape') && (mission.status === 'running' || mission.status === 'paused')) {
         event.preventDefault();
         mission.status = mission.status === 'paused' ? 'running' : 'paused';
         mission.message = mission.status === 'paused' ? 'Mission paused.' : 'Back online.';
+        if (mission.status === 'paused') {
+          pauseCyberBgm();
+        } else {
+          resumeCyberBgm();
+        }
         heldDirections.current.clear();
         updateSnapshot();
         return;
@@ -794,6 +865,7 @@ export default function AgentMission() {
         mission.shields = 0;
         mission.status = 'lost';
         playLoseSound();
+        stopCyberBgm();
         heldDirections.current.clear();
       }
       return true;
@@ -837,13 +909,18 @@ export default function AgentMission() {
           }
           playPickupSound();
           mission.policies += 1;
+          if (mission.policies === 3) {
+            setEmpCharges((c) => c + 1);
+          }
           const policyScore = Math.round(150 * MODES[mission.difficulty].multiplier);
           mission.score += policyScore;
           mission.message = `${pickup.label} policy key collected (+${policyScore}).`;
           openInjectionRef.current(`Milo reached ${pickup.label}. Policy key validation required!`, pickup.label);
         });
 
-        if (mission.status === 'running') {
+        const empActive = elapsedRef.current < empActiveUntilRef.current;
+
+        if (mission.status === 'running' && !empActive) {
           for (const threat of threatPositions(elapsedRef.current, mission.difficulty)) {
             if (Math.hypot(player.x - threat.x, player.y - threat.y) < player.radius + threat.radius) {
               changed = hitPlayer(`The ${threat.label.toLowerCase()} hit Milo’s shield (-25). ${Math.max(0, mission.shields)} remaining.`, 25, true) || changed;
@@ -852,7 +929,7 @@ export default function AgentMission() {
           }
         }
 
-        if (mission.status === 'running') {
+        if (mission.status === 'running' && !empActive) {
           for (const trap of trapPositions(elapsedRef.current, mission.difficulty)) {
             if (Math.hypot(player.x - trap.x, player.y - trap.y) < player.radius + trap.radius - 8) {
               changed = hitPlayer('Poisoned context burned a shield (-15). Keep moving through untrusted memory.', 15, false) || changed;
@@ -861,7 +938,7 @@ export default function AgentMission() {
           }
         }
 
-        if (mission.status === 'running') {
+        if (mission.status === 'running' && !empActive) {
           for (const beam of beamPositions(elapsedRef.current, mission.difficulty)) {
             const bdx = beam.x2 - beam.x1;
             const bdy = beam.y2 - beam.y1;
@@ -876,7 +953,7 @@ export default function AgentMission() {
           }
         }
 
-        if (mission.status === 'running') {
+        if (mission.status === 'running' && !empActive) {
           for (const zone of overflowZones(elapsedRef.current, mission.difficulty)) {
             if (Math.hypot(player.x - zone.x, player.y - zone.y) < player.radius + zone.radius - 6) {
               changed = hitPlayer('Context overflow engulfed Milo (-18). The expanding zone burned a shield.', 18, false) || changed;
@@ -885,14 +962,13 @@ export default function AgentMission() {
           }
         }
 
-
-
         if (mission.status === 'running' && mission.policies === 3 && Math.hypot(player.x - EXIT.x, player.y - EXIT.y) < 40) {
           mission.status = 'won';
           const timeBonus = Math.max(0, Math.floor((120 - elapsedRef.current) * 8 * MODES[mission.difficulty].multiplier));
           mission.score += 500 + timeBonus;
           mission.message = `Milo reached the gateway! Gateway: +500, Speed bonus: +${timeBonus}.`;
           playWinSound();
+          stopCyberBgm();
           directions.clear();
           changed = true;
         }
@@ -937,6 +1013,7 @@ export default function AgentMission() {
 
   const restartMission = (difficulty: Difficulty = snapshotRef.current.difficulty) => {
     initGameAudio();
+    startCyberBgm();
     const nextSnapshot: MissionSnapshot = {
       status: 'running',
       difficulty,
@@ -951,6 +1028,8 @@ export default function AgentMission() {
     elapsedRef.current = 0;
     immunityRef.current = 0;
     lastTimeRef.current = 0;
+    empActiveUntilRef.current = 0;
+    setEmpCharges(difficulty === 'hard' ? 1 : 2);
     injectionsResolvedRef.current = 0;
     usedInjectionsRef.current = new Set();
     heldDirections.current.clear();
@@ -983,6 +1062,7 @@ export default function AgentMission() {
       mission.score += bonus;
       mission.message = `Untrusted instruction quarantined (+${bonus}). Milo kept the original policy.`;
       mission.status = 'running';
+      resumeCyberBgm();
     } else {
       playHazardSound();
       mission.score = Math.max(0, mission.score - 75);
@@ -991,6 +1071,9 @@ export default function AgentMission() {
       mission.status = mission.shields > 0 ? 'running' : 'lost';
       if (mission.shields <= 0) {
         playLoseSound();
+        stopCyberBgm();
+      } else {
+        resumeCyberBgm();
       }
     }
     heldDirections.current.clear();
@@ -1004,6 +1087,11 @@ export default function AgentMission() {
     if (mission.status !== 'running' && mission.status !== 'paused') return;
     mission.status = mission.status === 'paused' ? 'running' : 'paused';
     mission.message = mission.status === 'paused' ? 'Mission paused.' : 'Back online.';
+    if (mission.status === 'paused') {
+      pauseCyberBgm();
+    } else {
+      resumeCyberBgm();
+    }
     heldDirections.current.clear();
     setSnapshot({ ...mission });
   };
@@ -1011,15 +1099,18 @@ export default function AgentMission() {
   const submitScore = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (submittingScore || scoreSubmitted) return;
-    const trimmed = nickname.trim();
-    if (!trimmed) return;
+    const sanitized = sanitizeNickname(nickname).trim();
+    if (!sanitized || sanitized.length < 2) {
+      setLeaderboardMessage('Nickname must be between 2 and 20 alphanumeric characters.');
+      return;
+    }
     setSubmittingScore(true);
     setLeaderboardMessage('');
     try {
       const response = await fetch('/api/leaderboard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname: trimmed, score: snapshotRef.current.score })
+        body: JSON.stringify({ nickname: sanitized, score: snapshotRef.current.score })
       });
       const result = await response.json() as { entries?: LeaderboardEntry[]; error?: string };
       if (!response.ok) throw new Error(result.error || 'Score could not be submitted.');
@@ -1074,6 +1165,16 @@ export default function AgentMission() {
         <div className="mission-hud-card mission-shields"><span>SHIELDS</span><strong aria-label={`${snapshot.shields} shields`}>{snapshot.shields ? '◆'.repeat(snapshot.shields) : '—'}</strong></div>
         <div className="mission-hud-card mission-score"><span>SCORE</span><strong>{snapshot.score.toLocaleString()}</strong></div>
         <div className="mission-hud-actions">
+          <button
+            className="mission-emp-btn"
+            type="button"
+            disabled={terminalState || paused || snapshot.status === 'injection' || empCharges <= 0}
+            onClick={triggerEmp}
+            title="Discharge EMP shockwave (Spacebar) - Freezes threats for 4s"
+            aria-label={`Discharge EMP (${empCharges} remaining)`}
+          >
+            ⚡ EMP ({empCharges})
+          </button>
           <button
             className="mission-sound-toggle"
             type="button"
@@ -1140,14 +1241,14 @@ export default function AgentMission() {
                   name="nickname"
                   type="text"
                   value={nickname}
-                  onChange={(event) => setNickname(event.currentTarget.value)}
-                  minLength={1}
+                  onChange={(event) => setNickname(sanitizeNickname(event.currentTarget.value))}
+                  minLength={2}
                   maxLength={20}
                   autoComplete="off"
                   autoCapitalize="none"
                   spellCheck={false}
                   required
-                  placeholder="Nickname only"
+                  placeholder="Nickname (2-20 characters)"
                 />
                 <div className="score-entry-actions">
                   <button type="submit" disabled={submittingScore}>{submittingScore ? 'Saving…' : 'Add score'}</button>
@@ -1167,9 +1268,9 @@ export default function AgentMission() {
         <p className="mission-feedback" aria-live="polite">{snapshot.message}</p>
         <div className="mission-key-hint">
           <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
-          <span>or</span>
-          <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd>
           <span>move</span>
+          <kbd>Space</kbd>
+          <span>EMP</span>
           <kbd>P</kbd>
           <span>pause</span>
         </div>

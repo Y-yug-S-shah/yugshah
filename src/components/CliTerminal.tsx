@@ -380,24 +380,52 @@ export default function CliTerminal() {
 
     if (trimmed === 'exit') {
       window.dispatchEvent(new CustomEvent('portfolio:request-close-cli'));
+      if (window.location.pathname !== '/') {
+        window.location.href = '/';
+      }
       return;
     }
 
     if (trimmed === 'sudo hire-me') {
-      appendOutput('success', 'Access granted. Open /contact to start a conversation about security engineering or technical validation.');
+      appendOutput('success', 'Access granted. Open contact page to start a conversation about security engineering or technical validation.');
       completeQuest('send-message');
       return;
     }
 
-    if (trimmed.startsWith('open ')) {
-      const target = trimmed.replace(/^open\s+/, '');
-      const route = target.startsWith('/') ? target : `/${target}`;
-      if (!['/', '/resume', '/projects', '/blog', '/contact', '/game'].includes(route)) {
-        appendOutput('error', `open: unknown route ${route}. Try /, /game, /resume, /projects, /blog, or /contact.`);
+    if (trimmed.startsWith('open ') || trimmed === 'open') {
+      const rawTarget = trimmed.replace(/^open\s*/, '').trim();
+      if (!rawTarget) {
+        appendOutput('info', 'Usage: open <destination>. Try home, game, resume, projects, blog, or contact.');
+        return;
+      }
+      const lower = rawTarget.toLowerCase();
+      if (lower === 'cli') {
+        appendOutput('info', "Already inside CLI mode. Type 'help' for commands or 'exit' to return to homepage.");
+        return;
+      }
+      const routeMap: Record<string, string> = {
+        home: '/',
+        '/': '/',
+        game: '/game',
+        '/game': '/game',
+        simulation: '/game',
+        resume: '/resume',
+        '/resume': '/resume',
+        projects: '/projects',
+        '/projects': '/projects',
+        blog: '/blog',
+        '/blog': '/blog',
+        contact: '/contact',
+        '/contact': '/contact'
+      };
+      const dest = routeMap[lower];
+      if (!dest) {
+        appendOutput('error', `open: unknown destination "${rawTarget}". Try home, game, resume, projects, blog, or contact.`);
         return;
       }
       completeQuest('explore-projects');
-      window.location.href = route;
+      window.dispatchEvent(new CustomEvent('portfolio:request-close-cli'));
+      window.location.href = dest;
       return;
     }
 

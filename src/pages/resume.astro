@@ -116,10 +116,13 @@ const jsonLd = {
     <section class="resume-section resume-achievement">
       <div class="resume-section-heading"><span>06</span><h2>Recognition</h2><i></i></div>
       {awards.map((award) => (
-        <article>
+        <article class="resume-award-card">
+          <div class="resume-award-top">
+            <span class="resume-award-badge">TRYHACKME TOP 1%</span>
+            <span class="resume-award-meta">{award.awarder} · {award.date}</span>
+          </div>
           <h3>{award.title}</h3>
           <p>{award.summary}</p>
-          <span>{award.awarder} · {award.date}</span>
         </article>
       ))}
     </section>

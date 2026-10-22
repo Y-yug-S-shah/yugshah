@@ -43,6 +43,7 @@
       <span class="agent-shadow" aria-hidden="true"></span>
     </div>
   </div>
+  <div id="milo-tip-bubble" class="milo-bubble" style="display: none;" role="status" aria-live="polite"></div>
   <div class="agent-sidebar-caption">
     <span>MILO</span>
   </div>
@@ -173,8 +174,42 @@
 
       updatePosition();
 
+      const runner = sidebar.querySelector('.agent-runner');
+      const bubble = document.getElementById('milo-tip-bubble');
+      const tips = [
+        "Milo: Untrusted inputs are data, never instructions!",
+        "Milo: Validate and sanitize every request boundary!",
+        "Milo: Zero-trust architecture keeps our agents safe!",
+        "Milo: Ready for the simulation? Check Milo's Mission!",
+        "Milo: Great scroll speed! Keep exploring!"
+      ];
+      let tipIdx = 0;
+      let bubbleTimeout = null;
+
+      const onRunnerClick = (e) => {
+        if (isDragging) return;
+        e.stopPropagation();
+        runner?.classList.remove('milo-pop');
+        void runner?.offsetWidth;
+        runner?.classList.add('milo-pop');
+
+        if (bubble) {
+          bubble.textContent = tips[tipIdx % tips.length];
+          tipIdx++;
+          bubble.style.display = 'block';
+          if (bubbleTimeout) clearTimeout(bubbleTimeout);
+          bubbleTimeout = setTimeout(() => {
+            bubble.style.display = 'none';
+          }, 3500);
+        }
+      };
+
+      runner?.addEventListener('click', onRunnerClick);
+
       currentCleanup = () => {
         if (rafId) window.cancelAnimationFrame(rafId);
+        if (bubbleTimeout) clearTimeout(bubbleTimeout);
+        runner?.removeEventListener('click', onRunnerClick);
         track.removeEventListener('pointerdown', onPointerDown);
         track.removeEventListener('pointermove', onPointerMove);
         track.removeEventListener('pointerup', stopDragging);

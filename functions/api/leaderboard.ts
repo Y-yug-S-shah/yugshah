@@ -37,9 +37,16 @@ declare global {
 }
 
 const scoreSchema = z.object({
-  nickname: z.string().trim().min(1).max(20).regex(/^[\p{L}\p{N}_ -]+$/u),
+  nickname: z.string().trim().min(2).max(20).regex(/^[\p{L}\p{N}_ -]+$/u),
   score: z.number().int().min(0).max(1_000_000)
 });
+
+function sanitizeLeaderboardName(name: string): string {
+  return name
+    .replace(/[<>'"&/\\;`]/g, '')
+    .trim()
+    .slice(0, 20);
+}
 
 const WINDOW_MS = 60_000;
 const MAX_SUBMISSIONS = 5;
@@ -331,7 +338,8 @@ export async function onRequest({ request, env }: { request: Request; env: Leade
     return jsonLeaderboardResponse({ error: 'Enter a nickname (up to 20 letters, numbers, spaces, _ or -).' }, { status: 400 });
   }
 
-  const { nickname, score } = parsed.data;
+  const nickname = sanitizeLeaderboardName(parsed.data.nickname);
+  const { score } = parsed.data;
 
   // 1. Cloudflare Pages native D1 binding
   if (env.DB) {
