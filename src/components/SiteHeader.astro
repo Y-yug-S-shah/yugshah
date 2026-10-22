@@ -15,9 +15,15 @@ const currentPath = Astro.url.pathname;
 
 <header class="site-header sticky top-0 z-50">
   <div class="mx-auto max-w-6xl px-3 sm:px-6">
-    <div class="site-header-row relative flex items-center justify-between gap-2 py-2">
-      <!-- Left: Navigation (Desktop) -->
-      <nav aria-label="Primary" class="hidden items-center gap-5 lg:flex">
+    <div class="site-header-row relative flex items-center justify-between gap-4 py-2">
+      <!-- Left: Brand (Y) YUG SHAH -->
+      <a href="/" class="site-header-brand group flex items-center gap-2.5 text-xs font-semibold tracking-[0.2em] uppercase transition-all shrink-0" aria-label="Yug Shah Home">
+        <span class="site-brand-avatar">Y</span>
+        <span class="site-brand-name font-mono text-[11px] sm:text-xs">YUG SHAH</span>
+      </a>
+
+      <!-- Center: Navigation (Desktop) -->
+      <nav aria-label="Primary" class="hidden items-center gap-6 lg:flex">
         {nav.map((item) => {
           const isActive = item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href);
           const isBlog = item.href === '/blog';
@@ -38,12 +44,6 @@ const currentPath = Astro.url.pathname;
           );
         })}
       </nav>
-
-      <!-- Center: Brand (Y) YUG SHAH -->
-      <a href="/" class="site-header-brand group flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase transition-all shrink-0" aria-label="Yug Shah Home">
-        <span class="site-brand-avatar">Y</span>
-        <span class="site-brand-name font-mono text-[11px] sm:text-xs">YUG SHAH</span>
-      </a>
 
       <!-- Right: Action Controls -->
       <div class="site-header-actions">

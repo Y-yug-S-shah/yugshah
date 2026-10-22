@@ -163,28 +163,10 @@ export function mountAgentSecurityBackdrop(canvas: HTMLCanvasElement): void {
     else syncMotionPreference();
   };
 
-  let isScrolling = false;
-  let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
-
-  const onScroll = () => {
-    if (!isScrolling) {
-      isScrolling = true;
-      stop();
-    }
-    if (scrollTimeout) clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      isScrolling = false;
-      if (!document.hidden && !reducedMotion.matches) {
-        start();
-      }
-    }, 150);
-  };
-
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(canvas);
   document.addEventListener('visibilitychange', syncVisibility);
   reducedMotion.addEventListener('change', syncMotionPreference);
-  window.addEventListener('scroll', onScroll, { passive: true });
   resize();
   start();
 }
