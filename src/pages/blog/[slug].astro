@@ -13,64 +13,712 @@ export async function getStaticPaths() {
 
 const posts = await getCollection('blog');
 const post = posts.find((entry) => entry.id === Astro.props.postId) ?? posts[0];
-const { Content } = await render(post);
+const { Content, headings: mdxHeadings } = await render(post);
 const slug = post.id.replace(/\.mdx?$/, '');
+
+// Extract and normalize metadata
+const title = post.data.title;
+const description = post.data.description;
+const pubDate = new Date(post.data.pubDate);
+const isoPubDate = pubDate.toISOString();
+const updatedDate = post.data.updatedDate ? new Date(post.data.updatedDate) : pubDate;
+const isoUpdatedDate = updatedDate.toISOString();
+const tags = post.data.tags || [];
+const author = post.data.author || 'Yug Shah';
+const heroImage = post.data.cover || `/og/blog-${slug}.svg`;
+const canonicalUrl = `${SITE_URL}/blog/${slug}`;
+const ogImageUrl = new URL(heroImage, SITE_URL).toString();
+
+// Process raw HTML content if present, or fallback to MDX
+interface TocHeading {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
+function processArticleHtml(rawHtml: string, articleTitle: string): { processedHtml: string; headings: TocHeading[] } {
+  const headings: TocHeading[] = [];
+  const slugCounts = new Map<string, number>();
+
+  function makeSlug(text: string): string {
+    const clean = text
+      .toLowerCase()
+      .replace(/<[^>]*>/g, '')
+      .replace(/&[a-z0-9#]+;/gi, '')
+      .replace(/[^\w\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-');
+    const base = clean || 'section';
+    const count = slugCounts.get(base) || 0;
+    slugCounts.set(base, count + 1);
+    return count === 0 ? base : `${base}-${count}`;
+  }
+
+  const hasH3 = /<h3[^>]*>/i.test(rawHtml);
+  const hasH4 = /<h4[^>]*>/i.test(rawHtml);
+
+  let html = rawHtml;
+
+  if (hasH3 && hasH4) {
+    // Both H3 and H4: H3 -> H2, H4 -> H3
+    html = html.replace(/<h3([^>]*)>(.*?)<\/h3>/gis, (_, attrs, content) => {
+      const text = content.replace(/<[^>]*>/g, '').trim();
+      const id = makeSlug(text);
+      headings.push({ id, text, level: 2 });
+      return `<h2 id="${id}" class="article-h2"${attrs}>${content}</h2>`;
+    });
+    html = html.replace(/<h4([^>]*)>(.*?)<\/h4>/gis, (_, attrs, content) => {
+      const text = content.replace(/<[^>]*>/g, '').trim();
+      const id = makeSlug(text);
+      headings.push({ id, text, level: 3 });
+      return `<h3 id="${id}" class="article-h3"${attrs}>${content}</h3>`;
+    });
+  } else if (hasH4 && !hasH3) {
+    // Only H4 present -> map to H2
+    html = html.replace(/<h4([^>]*)>(.*?)<\/h4>/gis, (_, attrs, content) => {
+      const text = content.replace(/<[^>]*>/g, '').trim();
+      const id = makeSlug(text);
+      headings.push({ id, text, level: 2 });
+      return `<h2 id="${id}" class="article-h2"${attrs}>${content}</h2>`;
+    });
+  } else if (hasH3 && !hasH4) {
+    // Only H3 present -> map to H2
+    html = html.replace(/<h3([^>]*)>(.*?)<\/h3>/gis, (_, attrs, content) => {
+      const text = content.replace(/<[^>]*>/g, '').trim();
+      const id = makeSlug(text);
+      headings.push({ id, text, level: 2 });
+      return `<h2 id="${id}" class="article-h2"${attrs}>${content}</h2>`;
+    });
+  } else {
+    // Standard H2 and H3
+    html = html.replace(/<h2([^>]*)>(.*?)<\/h2>/gis, (_, attrs, content) => {
+      const text = content.replace(/<[^>]*>/g, '').trim();
+      const id = makeSlug(text);
+      headings.push({ id, text, level: 2 });
+      return `<h2 id="${id}" class="article-h2"${attrs}>${content}</h2>`;
+    });
+    html = html.replace(/<h3([^>]*)>(.*?)<\/h3>/gis, (_, attrs, content) => {
+      const text = content.replace(/<[^>]*>/g, '').trim();
+      const id = makeSlug(text);
+      headings.push({ id, text, level: 3 });
+      return `<h3 id="${id}" class="article-h3"${attrs}>${content}</h3>`;
+    });
+  }
+
+  // Ensure all img tags have alt attribute, loading="lazy", and decoding="async"
+  html = html.replace(/<img([^>]*?)>/gis, (_, attrs) => {
+    let updated = attrs;
+    if (!/alt\s*=/i.test(updated)) {
+      updated += ` alt="${articleTitle.replace(/"/g, '&quot;')}"`;
+    }
+    if (!/loading\s*=/i.test(updated)) {
+      updated += ' loading="lazy"';
+    }
+    if (!/decoding\s*=/i.test(updated)) {
+      updated += ' decoding="async"';
+    }
+    return `<img${updated}>`;
+  });
+
+  // Ensure tables are wrapped in a scroll container
+  html = html.replace(/(<table[^>]*>.*?<\/table>)/gis, (tableMatch) => {
+    return `<div class="table-scroll-container">${tableMatch}</div>`;
+  });
+
+  return { processedHtml: html, headings };
+}
+
+let processedContentHtml = '';
+let headings: TocHeading[] = [];
+
+if (post.data.contentHtml) {
+  const processed = processArticleHtml(post.data.contentHtml, title);
+  processedContentHtml = processed.processedHtml;
+  headings = processed.headings;
+} else if (mdxHeadings && mdxHeadings.length > 0) {
+  headings = mdxHeadings
+    .filter((h) => h.depth === 2 || h.depth === 3)
+    .map((h) => ({ id: h.slug, text: h.text, level: h.depth as 2 | 3 }));
+}
+
+const hasToc = headings.length >= 3;
+
+// Estimate read time
+const textSample = post.data.contentHtml || post.body || '';
+const wordCount = textSample.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+const readTimeMinutes = Math.max(2, Math.ceil(wordCount / 220));
+
+// Schema.org Structured Data (TechArticle)
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: post.data.title,
-  description: post.data.description,
-  image: `${SITE_URL}/og/blog-${slug}.svg`,
-  datePublished: post.data.pubDate,
-  dateModified: post.data.updatedDate || post.data.pubDate,
+  '@type': 'TechArticle',
+  headline: title,
+  description: description,
+  image: [ogImageUrl],
+  datePublished: isoPubDate,
+  dateModified: isoUpdatedDate,
   author: {
     '@type': 'Person',
-    name: post.data.author || 'Yug Shah'
+    name: author,
+    url: SITE_URL
   },
-  keywords: post.data.tags.join(', '),
-  mainEntityOfPage: `${SITE_URL}/blog/${slug}`
+  publisher: {
+    '@type': 'Person',
+    name: 'Yug Shah',
+    url: SITE_URL
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonicalUrl
+  },
+  keywords: tags.join(', ')
+};
+
+const articleMeta = {
+  publishedTime: isoPubDate,
+  modifiedTime: isoUpdatedDate,
+  author,
+  tags
 };
 ---
 
-<BaseLayout title={`${post.data.title} | Blog | Yug Shah`} description={post.data.description} image={`/og/blog-${slug}.svg`} jsonLd={jsonLd} canonicalPath={`/blog/${slug}`} type="article">
-  <article class="mx-auto max-w-4xl space-y-10 py-12 sm:py-16">
-    <div>
-      <a href="/blog" class="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-strong)] hover:underline">
-        <span aria-hidden="true">←</span> Return to blog
-      </a>
+<BaseLayout
+  title={`${title} | Yug Shah`}
+  description={description}
+  image={heroImage}
+  jsonLd={jsonLd}
+  canonicalPath={`/blog/${slug}`}
+  type="article"
+  articleMeta={articleMeta}
+  hideSidebar={true}
+>
+  <div class="blog-post-view py-8 sm:py-12">
+    <!-- Top Return & Breadcrumb Bar -->
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-mono">
+        <a href="/" class="text-[var(--text-secondary)] hover:text-[var(--accent-strong)] transition-colors">Home</a>
+        <span class="text-[var(--muted)]" aria-hidden="true">/</span>
+        <a href="/blog" class="text-[var(--text-secondary)] hover:text-[var(--accent-strong)] transition-colors">Blog</a>
+        <span class="text-[var(--muted)]" aria-hidden="true">/</span>
+        <span class="text-[var(--muted)] truncate max-w-[200px] sm:max-w-xs">{title}</span>
+      </nav>
     </div>
 
-    <div class="space-y-4">
-      <div class="flex items-center gap-3">
-        <span class="rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-medium text-[var(--accent-strong)]">SECURITY BLOG</span>
-        <span class="text-xs font-mono text-[var(--muted)]">
-          {new Date(post.data.pubDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+    <!-- Centered Header Hero (Constrained for optimal readability) -->
+    <header class="mx-auto max-w-[720px] px-4 sm:px-6 space-y-5 mb-10">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <span class="inline-flex items-center rounded-full border border-[var(--border-accent)] bg-[var(--accent-soft)] px-3 py-1 text-xs font-mono font-semibold tracking-wider uppercase text-[var(--accent-strong)]">
+          Security Research
         </span>
+        <span class="text-xs font-mono text-[var(--muted)]" aria-hidden="true">&bull;</span>
+        <time datetime={isoPubDate} class="text-xs font-mono text-[var(--text-secondary)]">
+          {pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        </time>
+        <span class="text-xs font-mono text-[var(--muted)]" aria-hidden="true">&bull;</span>
+        <span class="text-xs font-mono text-[var(--muted)]">{readTimeMinutes} min read</span>
       </div>
-      <h1 class="hero-main-title text-4xl font-black tracking-tight sm:text-5xl leading-tight">{post.data.title}</h1>
-      <p class="text-lg text-[var(--text-secondary)] leading-relaxed">{post.data.description}</p>
-      
-      <div class="flex flex-wrap gap-2 pt-1">
-        {post.data.tags.map((tag) => (
-          <a href={`/blog/tags/${tag}`} class="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1 text-xs font-mono uppercase tracking-[0.08em] text-[var(--muted)] hover:border-[var(--accent)] hover:text-[var(--text)] transition-colors">{tag}</a>
-        ))}
-      </div>
-    </div>
 
-    <div class="rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-10 backdrop-blur-md shadow-2xl text-base leading-relaxed text-[var(--text)]">
-      {post.data.contentHtml
-        ? <div class="medium-article" set:html={post.data.contentHtml} />
-        : <div class="prose prose-invert max-w-none"><Content /></div>}
-    </div>
+      <h1 class="article-title text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl leading-[1.2]">
+        {title}
+      </h1>
 
-    <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[var(--border)]">
-      <a href="/blog" class="btn-cinematic-secondary">← Back to all articles</a>
-      {post.data.mediumUrl && (
-        <a href={post.data.mediumUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[var(--accent-strong)] hover:underline">
-          <span>Read original on Medium</span>
-          <span aria-hidden="true">↗</span>
-        </a>
+      <p class="article-lead text-base sm:text-lg leading-relaxed text-[var(--text-secondary)]">
+        {description}
+      </p>
+
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 pt-1" aria-label="Article tags">
+          {tags.map((tag: string) => (
+            <a
+              href={`/blog/tags/${tag}`}
+              class="rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs font-mono uppercase tracking-wider text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--accent-strong)] transition-all"
+            >
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <!-- Reading Container with Desktop ToC Rail -->
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 flex justify-center gap-8 lg:gap-12 items-start">
+      <!-- Main Content Column (Strictly constrained to 720px) -->
+      <main class="w-full max-w-[720px] shrink min-w-0">
+        <!-- Mobile Collapsible Table of Contents (Shown only on small screens when >= 3 headings) -->
+        {hasToc && (
+          <details class="toc-mobile mb-8 rounded-[14px] border border-[var(--border)] bg-[var(--panel)] p-4 lg:hidden">
+            <summary class="flex cursor-pointer items-center justify-between text-xs font-mono font-semibold tracking-wide text-[var(--accent-strong)] select-none">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                TABLE OF CONTENTS ({headings.length})
+              </span>
+              <span class="toc-chevron text-xs text-[var(--muted)] transition-transform duration-200">▾</span>
+            </summary>
+            <nav aria-label="Mobile table of contents" class="mt-3 pt-3 border-t border-[var(--border)] space-y-1.5 text-xs font-mono">
+              {headings.map((h) => (
+                <a
+                  href={`#${h.id}`}
+                  class={`block py-1 text-[var(--text-secondary)] hover:text-[var(--accent-strong)] transition-colors leading-snug ${
+                    h.level === 3 ? 'pl-4 text-[11px] text-[var(--muted)]' : 'font-medium'
+                  }`}
+                >
+                  {h.text}
+                </a>
+              ))}
+            </nav>
+          </details>
+        )}
+
+        <!-- Article Prose Body (Distraction-free, centered, optimal typography) -->
+        <article class="article-content rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-10 md:p-12 shadow-2xl backdrop-blur-md">
+          {processedContentHtml ? (
+            <div set:html={processedContentHtml} />
+          ) : (
+            <Content />
+          )}
+        </article>
+
+        <!-- Article Bottom Controls & Navigation -->
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[var(--border)]">
+          <a href="/blog" class="btn-cinematic-secondary inline-flex items-center gap-2 text-xs font-mono font-medium">
+            <span aria-hidden="true">&larr;</span> Back to all articles
+          </a>
+
+          {post.data.mediumUrl && (
+            <a
+              href={post.data.mediumUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[var(--accent-strong)] hover:underline"
+            >
+              <span>Read original on Medium</span>
+              <span aria-hidden="true">&nearr;</span>
+            </a>
+          )}
+        </div>
+      </main>
+
+      <!-- Desktop Sticky Table of Contents (Shown only on lg+ viewports when >= 3 headings) -->
+      {hasToc && (
+        <aside class="hidden lg:block w-64 shrink-0" aria-label="Table of contents">
+          <div class="sticky top-24 rounded-[16px] border border-[var(--border)] bg-[var(--panel)]/75 p-5 backdrop-blur-md shadow-sm">
+            <p class="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--accent-strong)] mb-3 flex items-center gap-2">
+              <span class="inline-block w-1.5 h-1.5 rounded-full bg-[var(--accent)]" aria-hidden="true"></span>
+              On This Page
+            </p>
+            <nav class="toc-desktop-nav max-h-[calc(100vh-9rem)] overflow-y-auto no-scrollbar space-y-1 text-xs">
+              {headings.map((h) => (
+                <a
+                  href={`#${h.id}`}
+                  class={`toc-link block py-1.5 px-2.5 rounded transition-all leading-snug ${
+                    h.level === 3
+                      ? 'pl-5 text-[11px] text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--accent-soft)]'
+                      : 'font-medium text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--accent-soft)]'
+                  }`}
+                  data-toc-id={h.id}
+                >
+                  {h.text}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </aside>
       )}
     </div>
-  </article>
+  </div>
+
+  <!-- Client-side Technical Ergonomics: Copy Code Buttons & Scroll-Spy -->
+  <script is:inline>
+    (() => {
+      function setupArticleEnhancements() {
+        // 1. Technical Ergonomics: Copy Code Button for <pre> blocks
+        const preBlocks = document.querySelectorAll('.article-content pre');
+        preBlocks.forEach((pre) => {
+          if (pre.dataset.hasCopyBtn === 'true') return;
+          pre.dataset.hasCopyBtn = 'true';
+          pre.classList.add('relative', 'group');
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'code-copy-btn';
+          button.setAttribute('aria-label', 'Copy code to clipboard');
+          button.innerHTML = `
+            <svg class="copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span class="copy-label">Copy</span>
+          `;
+
+          button.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const codeEl = pre.querySelector('code');
+            const codeText = (codeEl ? codeEl.innerText : pre.innerText).trim();
+            try {
+              await navigator.clipboard.writeText(codeText);
+              button.classList.add('is-copied');
+              button.setAttribute('aria-label', 'Copied to clipboard');
+              const label = button.querySelector('.copy-label');
+              if (label) label.textContent = 'Copied!';
+              setTimeout(() => {
+                button.classList.remove('is-copied');
+                button.setAttribute('aria-label', 'Copy code to clipboard');
+                if (label) label.textContent = 'Copy';
+              }, 2000);
+            } catch (err) {
+              console.error('Failed to copy code:', err);
+            }
+          });
+
+          pre.appendChild(button);
+        });
+
+        // 2. Desktop Table of Contents Scroll-Spy
+        const headings = Array.from(document.querySelectorAll('.article-content h2[id], .article-content h3[id]'));
+        const tocLinks = Array.from(document.querySelectorAll('.toc-desktop-nav a[data-toc-id]'));
+        if (headings.length > 0 && tocLinks.length > 0) {
+          const linkMap = new Map();
+          tocLinks.forEach((link) => {
+            const id = link.getAttribute('data-toc-id');
+            if (id) linkMap.set(id, link);
+          });
+
+          let currentActiveId = '';
+
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  const id = entry.target.id;
+                  if (id && id !== currentActiveId) {
+                    currentActiveId = id;
+                    tocLinks.forEach((l) => l.classList.remove('is-active'));
+                    const activeLink = linkMap.get(id);
+                    if (activeLink) {
+                      activeLink.classList.add('is-active');
+                    }
+                  }
+                }
+              });
+            },
+            {
+              rootMargin: '-80px 0px -70% 0px',
+              threshold: 0
+            }
+          );
+
+          headings.forEach((heading) => observer.observe(heading));
+        }
+      }
+
+      document.addEventListener('astro:page-load', setupArticleEnhancements);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupArticleEnhancements);
+      } else {
+        setupArticleEnhancements();
+      }
+    })();
+  </script>
+
+  <!-- Scoped Styling for Individual Blog Post Reading Pipeline -->
+  <style is:global>
+    /* ═══════════════════════════════════════════════════════════════
+       TYPOGRAPHY & READING EXPERIENCE (SCOPED TO .article-content)
+       Strict adherence to 18px-21px base font, 1.65-1.75 line-height,
+       680px-740px line length, and WCAG AA / AAA contrast.
+       ═══════════════════════════════════════════════════════════════ */
+
+    .article-content {
+      font-size: 1.125rem; /* 18px mobile */
+      line-height: 1.72;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    @media (min-width: 640px) {
+      .article-content {
+        font-size: 1.1875rem; /* 19px desktop (~65-72 characters per 720px line) */
+      }
+    }
+
+    /* Paragraph Rhythm */
+    .article-content p {
+      margin-top: 0;
+      margin-bottom: 1.5em;
+      line-height: 1.72;
+    }
+
+    /* Heading Rhythm & Anchors */
+    .article-content h2,
+    .article-content .article-h2 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.28;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-top: 2em;
+      margin-bottom: 0.5em;
+      scroll-margin-top: 5.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .article-content h2,
+      .article-content .article-h2 {
+        font-size: 1.85rem;
+      }
+    }
+
+    .article-content h3,
+    .article-content .article-h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-top: 1.85em;
+      margin-bottom: 0.5em;
+      scroll-margin-top: 5.5rem;
+    }
+
+    .article-content h4 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text);
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+      scroll-margin-top: 5.5rem;
+    }
+
+    /* Links & Contrast */
+    .article-content a {
+      color: var(--accent-strong);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1.5px;
+      transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    }
+
+    .article-content a:hover {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
+
+    [data-theme='light'] .article-content a {
+      color: #0369a1; /* Strict 7.2:1 contrast against light background */
+    }
+
+    /* Lists */
+    .article-content ul {
+      list-style-type: disc;
+      margin-top: 0;
+      margin-bottom: 1.5em;
+      padding-left: 1.6em;
+    }
+
+    .article-content ol {
+      list-style-type: decimal;
+      margin-top: 0;
+      margin-bottom: 1.5em;
+      padding-left: 1.6em;
+    }
+
+    .article-content li {
+      margin-bottom: 0.5em;
+      line-height: 1.7;
+    }
+
+    /* Blockquotes */
+    .article-content blockquote {
+      margin: 1.75em 0;
+      padding: 0.75em 1.25em;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 0 6px 6px 0;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .article-content blockquote p {
+      margin-bottom: 0.5em;
+    }
+
+    .article-content blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CODE BLOCKS & TECHNICAL ERGONOMICS
+       Clean container padding, 6px radius, overflow scroll, copy button.
+       ═══════════════════════════════════════════════════════════════ */
+
+    .article-content pre {
+      position: relative;
+      margin: 1.75em 0;
+      padding: 1rem 1.25rem;
+      border-radius: 6px;
+      background: rgba(10, 14, 23, 0.95);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    [data-theme='light'] .article-content pre {
+      background: #f1f5f9;
+      border-color: rgba(15, 23, 42, 0.15);
+    }
+
+    .article-content pre code {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      color: inherit;
+      font-size: 1em;
+      white-space: pre;
+    }
+
+    /* Inline Code */
+    .article-content code {
+      font-size: 0.85em;
+      padding: 0.15em 0.35em;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      word-break: break-word;
+    }
+
+    [data-theme='light'] .article-content code {
+      background: rgba(14, 165, 233, 0.12);
+      color: #0369a1;
+    }
+
+    /* Copy Code Button */
+    .code-copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 500;
+      padding: 0.25rem 0.55rem;
+      border-radius: 4px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+      z-index: 10;
+    }
+
+    .code-copy-btn:hover {
+      color: var(--text);
+      background: rgba(30, 41, 59, 0.9);
+      border-color: var(--accent);
+    }
+
+    .code-copy-btn.is-copied {
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.4);
+      background: rgba(6, 78, 59, 0.5);
+    }
+
+    [data-theme='light'] .code-copy-btn {
+      background: rgba(255, 255, 255, 0.85);
+      color: #475569;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       WIDE TABLES & TECHNICAL DATA
+       Horizontal scrolling container on mobile viewports.
+       ═══════════════════════════════════════════════════════════════ */
+
+    .table-scroll-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 1.75em 0;
+    }
+
+    .article-content table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .article-content th,
+    .article-content td {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .article-content th {
+      background: var(--surface);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .article-content tr:nth-child(even) {
+      background: var(--accent-soft);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       MEDIA & IMAGES
+       100% max-width, 6px radius, centered captions.
+       ═══════════════════════════════════════════════════════════════ */
+
+    .article-content figure {
+      margin: 2em 0;
+      text-align: center;
+    }
+
+    .article-content img,
+    .article-content figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      margin-inline: auto;
+    }
+
+    .article-content figcaption {
+      margin-top: 0.75em;
+      font-size: 0.875rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       DESKTOP & MOBILE TABLE OF CONTENTS
+       ═══════════════════════════════════════════════════════════════ */
+
+    .toc-desktop-nav .toc-link.is-active {
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      font-weight: 600;
+      border-left: 2px solid var(--accent);
+    }
+
+    details.toc-mobile summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.toc-mobile[open] .toc-chevron {
+      transform: rotate(180deg);
+    }
+  </style>
 </BaseLayout>
