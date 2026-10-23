@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import CliTerminal from '../components/CliTerminal.tsx';
 import CyberBackdrop from '../components/CyberBackdrop.astro';
 import AgentSidebar from '../components/AgentSidebar.astro';
 import { ClientRouter } from 'astro:transitions';
@@ -83,7 +82,6 @@ const ogImageUrl = new URL(image, SITE_URL).toString();
     </div>
     <CyberBackdrop />
     <SiteHeader />
-    <CliTerminal client:only="react" />
     <div class="site-shell">
       <main id="main-content" class="site-main min-w-0 py-10">
         <slot />

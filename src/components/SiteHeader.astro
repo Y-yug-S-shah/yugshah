@@ -3,11 +3,8 @@ import { SITE_URL } from '../config/site';
 
 const nav = [
   { label: 'Home', href: '/' },
-  { label: "Milo's mission", href: '/game' },
-  { label: 'Resume', href: '/resume' },
-  { label: 'Projects', href: '/projects' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' }
+  { label: "Milo's Mission", href: '/game' }
 ];
 
 const currentPath = Astro.url.pathname;
@@ -38,8 +35,8 @@ const currentPath = Astro.url.pathname;
               }`}
             >
               <span>{item.label}</span>
-              {isBlog && <span class="nav-badge-blog">RESEARCH</span>}
-              {isGame && <span class="nav-badge-lab">SIM</span>}
+              {isBlog && <span class="nav-badge-blog">ARTICLES</span>}
+              {isGame && <span class="nav-badge-lab">PLAY</span>}
             </a>
           );
         })}
@@ -47,10 +44,6 @@ const currentPath = Astro.url.pathname;
 
       <!-- Right: Action Controls -->
       <div class="site-header-actions">
-        <button id="cli-toggle" type="button" class="site-header-btn" aria-label="Open CLI mode" title="Open terminal">
-          <span aria-hidden="true">⌨️</span>
-          <span class="site-header-btn-label">CLI</span>
-        </button>
         <button id="sound-toggle" type="button" class="site-header-btn" aria-label="Turn ambient and click sounds off" aria-pressed="true" title="Toggle audio">
           <span aria-hidden="true">♫</span>
           <span class="site-header-btn-label">Sound on</span>
@@ -59,10 +52,6 @@ const currentPath = Astro.url.pathname;
           <span aria-hidden="true">☀️</span>
           <span class="site-header-btn-label">Theme</span>
         </button>
-        <a href="/contact" aria-label="Contact Yug Shah" class="site-header-cta" title="Contact Yug">
-          <span class="site-header-cta-icon" aria-hidden="true">✉</span>
-          <span class="site-header-btn-label">Hire me</span>
-        </a>
       </div>
     </div>
 
@@ -84,8 +73,8 @@ const currentPath = Astro.url.pathname;
             }`}
           >
             <span>{item.label}</span>
-            {isBlog && <span class="nav-badge-blog">RESEARCH</span>}
-            {isGame && <span class="nav-badge-lab">SIM</span>}
+            {isBlog && <span class="nav-badge-blog">ARTICLES</span>}
+            {isGame && <span class="nav-badge-lab">PLAY</span>}
           </a>
         );
       })}
@@ -102,6 +91,7 @@ const currentPath = Astro.url.pathname;
   const soundStorageKey = 'portfolio-ui-sound';
 
   // Global persistent background audio manager
+  // Piano ambience plays on ALL pages (blog + game)
   if (!window.__portfolioAmbience) {
     const pianoChords = [
       [261.63, 329.63, 392],      // C major
@@ -120,10 +110,6 @@ const currentPath = Astro.url.pathname;
 
       isEnabled() {
         return localStorage.getItem(soundStorageKey) !== 'off';
-      },
-
-      isGameRoute() {
-        return window.location.pathname.startsWith('/game') || !!this.gameAudioActive;
       },
 
       stopAmbience() {
@@ -145,7 +131,7 @@ const currentPath = Astro.url.pathname;
 
       playPianoChord() {
         if (!this.audioContext || !this.ambienceGain || this.audioContext.state !== 'running') return;
-        if (!this.isEnabled() || this.isGameRoute()) return;
+        if (!this.isEnabled()) return;
 
         const chord = pianoChords[this.chordStep % pianoChords.length];
         this.chordStep = (this.chordStep + 1) % pianoChords.length;
@@ -183,7 +169,7 @@ const currentPath = Astro.url.pathname;
       },
 
       async startAmbience() {
-        if (!this.isEnabled() || this.isGameRoute()) return;
+        if (!this.isEnabled()) return;
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return;
 
@@ -193,7 +179,7 @@ const currentPath = Astro.url.pathname;
             await this.audioContext.resume();
           } catch (_) {}
         }
-        if (!this.isEnabled() || this.isGameRoute() || this.audioContext.state !== 'running') return;
+        if (!this.isEnabled() || this.audioContext.state !== 'running') return;
         if (this.ambienceGain) return;
 
         this.ambienceGain = this.audioContext.createGain();
@@ -206,7 +192,7 @@ const currentPath = Astro.url.pathname;
       },
 
       playClick() {
-        if (!this.isEnabled() || this.isGameRoute() || !this.audioContext || this.audioContext.state !== 'running') return;
+        if (!this.isEnabled() || !this.audioContext || this.audioContext.state !== 'running') return;
         if (!this.clickBuffer) {
           this.clickBuffer = this.audioContext.createBuffer(1, Math.ceil(this.audioContext.sampleRate * 0.02), this.audioContext.sampleRate);
           const samples = this.clickBuffer.getChannelData(0);
@@ -261,7 +247,7 @@ const currentPath = Astro.url.pathname;
 
     // Auto-start background music on the very first user interaction anywhere on the website
     const onFirstUserGesture = () => {
-      if (window.__portfolioAmbience.isEnabled() && !window.__portfolioAmbience.isGameRoute()) {
+      if (window.__portfolioAmbience.isEnabled()) {
         void window.__portfolioAmbience.startAmbience();
       }
     };
@@ -270,14 +256,20 @@ const currentPath = Astro.url.pathname;
     window.addEventListener('touchstart', onFirstUserGesture, { passive: true });
     window.addEventListener('click', onFirstUserGesture, { passive: true });
 
-    // Handle game audio event: silence ambient music while Milo agent mission is active
+    // Handle game audio event: lower ambient music while Milo agent mission is active
     window.addEventListener('portfolio:game-audio-active', (event) => {
       const active = !!(event && event.detail && event.detail.active);
       window.__portfolioAmbience.gameAudioActive = active;
       if (active) {
-        window.__portfolioAmbience.stopAmbience();
-      } else if (window.__portfolioAmbience.isEnabled() && !window.__portfolioAmbience.isGameRoute()) {
-        void window.__portfolioAmbience.startAmbience();
+        // Lower piano volume during game, don't kill it
+        if (window.__portfolioAmbience.ambienceGain && window.__portfolioAmbience.audioContext) {
+          window.__portfolioAmbience.ambienceGain.gain.setTargetAtTime(0.25, window.__portfolioAmbience.audioContext.currentTime, 0.3);
+        }
+      } else {
+        // Restore piano volume
+        if (window.__portfolioAmbience.ambienceGain && window.__portfolioAmbience.audioContext) {
+          window.__portfolioAmbience.ambienceGain.gain.setTargetAtTime(0.99, window.__portfolioAmbience.audioContext.currentTime, 0.3);
+        }
       }
     });
 
@@ -308,22 +300,6 @@ const currentPath = Astro.url.pathname;
       };
     }
 
-    // CLI toggle
-    const cliBtn = document.getElementById('cli-toggle');
-    const setCliMode = (open, replace = false) => {
-      const url = new URL(window.location.href);
-      if (open) {
-        url.searchParams.set('mode', 'cli');
-      } else {
-        url.searchParams.delete('mode');
-      }
-      window.history[replace ? 'replaceState' : 'pushState']({}, '', url.toString());
-      window.dispatchEvent(new CustomEvent(open ? 'portfolio:open-cli' : 'portfolio:close-cli'));
-    };
-    if (cliBtn) {
-      cliBtn.onclick = () => setCliMode(true);
-    }
-
     // Sound toggle
     const soundBtn = document.getElementById('sound-toggle');
     if (soundBtn && window.__portfolioAmbience) {
@@ -349,39 +325,14 @@ const currentPath = Astro.url.pathname;
       };
     }
 
-    // Route check: pause if on game page, resume if navigating back to standard pages
-    if (window.__portfolioAmbience) {
-      if (window.__portfolioAmbience.isGameRoute()) {
-        window.__portfolioAmbience.stopAmbience();
-      } else if (window.__portfolioAmbience.isEnabled() && !window.__portfolioAmbience.ambienceTimer) {
-        void window.__portfolioAmbience.startAmbience();
-      }
+    // Resume ambience on any page if it was enabled
+    if (window.__portfolioAmbience && window.__portfolioAmbience.isEnabled() && !window.__portfolioAmbience.ambienceTimer) {
+      void window.__portfolioAmbience.startAmbience();
     }
   };
 
   document.addEventListener('astro:page-load', setupHeader);
   setupHeader();
-
-  // Keyboard shortcut for CLI
-  window.addEventListener('keydown', (event) => {
-    const target = event.target;
-    const isTyping = target instanceof HTMLElement &&
-      (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
-    if (event.key === '`' && !event.repeat && !isTyping) {
-      event.preventDefault();
-      const open = new URLSearchParams(window.location.search).get('mode') !== 'cli';
-      const url = new URL(window.location.href);
-      if (open) url.searchParams.set('mode', 'cli');
-      else url.searchParams.delete('mode');
-      window.history.pushState({}, '', url.toString());
-      window.dispatchEvent(new CustomEvent(open ? 'portfolio:open-cli' : 'portfolio:close-cli'));
-    } else if (event.key === 'Escape' && new URLSearchParams(window.location.search).get('mode') === 'cli') {
-      const url = new URL(window.location.href);
-      url.searchParams.delete('mode');
-      window.history.replaceState({}, '', url.toString());
-      window.dispatchEvent(new CustomEvent('portfolio:close-cli'));
-    }
-  });
 
   document.addEventListener('pointerdown', (e) => {
     const a = e.target && e.target.closest && e.target.closest('a, button');

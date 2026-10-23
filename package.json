@@ -7,18 +7,14 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "predev": "node scripts/build-resume-pdf.mjs && node scripts/generate-og-images.mjs",
     "build": "astro build",
-    "prebuild": "node scripts/build-resume-pdf.mjs && node scripts/generate-og-images.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
     "lint": "eslint . --ext .js,.mjs,.ts,.astro",
-    "format": "prettier --write .",
-    "auto-publish": "node scripts/auto-publish.mjs"
+    "format": "prettier --write ."
   },
   "dependencies": {
-    "@astrojs/markdown-satteri": "^0.4.3",
     "@astrojs/mdx": "^8.0.3",
     "@astrojs/react": "^7.0.1",
     "@astrojs/rss": "^4.0.19",
@@ -31,7 +27,6 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "astro": "^7.3.6",
-    "pdfkit": "^0.20.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwindcss": "^4.3.3",

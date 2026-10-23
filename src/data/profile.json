@@ -1,8 +1,8 @@
 {
   "name": "Yug Shah",
-  "tagline": "Security professional experienced in technical validation, PoC delivery, and solution architecture across security, networking, and AI systems.",
-  "bio": "Security professional with hands-on experience in technical validation, PoC delivery, and solution architecture across security and networking. Able to bridge technical implementation with business value through cross-functional collaboration, clear communication, and customer-focused problem-solving. Familiar with AI technologies and how to secure them.",
-  "city": "India",
+  "tagline": "Writing about AI security, prompt injection defenses, adversarial testing, and building secure agent runtimes. Play Milo's Mission to test your instincts.",
+  "bio": "Security researcher and engineer exploring the intersection of AI systems and adversarial defense. Writing in-depth about prompt injection, agentic identity, runtime sandboxing, and practical defensive engineering.",
+  "city": "Mumbai",
   "email": "yugdshahcs@gmail.com",
   "socialLinks": {
     "linkedin": "https://www.linkedin.com/in/yugshah369/",
